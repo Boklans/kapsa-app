@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "KAPSA",
+    "slug": "kapsa-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "kapsa",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0A0A0F",
+    "primaryColor": "#FF5E3A",
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-notifications"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.vanzalabs.kapsa"
+    },
+    "android": {
+      "package": "com.vanzalabs.kapsa",
+      "versionCode": 1,
+      "permissions": [
+        "POST_NOTIFICATIONS",
+        "VIBRATE"
+      ]
+    }
+  }
+}
+
