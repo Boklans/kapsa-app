@@ -12,7 +12,9 @@ import {
   RoomType,
   RoundCard,
   RoundHistoryItem,
+  RoundLifecycleState,
   TodayRound,
+  computeRoundLifecycleState,
 } from '@/types/kapsa';
 
 const DEMO_STORAGE_KEY = 'kapsa_demo_rooms_state_v1';
@@ -404,11 +406,19 @@ const buildDemoView = (
   const allAnswered = members.length >= 2 && members.every((m) => m.has_answered);
   const canReveal = iHaveAnswered || allAnswered;
 
+  const revealAt = allAnswered ? new Date().toISOString() : getTodayNinePmIso();
+  const lifecycle_state = computeRoundLifecycleState({
+    round_date: todayStr,
+    reveal_at: revealAt,
+    is_fully_revealed: allAnswered,
+  });
+
   const todayRound: TodayRound = {
     round_id: roundId,
     round_date: todayStr,
-    reveal_at: allAnswered ? new Date().toISOString() : getTodayNinePmIso(),
+    reveal_at: revealAt,
     is_fully_revealed: allAnswered,
+    lifecycle_state,
     prompt_id: prompt.id,
     prompt_format: format,
     question_text: bundle.customQuestionText || prompt.question_text,
@@ -752,7 +762,11 @@ export const useRoomStore = create<RoomState>((set, get) => ({
       );
       if (roundErr) throw roundErr;
 
-      const round = (Array.isArray(roundRows) ? roundRows[0] : roundRows) as TodayRound;
+      const rawRound = (Array.isArray(roundRows) ? roundRows[0] : roundRows) as TodayRound;
+      const round: TodayRound = {
+        ...rawRound,
+        lifecycle_state: computeRoundLifecycleState(rawRound),
+      };
 
       const { data: cardRows, error: cardsErr } = await supabase.rpc('get_round_cards', {
         p_round_id: round.round_id,

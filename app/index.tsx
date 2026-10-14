@@ -136,6 +136,22 @@ export default function HomeScreen() {
     return () => clearInterval(interval);
   }, [todayRound?.reveal_at]);
 
+  // Автоматична синхронізація стейту екрана зі стейт-машиною життєвого циклу раунду (Scheduled -> Open -> Revealed -> Archived)
+  useEffect(() => {
+    if (todayRound?.lifecycle_state === 'revealed' || todayRound?.is_fully_revealed) {
+      setTodayStage('revealed');
+    } else if (todayRound?.lifecycle_state === 'open' || !todayRound?.lifecycle_state) {
+      const myCard = cards.find(
+        (c) => c.user_id === 'demo-user-me' || c.display_name === 'Ти' || c.display_name === displayName
+      );
+      if (myCard?.has_answered || isAnswerSealed) {
+        setTodayStage('waiting');
+      } else {
+        setTodayStage('vote');
+      }
+    }
+  }, [todayRound?.lifecycle_state, todayRound?.is_fully_revealed, cards, isAnswerSealed, displayName]);
+
   const myMember = cards.find(
     (c) => c.user_id === 'demo-user-me' || c.display_name === 'Ти' || c.display_name === displayName
   ) || {
@@ -1815,7 +1831,7 @@ export default function HomeScreen() {
       {/* SHARED BOTTOM NAVIGATION BAR (1-в-1 з Google Stitch JSON & Макету)     */}
       {/* ===================================================================== */}
       <View style={styles.stitchBottomNavBar}>
-        {/* Item 1: Today */}
+        {/* Item 1: Сьогодні */}
         <TouchableOpacity
           style={styles.stitchNavTabItem}
           onPress={() => setActiveTab('today')}
@@ -1832,11 +1848,11 @@ export default function HomeScreen() {
               activeTab === 'today' && styles.stitchNavTabLabelActive,
             ]}
           >
-            Today
+            Сьогодні
           </Text>
         </TouchableOpacity>
 
-        {/* Item 2: Circles */}
+        {/* Item 2: Кімнати */}
         <TouchableOpacity
           style={styles.stitchNavTabItem}
           onPress={() => setActiveTab('circles')}
@@ -1853,7 +1869,7 @@ export default function HomeScreen() {
               activeTab === 'circles' && styles.stitchNavTabLabelActive,
             ]}
           >
-            Circles
+            Кімнати
           </Text>
         </TouchableOpacity>
 
@@ -1878,7 +1894,7 @@ export default function HomeScreen() {
           </Text>
         </TouchableOpacity>
 
-        {/* Item 4: Memories */}
+        {/* Item 4: Профіль */}
         <TouchableOpacity
           style={styles.stitchNavTabItem}
           onPress={() => setActiveTab('memories')}
@@ -1895,7 +1911,7 @@ export default function HomeScreen() {
               activeTab === 'memories' && styles.stitchNavTabLabelActive,
             ]}
           >
-            Memories
+            Профіль
           </Text>
         </TouchableOpacity>
       </View>
