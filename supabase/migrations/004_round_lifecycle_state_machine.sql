@@ -26,9 +26,13 @@ DECLARE
     v_now_tz TIMESTAMP;
     v_today DATE;
 BEGIN
-    -- Поточний локальний час у часовому поясі кімнати
+    -- Поточний локальний час у часовому поясі кімнати (новий раунд о 08:00 ранку)
     v_now_tz := timezone(p_timezone, now());
-    v_today := v_now_tz::date;
+    IF extract(hour from v_now_tz) < 8 THEN
+        v_today := (v_now_tz - interval '1 day')::date;
+    ELSE
+        v_today := v_now_tz::date;
+    END IF;
 
     -- Стан 1: Scheduled — майбутня дата
     IF p_round_date > v_today THEN
@@ -104,8 +108,12 @@ BEGIN
     FROM public.rooms r
     WHERE r.id = p_room_id;
 
-    -- Обчислюємо сьогоднішню дату в часовому поясі кімнати
-    v_today := (now() AT TIME ZONE v_tz)::date;
+    -- Обчислюємо ефективну дату раунду в часовому поясі кімнати (добовий цикл оновлюється о 08:00 ранку)
+    IF extract(hour from (now() AT TIME ZONE v_tz)) < 8 THEN
+        v_today := ((now() AT TIME ZONE v_tz) - interval '1 day')::date;
+    ELSE
+        v_today := (now() AT TIME ZONE v_tz)::date;
+    END IF;
 
     -- Шукаємо раунд на сьогодні
     SELECT rr.id INTO v_round_id

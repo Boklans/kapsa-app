@@ -776,8 +776,8 @@ export default function HomeScreen() {
                 <View style={styles.stitchCountdownTimerBox}>
                   <Text style={styles.stitchCountdownLabel}>ТАЄМНИЦЯ ВІДКРИЄТЬСЯ ЧЕРЕЗ</Text>
                   <Text style={styles.stitchCountdownDigits}>{countdownText}</Text>
-                  <Text style={{ fontSize: 11, color: colors.inkMuted }}>
-                    О 21:00 сургуч розплавиться для вас обох
+                  <Text style={{ fontSize: 11, color: colors.inkMuted, textAlign: 'center' }}>
+                    О 21:00 або коли ви обидва зробите хід — сургуч розплавиться для вас обох
                   </Text>
                 </View>
 
@@ -832,7 +832,7 @@ export default function HomeScreen() {
                   <View style={styles.stitchPulseTile}>
                     <View style={styles.stitchPulseAvatarWrap}>
                       <Image
-                        source={{ uri: getAvatarPhotoUri(undefined, 2) }}
+                        source={{ uri: PORTRAIT_AVATARS['🦊'] }}
                         style={styles.stitchPulseAvatar}
                       />
                       {partnerMember.has_answered ? (

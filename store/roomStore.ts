@@ -15,6 +15,7 @@ import {
   RoundLifecycleState,
   TodayRound,
   computeRoundLifecycleState,
+  getKapsaEffectiveRoundDate,
 } from '@/types/kapsa';
 
 const DEMO_STORAGE_KEY = 'kapsa_demo_rooms_state_v1';
@@ -392,7 +393,7 @@ const buildDemoView = (
 ): { todayRound: TodayRound; cards: RoundCard[]; loreItems: LoreItem[] } => {
   const format = bundle.activeFormat;
   const prompt = bundle.promptsByFormat[format];
-  const todayStr = new Date().toISOString().slice(0, 10);
+  const todayStr = getKapsaEffectiveRoundDate();
   const roundId = `round-${bundle.room.id}-${todayStr}-${format}`;
 
   const members = bundle.members.map((m) =>

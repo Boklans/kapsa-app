@@ -33,12 +33,22 @@ export interface TodayRound {
 }
 
 /**
- * Детермінована функція розрахунку стану раунду на основі часу та кворуму:
- * 1. 'scheduled' — заплановано на майбутнє
- * 2. 'open' — раунд активний, триває збір таємних відповідей
- * 3. 'revealed' — виконано умови кворуму АБО настав час розкриття (21:00)
- * 4. 'archived' — минулий раунд відправлено в історію
+ * Добовий цикл KAPSA (оновлення щодня о 08:00 ранку):
+ * - О 08:00 ранку починається новий день: стан 'open' (збір відповідей наосліп).
+ * - О 21:00 (або миттєво при 100% кворумі): стан 'revealed'.
+ * - З 21:00 до 08:00 наступного ранку: вікно обговорення ('revealed') триває всю ніч
+ *   і ранок, щоб друзі встигли прочитати коментарі та зберегти найкраще в Lore за кавою.
+ * - О 08:00 ранку вчорашній день переходить в 'archived', а новий день стає 'open'.
  */
+export function getKapsaEffectiveRoundDate(now = new Date()): string {
+  const d = new Date(now);
+  // До 08:00 ранку активним ще є вчорашній розкритий раунд
+  if (d.getHours() < 8) {
+    d.setDate(d.getDate() - 1);
+  }
+  return d.toISOString().slice(0, 10);
+}
+
 export function computeRoundLifecycleState(
   round: {
     round_date: string;
@@ -48,26 +58,25 @@ export function computeRoundLifecycleState(
   },
   now = new Date()
 ): RoundLifecycleState {
-  const nowIso = now.toISOString();
-  const todayDateStr = nowIso.slice(0, 10);
+  const effectiveDate = getKapsaEffectiveRoundDate(now);
 
-  // Якщо дата раунду ще не настала — раунд заплановано
-  if (round.round_date > todayDateStr) {
+  // 1. Майбутня дата — раунд заплановано
+  if (round.round_date > effectiveDate) {
     return 'scheduled';
   }
 
-  // Якщо дата раунду минула (вчора або раніше) — раунд в архіві
-  if (round.round_date < todayDateStr) {
+  // 2. Минула дата (раніша за вчорашній розкритий раунд) — в архіві
+  if (round.round_date < effectiveDate) {
     return 'archived';
   }
 
-  // Якщо раунд вже розпечатаний за кворумом або настав час reveal_at
+  // 3. Для поточної активної доби: перевіряємо умови розкриття (кворум або 21:00)
   const revealTimeMs = new Date(round.reveal_at).getTime();
   if (round.is_fully_revealed || now.getTime() >= revealTimeMs) {
     return 'revealed';
   }
 
-  // Інакше раунд відкритий для ходів користувачів
+  // 4. Інакше раунд відкритий для ходів користувачів
   return 'open';
 }
 
