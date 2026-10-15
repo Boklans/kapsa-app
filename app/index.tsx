@@ -439,128 +439,253 @@ export default function HomeScreen() {
   };
 
   // =========================================================================
-  // ЕКРАН 5 З ШАБЛОНУ: «Створи свою кімнату»
+  // SCREEN 6: СТВОРИТИ ПРОСТІР (app/room/create)
   // =========================================================================
   if (activeTab === 'create') {
     return (
       <SafeAreaView style={styles.safeArea}>
+        {/* Top Editorial Header (Task-oriented navigation) */}
+        <View style={styles.createTopNavBar}>
+          <TouchableOpacity
+            style={styles.createNavBackBtn}
+            onPress={() => setActiveTab('circles')}
+            activeOpacity={0.8}
+          >
+            <Feather name="arrow-left" size={18} color={stitch.onSurfaceVariant} />
+            <Text style={styles.createNavBackText}>До кімнат</Text>
+          </TouchableOpacity>
+
+          <Text style={styles.createNavTitleCenter}>Новий простір</Text>
+
+          <View style={styles.createStepBadge}>
+            <Text style={styles.createStepBadgeText}>Крок 1 з 2</Text>
+          </View>
+        </View>
+
         <ScrollView
-          contentContainerStyle={styles.createContainer}
+          contentContainerStyle={styles.createScrollCanvas}
           showsVerticalScrollIndicator={false}
         >
-          <TouchableOpacity
-            style={styles.backIconBtn}
-            onPress={() => setActiveTab('today')}
-          >
-            <Feather name="chevron-left" size={20} color={colors.inkPrimary} />
-          </TouchableOpacity>
+          {/* Editorial Page Heading */}
+          <View style={styles.createPageHeadingSection}>
+            <Text style={styles.createHeadlineHeroTitle}>Створи власну капсулу</Text>
+            <Text style={styles.createHeadlineHeroDesc}>
+              Тихий куточок для двох або затишна кімната для близьких друзів до 8 людей.
+            </Text>
+          </View>
 
-          <Text style={styles.createTitle}>{'Створи\nсвою кімнату'}</Text>
+          {/* Section: Room Type Selector */}
+          <View style={styles.createSectionWrap}>
+            <Text style={styles.createSectionOverlineLabel}>ФОРМАТ ПРОСТОРУ</Text>
 
-          <Text style={styles.sectionBlockLabel}>Обери тип</Text>
+            <View style={styles.createTypeGrid}>
+              {/* Card A: Пара (Selected by default) */}
+              <TouchableOpacity
+                style={[
+                  styles.createTypeCard,
+                  roomType === 'couple' ? styles.createTypeCardActive : styles.createTypeCardInactive,
+                ]}
+                onPress={() => setRoomType('couple')}
+                activeOpacity={0.88}
+              >
+                <View style={styles.createTypeCardTopRow}>
+                  <View style={styles.createTypeTitleRow}>
+                    <Text style={styles.createTypeTitleText}>Пара</Text>
+                    <Text style={{ fontSize: 13 }}>❤️</Text>
+                  </View>
+                  <View style={styles.createTypePillPair}>
+                    <Text style={styles.createTypePillPairText}>ДЛЯ ДВОХ</Text>
+                  </View>
+                </View>
 
-          <View style={styles.typeCardsCol}>
+                <Text style={styles.createTypeDescText}>
+                  Тільки ви вдвох. Питання про стосунки, спільні жарти та щоденні фото-моменти.
+                </Text>
+
+                <View style={styles.createTypeCheckBadgeWrap}>
+                  <Ionicons
+                    name={roomType === 'couple' ? 'checkmark-circle' : 'checkmark-circle-outline'}
+                    size={18}
+                    color={roomType === 'couple' ? stitch.secondary : 'transparent'}
+                  />
+                </View>
+              </TouchableOpacity>
+
+              {/* Card B: Банда */}
+              <TouchableOpacity
+                style={[
+                  styles.createTypeCard,
+                  roomType === 'friends' ? styles.createTypeCardActive : styles.createTypeCardInactive,
+                ]}
+                onPress={() => setRoomType('friends')}
+                activeOpacity={0.88}
+              >
+                <View style={styles.createTypeCardTopRow}>
+                  <View style={styles.createTypeTitleRow}>
+                    <Text style={styles.createTypeTitleText}>Банда</Text>
+                    <Text style={{ fontSize: 13 }}>🔥</Text>
+                  </View>
+                  <View style={styles.createTypePillCrew}>
+                    <Text style={styles.createTypePillCrewText}>3–8 ЛЮДЕЙ</Text>
+                  </View>
+                </View>
+
+                <Text style={styles.createTypeDescText}>
+                  Голосування, безглузді спогади, спільний літопис і жодного спаму.
+                </Text>
+
+                <View style={styles.createTypeCheckBadgeWrap}>
+                  <Ionicons
+                    name={roomType === 'friends' ? 'checkmark-circle' : 'checkmark-circle-outline'}
+                    size={18}
+                    color={roomType === 'friends' ? stitch.secondary : 'transparent'}
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          {/* Section: Configuration Fields */}
+          <View style={styles.createFieldsSection}>
+            {/* Field 1: Room Name */}
+            <View style={styles.createFieldBlock}>
+              <Text style={styles.createSectionOverlineLabel}>НАЗВА КІМНАТИ</Text>
+              <TextInput
+                style={styles.createTextInputBox}
+                placeholder={roomType === 'couple' ? 'Наприклад: ЧСМ' : 'Наприклад: Банда з КПІ'}
+                placeholderTextColor={stitch.outlineVariant}
+                value={roomName}
+                onChangeText={(t) => {
+                  setRoomName(t);
+                  if (formError) setFormError(null);
+                }}
+              />
+            </View>
+
+            {/* Field 2: Daily Reveal Time */}
+            <View style={styles.createFieldBlock}>
+              <View style={styles.createRevealTimeHeaderRow}>
+                <Text style={styles.createSectionOverlineLabel}>
+                  ЧАС ЩОДЕННОГО РОЗПЕЧАТУВАННЯ (REVEAL TIME)
+                </Text>
+                <Text style={styles.createSyncBadgeLabel}>СИНХРОННО</Text>
+              </View>
+
+              <View style={styles.createTimePillsRow}>
+                {['20:00', '21:00', '22:00', '23:00'].map((timeLabel, idx) => {
+                  const isSelected = (revealHourIdx === 1 && idx === 1) || (revealHourIdx === 0 && idx === 0) || (revealHourIdx === 2 && idx === 2) || (revealHourIdx === 3 && idx === 3);
+                  return (
+                    <TouchableOpacity
+                      key={timeLabel}
+                      style={[
+                        styles.createTimePillBtn,
+                        isSelected && styles.createTimePillBtnSelected,
+                      ]}
+                      onPress={() => setRevealHourIdx(idx)}
+                      activeOpacity={0.85}
+                    >
+                      <Text
+                        style={[
+                          styles.createTimePillBtnText,
+                          isSelected && styles.createTimePillBtnTextSelected,
+                        ]}
+                      >
+                        {timeLabel}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+
+              <View style={styles.createInfoNoteRow}>
+                <Feather name="info" size={14} color={stitch.outline} style={{ marginTop: 2 }} />
+                <Text style={styles.createInfoNoteText}>
+                  О цій годині запечатані відповіді відкриваються одночасно для всіх. Якщо всі відповідять раніше — капсула відкриється достроково.
+                </Text>
+              </View>
+            </View>
+
+            {/* Field 3: Question Deck Selector */}
+            <View style={styles.createFieldBlock}>
+              <Text style={styles.createSectionOverlineLabel}>КОЛОДА ЗАПИТАНЬ</Text>
+
+              <View style={styles.createDeckListWrap}>
+                {[
+                  {
+                    id: 'core' as const,
+                    title: 'База',
+                    emoji: '⚡',
+                    desc: 'Перевірені щоденні питання про характер, звички та кумедні ситуації.',
+                  },
+                  {
+                    id: 'nostalgia' as const,
+                    title: 'Теплі спогади',
+                    emoji: '☕',
+                    desc: 'Питання про дитинство, перші враження та незабутні спільні поїздки.',
+                  },
+                  {
+                    id: 'spicy' as const,
+                    title: 'Гострі жарти',
+                    emoji: '🔥',
+                    desc: 'Для тих, хто давно разом і не боїться чесної правди чи суперечок.',
+                  },
+                ].map((deck) => {
+                  const isChosen = selectedDeck === deck.id;
+                  return (
+                    <TouchableOpacity
+                      key={deck.id}
+                      style={[
+                        styles.createDeckOptionCard,
+                        isChosen && styles.createDeckOptionCardSelected,
+                      ]}
+                      onPress={() => setSelectedDeck(deck.id)}
+                      activeOpacity={0.88}
+                    >
+                      <View style={styles.createDeckMetaLeft}>
+                        <View style={styles.createDeckTitleRow}>
+                          <Text style={styles.createDeckTitleText}>{deck.title}</Text>
+                          <Text style={{ fontSize: 13 }}>{deck.emoji}</Text>
+                          {isChosen && (
+                            <View style={styles.createDeckChosenBadge}>
+                              <Text style={styles.createDeckChosenBadgeText}>ОБРАНО</Text>
+                            </View>
+                          )}
+                        </View>
+                        <Text style={styles.createDeckDescText}>{deck.desc}</Text>
+                      </View>
+
+                      <View style={styles.createDeckRadioWrap}>
+                        <Ionicons
+                          name={isChosen ? 'radio-button-on' : 'radio-button-off'}
+                          size={19}
+                          color={isChosen ? stitch.primary : stitch.outlineVariant}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </View>
+          </View>
+
+          {formError ? <Text style={styles.createErrorAlertText}>⚠️ {formError}</Text> : null}
+
+          {/* Bottom Primary Action & Disclaimer */}
+          <View style={styles.createActionFooter}>
             <TouchableOpacity
-              style={[
-                styles.typeEditorialCard,
-                roomType === 'friends' && styles.typeEditorialCardActive,
-              ]}
-              onPress={() => setRoomType('friends')}
+              style={styles.createPrimaryCtaBtn}
+              onPress={handleCreateRoom}
               activeOpacity={0.88}
             >
-              <Image
-                source={{ uri: FRIENDS_THUMB_IMAGE }}
-                style={styles.typeCardThumb}
-              />
-              <View style={styles.typeCardContent}>
-                <Text style={styles.typeCardTitle}>Банда 🔥</Text>
-                <Text style={styles.typeCardCount}>3–8 людей</Text>
-                <Text style={styles.typeCardHint}>Друзі, колеги, вайб</Text>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.typeEditorialCard,
-                roomType === 'couple' && styles.typeEditorialCardActive,
-              ]}
-              onPress={() => setRoomType('couple')}
-              activeOpacity={0.88}
-            >
-              <Image
-                source={{ uri: COUPLE_THUMB_IMAGE }}
-                style={styles.typeCardThumb}
-              />
-              <View style={styles.typeCardContent}>
-                <Text style={styles.typeCardTitle}>Пара ❤️</Text>
-                <Text style={styles.typeCardCount}>2 людини</Text>
-                <Text style={styles.typeCardHint}>Близькі, теплі, завжди</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-
-          <Text style={[styles.sectionBlockLabel, { marginTop: 8 }]}>
-            Налаштуй кімнату
-          </Text>
-
-          <View style={styles.fieldGroup}>
-            <Text style={styles.fieldLabel}>Назва кімнати</Text>
-            <TextInput
-              style={styles.editorialInput}
-              placeholder={
-                roomType === 'friends'
-                  ? 'Наприклад: Банда з КПІ'
-                  : 'Наприклад: Наші моменти'
-              }
-              placeholderTextColor={colors.inkMuted}
-              value={roomName}
-              onChangeText={(t) => {
-                setRoomName(t);
-                if (formError) setFormError(null);
-              }}
-            />
-          </View>
-
-          <View style={styles.fieldGroup}>
-            <Text style={styles.fieldLabel}>Час відкриття</Text>
-            <TouchableOpacity
-              style={styles.selectorRow}
-              onPress={() =>
-                setRevealHourIdx((prev) => (prev + 1) % REVEAL_HOURS.length)
-              }
-            >
-              <Text style={styles.selectorValue}>
-                {REVEAL_HOURS[revealHourIdx]}:00
+              <Text style={styles.createPrimaryCtaBtnText}>
+                Створити кімнату та покликати своїх
               </Text>
-              <Feather name="chevron-right" size={18} color={colors.inkMuted} />
+              <Feather name="arrow-right" size={17} color="#FFFFFF" />
             </TouchableOpacity>
+            <Text style={styles.createDisclaimerNote}>
+              Після створення ви отримаєте приватний інвайт-код та посилання для швидкого входу.
+            </Text>
           </View>
-
-          <View style={styles.fieldGroup}>
-            <Text style={styles.fieldLabel}>Колода питань</Text>
-            <TouchableOpacity
-              style={styles.selectorRow}
-              onPress={() => {
-                const idx = DECK_LIST.findIndex((d) => d.tag === selectedDeck);
-                const next = DECK_LIST[(idx + 1) % DECK_LIST.length];
-                setSelectedDeck(next.tag);
-              }}
-            >
-              <Text style={styles.selectorValue}>
-                {DECK_LIST.find((d) => d.tag === selectedDeck)?.label || 'База'}
-              </Text>
-              <Feather name="chevron-right" size={18} color={colors.inkMuted} />
-            </TouchableOpacity>
-          </View>
-
-          {formError ? <Text style={styles.errorText}>⚠️ {formError}</Text> : null}
-
-          <TouchableOpacity
-            style={styles.charcoalPrimaryBtn}
-            onPress={handleCreateRoom}
-          >
-            <Text style={styles.charcoalPrimaryBtnText}>Створити кімнату</Text>
-          </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
     );
@@ -7417,6 +7542,317 @@ const styles = StyleSheet.create({
     color: stitch.onSurfaceVariant,
     opacity: 0.75,
     textAlign: 'center',
+  },
+
+  // SCREEN 6: СТВОРИТИ ПРОСТІР (app/room/create)
+  createTopNavBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: stitch.outlineVariant,
+    backgroundColor: stitch.surface,
+  },
+  createNavBackBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  createNavBackText: {
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    color: stitch.onSurfaceVariant,
+  },
+  createNavTitleCenter: {
+    fontFamily: fonts.serif,
+    fontSize: 18,
+    fontWeight: '500',
+    color: stitch.primary,
+  },
+  createStepBadge: {
+    backgroundColor: stitch.surfaceContainerLow,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+  },
+  createStepBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: stitch.onSurfaceVariant,
+  },
+  createScrollCanvas: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 36,
+    gap: 24,
+  },
+  createPageHeadingSection: {
+    gap: 6,
+  },
+  createHeadlineHeroTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 32,
+    fontWeight: '400',
+    letterSpacing: -0.8,
+    color: stitch.primary,
+  },
+  createHeadlineHeroDesc: {
+    fontSize: 14,
+    color: stitch.onSurfaceVariant,
+    lineHeight: 20,
+  },
+  createSectionWrap: {
+    gap: 10,
+  },
+  createSectionOverlineLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    color: stitch.onSurfaceVariant,
+  },
+  createTypeGrid: {
+    gap: 12,
+  },
+  createTypeCard: {
+    position: 'relative',
+    padding: 16,
+    borderRadius: 6,
+    gap: 8,
+  },
+  createTypeCardActive: {
+    backgroundColor: stitch.surface,
+    borderWidth: 2,
+    borderColor: stitch.secondary,
+  },
+  createTypeCardInactive: {
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+  },
+  createTypeCardTopRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingRight: 24,
+  },
+  createTypeTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  createTypeTitleText: {
+    fontFamily: fonts.serif,
+    fontSize: 18,
+    fontWeight: '500',
+    color: stitch.primary,
+  },
+  createTypePillPair: {
+    backgroundColor: stitch.secondaryFixed,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  createTypePillPairText: {
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    color: stitch.secondary,
+  },
+  createTypePillCrew: {
+    backgroundColor: stitch.surfaceContainerHighest,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  createTypePillCrewText: {
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    color: stitch.onSurfaceVariant,
+  },
+  createTypeDescText: {
+    fontSize: 13,
+    color: stitch.onSurfaceVariant,
+    lineHeight: 18,
+  },
+  createTypeCheckBadgeWrap: {
+    position: 'absolute',
+    top: 14,
+    right: 14,
+  },
+  createFieldsSection: {
+    gap: 20,
+  },
+  createFieldBlock: {
+    gap: 8,
+  },
+  createTextInputBox: {
+    width: '100%',
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    borderRadius: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    fontSize: 15,
+    color: stitch.onSurface,
+  },
+  createRevealTimeHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+  },
+  createSyncBadgeLabel: {
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: stitch.secondary,
+  },
+  createTimePillsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  createTimePillBtn: {
+    flex: 1,
+    minWidth: 70,
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+    borderRadius: 6,
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  createTimePillBtnSelected: {
+    backgroundColor: stitch.surface,
+    borderColor: stitch.primary,
+    borderWidth: 1.5,
+  },
+  createTimePillBtnText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: stitch.onSurfaceVariant,
+    fontFamily: Platform.select({ web: 'monospace', default: 'Courier' }),
+  },
+  createTimePillBtnTextSelected: {
+    color: stitch.primary,
+    fontWeight: '700',
+  },
+  createInfoNoteRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 6,
+    paddingTop: 4,
+  },
+  createInfoNoteText: {
+    flex: 1,
+    fontSize: 12,
+    color: stitch.onSurfaceVariant,
+    lineHeight: 17,
+  },
+  createDeckListWrap: {
+    gap: 10,
+  },
+  createDeckOptionCard: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    padding: 14,
+    borderRadius: 6,
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    gap: 10,
+  },
+  createDeckOptionCardSelected: {
+    backgroundColor: stitch.surface,
+    borderColor: stitch.primary,
+    borderWidth: 2,
+  },
+  createDeckMetaLeft: {
+    flex: 1,
+    gap: 4,
+  },
+  createDeckTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  createDeckTitleText: {
+    fontFamily: fonts.serif,
+    fontSize: 16,
+    fontWeight: '500',
+    color: stitch.primary,
+  },
+  createDeckChosenBadge: {
+    backgroundColor: stitch.primary,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 3,
+  },
+  createDeckChosenBadgeText: {
+    fontSize: 9,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    color: stitch.surface,
+    textTransform: 'uppercase',
+  },
+  createDeckDescText: {
+    fontSize: 12,
+    color: stitch.onSurfaceVariant,
+    lineHeight: 17,
+  },
+  createDeckRadioWrap: {
+    paddingTop: 2,
+  },
+  createErrorAlertText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: stitch.error,
+    paddingHorizontal: 4,
+  },
+  createActionFooter: {
+    paddingTop: 8,
+    gap: 12,
+  },
+  createPrimaryCtaBtn: {
+    width: '100%',
+    backgroundColor: stitch.secondary,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    shadowColor: stitch.secondary,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  createPrimaryCtaBtnText: {
+    fontSize: 14,
+    fontWeight: '600',
+    letterSpacing: 0.3,
+    color: '#FFFFFF',
+  },
+  createDisclaimerNote: {
+    fontSize: 12,
+    color: stitch.onSurfaceVariant,
+    textAlign: 'center',
+    lineHeight: 17,
+    paddingHorizontal: 12,
   },
 
   // WAITING SCREEN (SEALED TIL 21:00)

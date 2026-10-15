@@ -115,6 +115,8 @@ export const stitch = {
   secondaryFixed: '#FFDAD4',
   outline: '#7C766F',
   outlineVariant: '#CCC5BD',
+  error: '#BA1A1A',
+  errorContainer: '#FFDAD6',
   goldStar: '#D97706',
 };
 
