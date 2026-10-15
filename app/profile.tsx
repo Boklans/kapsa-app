@@ -85,14 +85,23 @@ export default function ProfileScreen() {
           onPress={() => router.replace('/')}
           activeOpacity={0.8}
         >
-          <Feather name="arrow-left" size={18} color={stitch.primary} />
+          <Feather name="arrow-left" size={18} color={stitch.onSurfaceVariant} />
           <Text style={styles.navBackText}>На головну</Text>
         </TouchableOpacity>
 
-        <Text style={styles.navTitleCenter}>Особистий простір</Text>
+        <View style={styles.headerCenterBrand} pointerEvents="none">
+          <Text style={styles.brandTitle}>KAPSA</Text>
+        </View>
 
-        <View style={styles.secureBadge}>
-          <Feather name="lock" size={13} color={stitch.onSurfaceVariant} />
+        <View style={styles.navRightWrap}>
+          <TouchableOpacity
+            accessibilityLabel="Поділитися"
+            style={styles.navShareBtn}
+            onPress={handleCopyProfileInviteCode}
+            activeOpacity={0.8}
+          >
+            <Feather name="share-2" size={17} color={stitch.onSurfaceVariant} />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -370,32 +379,65 @@ const styles = StyleSheet.create({
     backgroundColor: stitch.background,
   },
   topNavBar: {
+    position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 14,
+    minHeight: 56,
     borderBottomWidth: 1,
     borderBottomColor: stitch.outlineVariant,
     backgroundColor: stitch.surface,
   },
   navBackBtn: {
+    zIndex: 10,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
+    paddingVertical: 2,
   },
   navBackText: {
     fontSize: 11,
     fontWeight: '700',
-    letterSpacing: 1,
+    letterSpacing: 0.8,
     textTransform: 'uppercase',
+    color: stitch.onSurfaceVariant,
+  },
+  headerCenterBrand: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  brandTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 27,
+    letterSpacing: 4.5,
+    fontWeight: '600',
     color: stitch.primary,
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
+  navRightWrap: {
+    zIndex: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  navShareBtn: {
+    padding: 4,
   },
   navTitleCenter: {
     fontFamily: fonts.serif,
-    fontSize: 18,
-    fontWeight: '500',
+    fontSize: 27,
+    letterSpacing: 4.5,
+    fontWeight: '600',
     color: stitch.primary,
+    textAlign: 'center',
+    includeFontPadding: false,
   },
   secureBadge: {
     padding: 4,

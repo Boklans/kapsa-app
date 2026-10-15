@@ -107,19 +107,19 @@ export default function LoreDetailScreen() {
     <SafeAreaView style={styles.safeArea}>
       {/* Top Context Header Bar */}
       <View style={styles.topContextBar}>
-        <TouchableOpacity
-          style={styles.backBtn}
-          onPress={() => router.back()}
-          activeOpacity={0.8}
-        >
-          <Feather name="arrow-left" size={18} color={stitch.primary} />
-          <Text style={styles.backBtnText}>До архіву Lore</Text>
-        </TouchableOpacity>
+        <View style={styles.navLeftWrap}>
+          <TouchableOpacity
+            style={styles.backBtn}
+            onPress={() => router.back()}
+            activeOpacity={0.8}
+          >
+            <Feather name="arrow-left" size={18} color={stitch.onSurfaceVariant} />
+            <Text style={styles.backBtnText}>До архіву</Text>
+          </TouchableOpacity>
+        </View>
 
-        {/* Circle Pill Capsule */}
-        <View style={styles.roomPill}>
-          <Feather name="lock" size={11} color={stitch.onSurfaceVariant} />
-          <Text style={styles.roomPillText}>Банда з КПІ 🔥</Text>
+        <View style={styles.headerCenterBrand} pointerEvents="none">
+          <Text style={styles.brandTitle}>KAPSA</Text>
         </View>
 
         {/* Actions / Overflow */}
@@ -158,6 +158,13 @@ export default function LoreDetailScreen() {
             <View style={styles.goldenRecordBadge}>
               <Ionicons name="star" size={11} color={stitch.secondary} />
               <Text style={styles.goldenRecordText}>У Золотому фонді</Text>
+            </View>
+          </View>
+
+          <View style={styles.roomTagRow}>
+            <View style={styles.roomPill}>
+              <Feather name="lock" size={11} color={stitch.onSurfaceVariant} />
+              <Text style={styles.roomPillText}>Банда з КПІ 🔥</Text>
             </View>
           </View>
 
@@ -409,27 +416,57 @@ const styles = StyleSheet.create({
     backgroundColor: stitch.background,
   },
   topContextBar: {
+    position: 'relative',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 18,
-    paddingVertical: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    minHeight: 56,
     borderBottomWidth: 1,
     borderBottomColor: stitch.outlineVariant,
     backgroundColor: stitch.surface,
+  },
+  navLeftWrap: {
+    zIndex: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   backBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    paddingVertical: 4,
+    paddingVertical: 2,
   },
   backBtnText: {
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 0.8,
     textTransform: 'uppercase',
+    color: stitch.onSurfaceVariant,
+  },
+  headerCenterBrand: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  brandTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 27,
+    letterSpacing: 4.5,
+    fontWeight: '600',
     color: stitch.primary,
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
+  roomTagRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
   },
   roomPill: {
     flexDirection: 'row',
@@ -449,6 +486,7 @@ const styles = StyleSheet.create({
     color: stitch.primary,
   },
   navActionsRow: {
+    zIndex: 10,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,

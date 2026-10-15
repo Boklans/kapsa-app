@@ -88,19 +88,25 @@ export default function CreateRoomScreen() {
     <SafeAreaView style={styles.safeArea}>
       {/* Top Editorial Header (Task-oriented navigation) */}
       <View style={styles.topNavBar}>
-        <TouchableOpacity
-          style={styles.navBackBtn}
-          onPress={() => router.back()}
-          activeOpacity={0.8}
-        >
-          <Feather name="arrow-left" size={18} color={stitch.onSurfaceVariant} />
-          <Text style={styles.navBackText}>До кімнат</Text>
-        </TouchableOpacity>
+        <View style={styles.navLeftWrap}>
+          <TouchableOpacity
+            style={styles.navBackBtn}
+            onPress={() => router.back()}
+            activeOpacity={0.8}
+          >
+            <Feather name="arrow-left" size={18} color={stitch.onSurfaceVariant} />
+            <Text style={styles.navBackText}>До кімнат</Text>
+          </TouchableOpacity>
+        </View>
 
-        <Text style={styles.navTitleCenter}>Новий простір</Text>
+        <View style={styles.headerCenterBrand} pointerEvents="none">
+          <Text style={styles.brandTitle}>KAPSA</Text>
+        </View>
 
-        <View style={styles.stepBadge}>
-          <Text style={styles.stepBadgeText}>Крок 1 з 2</Text>
+        <View style={styles.navRightWrap}>
+          <View style={styles.stepBadge}>
+            <Text style={styles.stepBadgeText}>Крок 1 з 2</Text>
+          </View>
         </View>
       </View>
 
@@ -327,19 +333,27 @@ const styles = StyleSheet.create({
     backgroundColor: stitch.background,
   },
   topNavBar: {
+    position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 14,
+    minHeight: 56,
     borderBottomWidth: 1,
     borderBottomColor: stitch.outlineVariant,
     backgroundColor: stitch.surface,
+  },
+  navLeftWrap: {
+    zIndex: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   navBackBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
+    paddingVertical: 2,
   },
   navBackText: {
     fontSize: 11,
@@ -348,11 +362,37 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     color: stitch.onSurfaceVariant,
   },
+  headerCenterBrand: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  brandTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 27,
+    letterSpacing: 4.5,
+    fontWeight: '600',
+    color: stitch.primary,
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
   navTitleCenter: {
     fontFamily: fonts.serif,
-    fontSize: 18,
-    fontWeight: '500',
+    fontSize: 27,
+    letterSpacing: 4.5,
+    fontWeight: '600',
     color: stitch.primary,
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
+  navRightWrap: {
+    zIndex: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   stepBadge: {
     backgroundColor: stitch.surfaceContainerLow,

@@ -106,30 +106,32 @@ export default function JoinByCodeScreen() {
     <SafeAreaView style={styles.safeArea}>
       {/* Top Navigation Header */}
       <View style={styles.topNavBar}>
-        <TouchableOpacity
-          accessibilityLabel="Назад"
-          style={styles.navBackBtn}
-          onPress={() => router.back()}
-          activeOpacity={0.8}
-        >
-          <Feather name="arrow-left" size={18} color={stitch.onSurfaceVariant} />
-          <Text style={styles.navBackText}>НАЗАД</Text>
-        </TouchableOpacity>
-
-        {/* Monogram / Issue Marker */}
-        <View style={styles.monogramRow}>
-          <Feather name="clock" size={13} color={stitch.onSurfaceVariant} />
-          <Text style={styles.monogramText}>KAPSA • APP/JOIN</Text>
+        <View style={styles.navLeftWrap}>
+          <TouchableOpacity
+            accessibilityLabel="Назад"
+            style={styles.navBackBtn}
+            onPress={() => router.back()}
+            activeOpacity={0.8}
+          >
+            <Feather name="arrow-left" size={18} color={stitch.onSurfaceVariant} />
+            <Text style={styles.navBackText}>НАЗАД</Text>
+          </TouchableOpacity>
         </View>
 
-        <TouchableOpacity
-          accessibilityLabel="Закрити"
-          style={styles.navCloseBtn}
-          onPress={() => router.replace('/')}
-          activeOpacity={0.8}
-        >
-          <Feather name="x" size={19} color={stitch.onSurfaceVariant} />
-        </TouchableOpacity>
+        <View style={styles.headerCenterBrand} pointerEvents="none">
+          <Text style={styles.brandTitle}>KAPSA</Text>
+        </View>
+
+        <View style={styles.navRightWrap}>
+          <TouchableOpacity
+            accessibilityLabel="Закрити"
+            style={styles.navCloseBtn}
+            onPress={() => router.replace('/')}
+            activeOpacity={0.8}
+          >
+            <Feather name="x" size={19} color={stitch.onSurfaceVariant} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView
@@ -352,20 +354,27 @@ const styles = StyleSheet.create({
     backgroundColor: stitch.background,
   },
   topNavBar: {
+    position: 'relative',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingVertical: 14,
+    minHeight: 56,
     borderBottomWidth: 1,
     borderBottomColor: stitch.outlineVariant,
     backgroundColor: stitch.surface,
+  },
+  navLeftWrap: {
+    zIndex: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   navBackBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    paddingVertical: 4,
+    paddingVertical: 2,
   },
   navBackText: {
     fontSize: 11,
@@ -373,6 +382,29 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     textTransform: 'uppercase',
     color: stitch.onSurfaceVariant,
+  },
+  headerCenterBrand: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  brandTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 27,
+    letterSpacing: 4.5,
+    fontWeight: '600',
+    color: stitch.primary,
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
+  navRightWrap: {
+    zIndex: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   monogramRow: {
     flexDirection: 'row',

@@ -469,19 +469,25 @@ export default function HomeScreen() {
       <SafeAreaView style={styles.safeArea}>
         {/* Top Editorial Header (Task-oriented navigation) */}
         <View style={styles.createTopNavBar}>
-          <TouchableOpacity
-            style={styles.createNavBackBtn}
-            onPress={() => setActiveTab('circles')}
-            activeOpacity={0.8}
-          >
-            <Feather name="arrow-left" size={18} color={stitch.onSurfaceVariant} />
-            <Text style={styles.createNavBackText}>До кімнат</Text>
-          </TouchableOpacity>
+          <View style={styles.createNavLeft}>
+            <TouchableOpacity
+              style={styles.createNavBackBtn}
+              onPress={() => setActiveTab('circles')}
+              activeOpacity={0.8}
+            >
+              <Feather name="arrow-left" size={18} color={stitch.onSurfaceVariant} />
+              <Text style={styles.createNavBackText}>До кімнат</Text>
+            </TouchableOpacity>
+          </View>
 
-          <Text style={styles.createNavTitleCenter}>Новий простір</Text>
+          <View style={styles.universalHeaderCenter} pointerEvents="none">
+            <Text style={styles.universalBrandTitle}>KAPSA</Text>
+          </View>
 
-          <View style={styles.createStepBadge}>
-            <Text style={styles.createStepBadgeText}>Крок 1 з 2</Text>
+          <View style={styles.createNavRight}>
+            <View style={styles.createStepBadge}>
+              <Text style={styles.createStepBadgeText}>Крок 1 з 2</Text>
+            </View>
           </View>
         </View>
 
@@ -739,8 +745,8 @@ export default function HomeScreen() {
               </Text>
             </View>
 
-            <View style={styles.hubHeaderCenter}>
-              <Text style={styles.hubBrandTitle}>KAPSA</Text>
+            <View style={styles.universalHeaderCenter} pointerEvents="none">
+              <Text style={styles.universalBrandTitle}>KAPSA</Text>
             </View>
 
             <View style={styles.hubHeaderRight}>
@@ -1808,32 +1814,35 @@ export default function HomeScreen() {
           <View style={styles.circlesScreenContainer}>
             {/* TopAppBar Component */}
             <View style={styles.circlesTopNavBar}>
-              <TouchableOpacity
-                accessibilityLabel="Приватні простори"
-                style={styles.circlesNavClockBtn}
-                onPress={() => {}}
-                activeOpacity={0.8}
-              >
-                <Feather name="lock" size={19} color={stitch.primary} />
-              </TouchableOpacity>
-
-              <View style={styles.circlesBrandCenter}>
-                <Text style={styles.circlesBrandTitle}>KAPSA</Text>
-                <Text style={styles.circlesBrandSub}>ПРИВАТНІ ПРОСТОРИ</Text>
+              <View style={styles.circlesNavLeft}>
+                <TouchableOpacity
+                  accessibilityLabel="Приватні простори"
+                  style={styles.circlesNavClockBtn}
+                  onPress={() => {}}
+                  activeOpacity={0.8}
+                >
+                  <Feather name="lock" size={18} color={stitch.onSurfaceVariant} />
+                </TouchableOpacity>
               </View>
 
-              <TouchableOpacity
-                accessibilityLabel="Профіль користувача"
-                style={styles.circlesNavAvatarBtn}
-                onPress={() => setActiveTab('memories')}
-                activeOpacity={0.85}
-              >
-                <Image
-                  source={{ uri: userPortraitUri }}
-                  style={styles.circlesNavAvatarImg}
-                />
-                <View style={styles.circlesOnlineDot} />
-              </TouchableOpacity>
+              <View style={styles.universalHeaderCenter} pointerEvents="none">
+                <Text style={styles.universalBrandTitle}>KAPSA</Text>
+              </View>
+
+              <View style={styles.circlesNavRight}>
+                <TouchableOpacity
+                  accessibilityLabel="Профіль користувача"
+                  style={styles.circlesNavAvatarBtn}
+                  onPress={() => setActiveTab('memories')}
+                  activeOpacity={0.85}
+                >
+                  <Image
+                    source={{ uri: userPortraitUri }}
+                    style={styles.circlesNavAvatarImg}
+                  />
+                  <View style={styles.circlesOnlineDot} />
+                </TouchableOpacity>
+              </View>
             </View>
 
             <View style={styles.circlesContentCanvas}>
@@ -2127,16 +2136,20 @@ export default function HomeScreen() {
           <View style={styles.loreScreenContainer}>
             {/* Top Navigation Bar Component (Shared Stitch Header) */}
             <View style={styles.loreTopNavBar}>
-              <TouchableOpacity
-                accessibilityLabel="Статус архіву"
-                style={styles.loreNavClockBtn}
-                onPress={() => {}}
-                activeOpacity={0.8}
-              >
-                <Feather name="clock" size={19} color={stitch.primary} />
-              </TouchableOpacity>
+              <View style={styles.loreNavLeft}>
+                <TouchableOpacity
+                  accessibilityLabel="Статус архіву"
+                  style={styles.loreNavClockBtn}
+                  onPress={() => {}}
+                  activeOpacity={0.8}
+                >
+                  <Feather name="clock" size={18} color={stitch.onSurfaceVariant} />
+                </TouchableOpacity>
+              </View>
 
-              <Text style={styles.loreBrandWordmark}>KAPSA</Text>
+              <View style={styles.universalHeaderCenter} pointerEvents="none">
+                <Text style={styles.universalBrandTitle}>KAPSA</Text>
+              </View>
 
               <View style={styles.loreNavRightActions}>
                 <TouchableOpacity
@@ -2145,7 +2158,7 @@ export default function HomeScreen() {
                   onPress={() => {}}
                   activeOpacity={0.8}
                 >
-                  <Feather name="search" size={20} color={stitch.primary} />
+                  <Feather name="search" size={19} color={stitch.onSurfaceVariant} />
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -2584,6 +2597,36 @@ export default function HomeScreen() {
         {/* ================================================================= */}
         {activeTab === 'memories' && (
           <View style={styles.stitchProfileContainer}>
+            {/* Top Navigation Bar with KAPSA Wordmark */}
+            <View style={styles.profileTopNavBar}>
+              <View style={styles.profileNavLeft}>
+                <TouchableOpacity
+                  accessibilityLabel="Головна"
+                  style={styles.profileNavBackBtn}
+                  onPress={() => setActiveTab('today')}
+                  activeOpacity={0.8}
+                >
+                  <Feather name="arrow-left" size={18} color={stitch.onSurfaceVariant} />
+                  <Text style={styles.profileNavBackText}>Сьогодні</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.universalHeaderCenter} pointerEvents="none">
+                <Text style={styles.universalBrandTitle}>KAPSA</Text>
+              </View>
+
+              <View style={styles.profileNavRight}>
+                <TouchableOpacity
+                  accessibilityLabel="Поділитися"
+                  style={styles.profileNavActionBtn}
+                  onPress={handleCopyProfileInviteCode}
+                  activeOpacity={0.8}
+                >
+                  <Feather name="share-2" size={17} color={stitch.onSurfaceVariant} />
+                </TouchableOpacity>
+              </View>
+            </View>
+
             {/* Screen Section Header */}
             <View style={styles.stitchSectionHeaderRow}>
               <Text style={styles.stitchScreenTitle}>Профіль</Text>
@@ -3688,6 +3731,47 @@ const styles = StyleSheet.create({
   // =========================================================================
   // GOOGLE STITCH SCREEN 4: PROFILE & SETTINGS STYLES
   // =========================================================================
+  profileTopNavBar: {
+    position: 'relative',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    minHeight: 56,
+    borderBottomWidth: 1,
+    borderBottomColor: stitch.outlineVariant,
+    backgroundColor: stitch.surface,
+    marginHorizontal: -20,
+    marginTop: -10,
+    marginBottom: 10,
+  },
+  profileNavLeft: {
+    zIndex: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  profileNavBackBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 2,
+  },
+  profileNavBackText: {
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: stitch.onSurfaceVariant,
+  },
+  profileNavRight: {
+    zIndex: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  profileNavActionBtn: {
+    padding: 4,
+  },
   stitchProfileContainer: {
     paddingHorizontal: 20,
     paddingTop: 10,
@@ -4441,16 +4525,19 @@ const styles = StyleSheet.create({
   // HOME HUB (SCREEN 1) STYLES — 1-В-1 З GOOGLE STITCH DESIGN
   // =========================================================================
   hubHeader: {
+    position: 'relative',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 14,
+    minHeight: 56,
     borderBottomWidth: 1,
     borderBottomColor: stitch.outlineVariant,
     backgroundColor: stitch.surface,
   },
   hubHeaderLeft: {
+    zIndex: 10,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
@@ -4465,17 +4552,44 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     color: stitch.onSurfaceVariant,
   },
+  universalHeaderCenter: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  universalBrandTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 27,
+    letterSpacing: 4.5,
+    color: stitch.primary,
+    fontWeight: '600',
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
   hubHeaderCenter: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   hubBrandTitle: {
     fontFamily: fonts.serif,
-    fontSize: 22,
-    letterSpacing: 4,
+    fontSize: 27,
+    letterSpacing: 4.5,
     color: stitch.primary,
-    fontWeight: '400',
+    fontWeight: '600',
+    textAlign: 'center',
+    includeFontPadding: false,
   },
   hubHeaderRight: {
+    zIndex: 10,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -6448,26 +6562,36 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   loreTopNavBar: {
+    position: 'relative',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingVertical: 14,
+    minHeight: 56,
     borderBottomWidth: 1,
     borderBottomColor: stitch.outlineVariant,
     backgroundColor: stitch.surface,
+  },
+  loreNavLeft: {
+    zIndex: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   loreNavClockBtn: {
     padding: 4,
   },
   loreBrandWordmark: {
     fontFamily: fonts.serif,
-    fontSize: 24,
-    fontWeight: '400',
-    letterSpacing: -0.5,
+    fontSize: 27,
+    letterSpacing: 4.5,
     color: stitch.primary,
+    fontWeight: '600',
+    textAlign: 'center',
+    includeFontPadding: false,
   },
   loreNavRightActions: {
+    zIndex: 10,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
@@ -7117,27 +7241,42 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
   },
   circlesTopNavBar: {
+    position: 'relative',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 12,
+    paddingVertical: 14,
+    minHeight: 56,
     borderBottomWidth: 1,
     borderBottomColor: stitch.outlineVariant,
     backgroundColor: stitch.surface,
+  },
+  circlesNavLeft: {
+    zIndex: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   circlesNavClockBtn: {
     padding: 4,
   },
   circlesBrandCenter: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   circlesBrandTitle: {
     fontFamily: fonts.serif,
-    fontSize: 24,
-    fontWeight: '400',
-    letterSpacing: -0.5,
+    fontSize: 27,
+    letterSpacing: 4.5,
+    fontWeight: '600',
     color: stitch.primary,
+    textAlign: 'center',
+    includeFontPadding: false,
   },
   circlesBrandSub: {
     fontSize: 9,
@@ -7146,6 +7285,11 @@ const styles = StyleSheet.create({
     color: stitch.secondary,
     textTransform: 'uppercase',
     marginTop: 1,
+  },
+  circlesNavRight: {
+    zIndex: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   circlesNavAvatarBtn: {
     position: 'relative',
@@ -7675,19 +7819,27 @@ const styles = StyleSheet.create({
 
   // SCREEN 6: СТВОРИТИ ПРОСТІР (app/room/create)
   createTopNavBar: {
+    position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 14,
+    minHeight: 56,
     borderBottomWidth: 1,
     borderBottomColor: stitch.outlineVariant,
     backgroundColor: stitch.surface,
+  },
+  createNavLeft: {
+    zIndex: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   createNavBackBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
+    paddingVertical: 2,
   },
   createNavBackText: {
     fontSize: 11,
@@ -7698,9 +7850,17 @@ const styles = StyleSheet.create({
   },
   createNavTitleCenter: {
     fontFamily: fonts.serif,
-    fontSize: 18,
-    fontWeight: '500',
+    fontSize: 27,
+    letterSpacing: 4.5,
+    fontWeight: '600',
     color: stitch.primary,
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
+  createNavRight: {
+    zIndex: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   createStepBadge: {
     backgroundColor: stitch.surfaceContainerLow,
