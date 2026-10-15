@@ -12,6 +12,8 @@ import {
   Platform,
   Share,
   Switch,
+  Modal,
+  Alert,
 } from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
@@ -172,6 +174,29 @@ export default function HomeScreen() {
   const [hasSavedLoreHome, setHasSavedLoreHome] = useState(false);
   const [quickReplyHome, setQuickReplyHome] = useState('');
   const [isPlayingAudioHome, setIsPlayingAudioHome] = useState(false);
+
+  // Стан для Екрана 4 (Lore: Архів спогадів / Золотий фонд)
+  const [loreRoomFilter, setLoreRoomFilter] = useState<'all' | 'friends' | 'couple'>('all');
+  const [loreBookmarkSaved, setLoreBookmarkSaved] = useState(false);
+  const [loreAudioPlaying, setLoreAudioPlaying] = useState(false);
+  const [loreReactions, setLoreReactions] = useState<Record<string, number>>({
+    '🍕': 4,
+    '🌧️': 6,
+    '❤️': 8,
+  });
+  const [userLoreReacted, setUserLoreReacted] = useState<Record<string, boolean>>({});
+  const [showPhotobookModal, setShowPhotobookModal] = useState(false);
+
+  const toggleLoreEmojiReaction = (emoji: string) => {
+    setUserLoreReacted((prev) => {
+      const already = prev[emoji];
+      setLoreReactions((counts) => ({
+        ...counts,
+        [emoji]: already ? Math.max(0, (counts[emoji] || 0) - 1) : (counts[emoji] || 0) + 1,
+      }));
+      return { ...prev, [emoji]: !already };
+    });
+  };
 
   useEffect(() => {
     fetchMyRooms();
@@ -1807,159 +1832,461 @@ export default function HomeScreen() {
         )}
 
         {/* ================================================================= */}
-        {/* ВКЛАДКА 3: LORE — ЕКРАН АРХІВУ СПОГАДІВ (Lore / Артефакти)        */}
+        {/* ВКЛАДКА 3: LORE — ЕКРАН 4 З GOOGLE STITCH (Золотий фонд / Архів)    */}
         {/* ================================================================= */}
         {activeTab === 'fond' && (
-          <View style={styles.stitchLoreCanvas}>
-            {/* Subheader / Room Switcher & Collection Meta */}
-            <View style={styles.stitchLoreSubheader}>
-              <View>
-                <Text style={styles.stitchLoreMetaLabel}>АРХІВ СПОГАДІВ</Text>
-                <Text style={styles.stitchLoreScreenTitle}>Lore</Text>
-              </View>
+          <View style={styles.loreScreenContainer}>
+            {/* Top Navigation Bar Component (Shared Stitch Header) */}
+            <View style={styles.loreTopNavBar}>
               <TouchableOpacity
-                style={styles.stitchLoreRoomPill}
-                onPress={() => setActiveTab('circles')}
+                accessibilityLabel="Статус архіву"
+                style={styles.loreNavClockBtn}
+                onPress={() => {}}
                 activeOpacity={0.8}
               >
-                <Text style={styles.stitchLoreRoomPillText}>
-                  {featuredRoom ? featuredRoom.name : 'ЧСМ ❤️'}
-                </Text>
-                <Feather name="chevron-down" size={14} color={colors.inkSecondary} />
+                <Feather name="clock" size={19} color={stitch.primary} />
               </TouchableOpacity>
-            </View>
 
-            {/* Editorial Filter Tabs */}
-            <View style={styles.stitchLoreFiltersRow}>
-              {(['all', 'photo', 'quote', 'vote'] as const).map((key) => {
-                const labels: Record<string, string> = {
-                  all: 'Усі (24)',
-                  photo: 'Фото (12)',
-                  quote: 'Цитати (8)',
-                  vote: 'Голоси (4)',
-                };
-                const isAct = fondFilter === key;
-                return (
-                  <TouchableOpacity
-                    key={key}
-                    style={[styles.stitchLoreFilterPill, isAct && styles.stitchLoreFilterPillActive]}
-                    onPress={() => setFondFilter(key)}
-                  >
-                    <Text style={[styles.stitchLoreFilterPillText, isAct && styles.stitchLoreFilterPillTextActive]}>
-                      {labels[key]}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
+              <Text style={styles.loreBrandWordmark}>KAPSA</Text>
 
-            {/* Artifact 1: Candid 35mm Photo Card */}
-            {(fondFilter === 'all' || fondFilter === 'photo') && (
-              <View style={styles.stitchPhotoArtifactCard}>
-                <View style={styles.stitchPhotoArtifactTopRow}>
-                  <Text style={styles.stitchPhotoArtifactMeta}>
-                    РАУНД #14 · {featuredRoom ? featuredRoom.name : 'ЧСМ DUO'}
-                  </Text>
-                  <Text style={styles.stitchPhotoArtifactDate}>12 ТРАВНЯ 2025</Text>
-                </View>
+              <View style={styles.loreNavRightActions}>
+                <TouchableOpacity
+                  accessibilityLabel="Пошук у хроніці"
+                  style={styles.loreSearchBtn}
+                  onPress={() => {}}
+                  activeOpacity={0.8}
+                >
+                  <Feather name="search" size={20} color={stitch.primary} />
+                </TouchableOpacity>
 
-                <View style={styles.stitchPhotoArtifactImgWrap}>
+                <TouchableOpacity
+                  accessibilityLabel="Профіль користувача"
+                  style={styles.loreNavAvatarBtn}
+                  onPress={() => setActiveTab('memories')}
+                  activeOpacity={0.85}
+                >
                   <Image
-                    source={{ uri: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80' }}
-                    style={styles.stitchPhotoArtifactImg}
+                    source={{ uri: userPortraitUri }}
+                    style={styles.loreNavAvatarImg}
                   />
-                  <View style={styles.stitchPhotoArtifactStarBadge}>
-                    <Ionicons name="star" size={13} color="#FFFFFF" />
-                    <Text style={styles.stitchPhotoArtifactStarText}>LORE</Text>
-                  </View>
-                </View>
+                </TouchableOpacity>
+              </View>
+            </View>
 
-                <Text style={styles.stitchPhotoArtifactTitle}>
-                  «Той вечір у Львові: піца під дощем та нескінченні розмови»
-                </Text>
-                <Text style={styles.stitchPhotoArtifactDesc}>
-                  Коли раптова злива змусила нас сховатися під старовинною аркою біля Ратуші. Найкращі спільні спогади завжди трапляються не за планом.
-                </Text>
-
-                <View style={styles.stitchPhotoArtifactFooter}>
-                  <View style={styles.stitchPhotoReactionsRow}>
-                    <Text style={styles.stitchPhotoReactionBadge}>❤️ 7</Text>
-                    <Text style={styles.stitchPhotoReactionBadge}>😂 5</Text>
-                  </View>
-                  <TouchableOpacity style={styles.stitchPhotoShareLink} onPress={handleCopyProfileInviteCode}>
-                    <Feather name="share-2" size={13} color={colors.inkSecondary} />
-                    <Text style={styles.stitchPhotoShareText}>Поділитися</Text>
+            {/* Editorial Canvas Container */}
+            <View style={styles.loreContentCanvas}>
+              {/* Title & Editorial Subtitle */}
+              <View style={styles.loreHeaderSection}>
+                <View style={styles.loreMetaHeaderRow}>
+                  <Text style={styles.loreChronicleLabel}>ХРОНІКА ПАМʼЯТІ</Text>
+                  <TouchableOpacity
+                    style={styles.lorePhotobookLink}
+                    onPress={() => setShowPhotobookModal(true)}
+                    activeOpacity={0.8}
+                  >
+                    <Feather name="book-open" size={14} color={stitch.onSurfaceVariant} />
+                    <Text style={styles.lorePhotobookLinkText}>Фотокнига</Text>
                   </TouchableOpacity>
                 </View>
+
+                <Text style={styles.loreHeadlineTitle}>Золотий фонд</Text>
+                <Text style={styles.loreHeadlineSubtitle}>Живий літопис ваших кімнат</Text>
               </View>
-            )}
 
-            {/* Artifact 2: Typographic Quote Card */}
-            {(fondFilter === 'all' || fondFilter === 'quote') && (
-              <View style={styles.stitchQuoteArtifactCard}>
-                <View style={styles.stitchQuoteArtifactTopRow}>
-                  <Text style={styles.stitchQuoteArtifactMeta}>ЦИТАТА ДНЯ • ЧСМ ♥ Duo</Text>
-                  <Text style={styles.stitchQuoteArtifactDate}>8 ТРАВНЯ</Text>
-                </View>
+              {/* Room Switcher Filter (Tactile Tabs) */}
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.loreRoomTabsRow}
+              >
+                <TouchableOpacity
+                  style={[
+                    styles.loreRoomTab,
+                    loreRoomFilter === 'all' && styles.loreRoomTabActive,
+                  ]}
+                  onPress={() => setLoreRoomFilter('all')}
+                  activeOpacity={0.85}
+                >
+                  <Text
+                    style={[
+                      styles.loreRoomTabText,
+                      loreRoomFilter === 'all' && styles.loreRoomTabTextActive,
+                    ]}
+                  >
+                    Всі простори
+                  </Text>
+                </TouchableOpacity>
 
-                <Text style={styles.stitchQuoteArtifactText}>
-                  «Ти — моя улюблена неконтрольована катастрофа»
-                </Text>
+                <TouchableOpacity
+                  style={[
+                    styles.loreRoomTab,
+                    loreRoomFilter === 'friends' && styles.loreRoomTabActive,
+                  ]}
+                  onPress={() => setLoreRoomFilter('friends')}
+                  activeOpacity={0.85}
+                >
+                  <Text
+                    style={[
+                      styles.loreRoomTabText,
+                      loreRoomFilter === 'friends' && styles.loreRoomTabTextActive,
+                    ]}
+                  >
+                    Банда з КПІ 🔥
+                  </Text>
+                </TouchableOpacity>
 
-                <View style={styles.stitchQuoteArtifactAuthorRow}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                    <Image
-                      source={{ uri: userPortraitUri }}
-                      style={styles.stitchQuoteAuthorAvatar}
-                    />
-                    <Text style={styles.stitchQuoteAuthorName}>Маша</Text>
-                  </View>
-                  <Ionicons name="star" size={14} color="#C4A46C" />
-                </View>
+                <TouchableOpacity
+                  style={[
+                    styles.loreRoomTab,
+                    loreRoomFilter === 'couple' && styles.loreRoomTabActive,
+                  ]}
+                  onPress={() => setLoreRoomFilter('couple')}
+                  activeOpacity={0.85}
+                >
+                  <Text
+                    style={[
+                      styles.loreRoomTabText,
+                      loreRoomFilter === 'couple' && styles.loreRoomTabTextActive,
+                    ]}
+                  >
+                    ЧСМ ❤️
+                  </Text>
+                </TouchableOpacity>
+              </ScrollView>
+
+              {/* Media Filter Tabs */}
+              <View style={styles.loreMediaFiltersRow}>
+                {(['all', 'photo', 'quote', 'vote'] as const).map((key) => {
+                  const labels: Record<string, string> = {
+                    all: 'Усі (24)',
+                    photo: 'Фото (14)',
+                    quote: 'Цитати (6)',
+                    vote: 'Голосування (4)',
+                  };
+                  const isActive = fondFilter === key;
+
+                  return (
+                    <TouchableOpacity
+                      key={key}
+                      style={[
+                        styles.loreMediaFilterTab,
+                        isActive && styles.loreMediaFilterTabActive,
+                      ]}
+                      onPress={() => setFondFilter(key)}
+                      activeOpacity={0.8}
+                    >
+                      <Text
+                        style={[
+                          styles.loreMediaFilterText,
+                          isActive && styles.loreMediaFilterTextActive,
+                        ]}
+                      >
+                        {labels[key]}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
-            )}
 
-            {/* Artifact 3: Collective Consensus / Vote Poll Artifact */}
-            {(fondFilter === 'all' || fondFilter === 'vote') && (
-              <View style={styles.stitchVoteArtifactCard}>
-                <View style={styles.stitchVoteArtifactTopRow}>
-                  <Text style={styles.stitchVoteArtifactMeta}>ГОЛОСУВАННЯ · ЛОНГЛІСТ</Text>
-                  <Text style={styles.stitchVoteArtifactDate}>15 КВІТНЯ</Text>
-                </View>
+              {/* Living Journal Stream */}
+              <View style={styles.loreStreamSpace}>
+                {/* 1. Large 35mm Film Photo Memory Card */}
+                {(fondFilter === 'all' || fondFilter === 'photo') &&
+                  (loreRoomFilter === 'all' || loreRoomFilter === 'friends') && (
+                    <View style={styles.loreArticleCard}>
+                      {/* Card Header Info */}
+                      <View style={styles.loreArticleHeader}>
+                        <View style={styles.loreArticleHeaderLeft}>
+                          <View style={styles.loreRoomBadgeChip}>
+                            <Text style={styles.loreRoomBadgeChipText}>Банда з КПІ 🔥</Text>
+                          </View>
+                          <Text style={styles.loreBulletDot}>•</Text>
+                          <Text style={styles.loreDateStamp}>14 листопада</Text>
+                        </View>
 
-                <Text style={styles.stitchVoteArtifactQuestion}>
-                  Хто з нас найімовірніше виживе в зомбі-апокаліпсисі?
-                </Text>
+                        <View style={styles.loreGoldenRecordPill}>
+                          <Ionicons name="star" size={13} color={stitch.secondary} />
+                          <Text style={styles.loreGoldenRecordText}>Золотий запис</Text>
+                        </View>
+                      </View>
 
-                {/* Poll bars */}
-                <View style={styles.stitchPollBarsWrap}>
-                  <View style={styles.stitchPollItem}>
-                    <View style={styles.stitchPollRowText}>
-                      <Text style={[styles.stitchPollName, { fontWeight: '700' }]}>👑 Діма</Text>
-                      <Text style={[styles.stitchPollPct, { fontWeight: '700' }]}>60%</Text>
+                      {/* Film Photo with generous white matting/frame */}
+                      <View style={styles.lorePhotoMatting}>
+                        <View style={styles.lorePhotoFrame}>
+                          <Image
+                            source={{
+                              uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB0qpBpw5l9Os6ZxasZ9DBmaU0h7RBOrvQpYp3JFzGvxFrIrvQqJas3XYyyO-ep1lGsHp1BDknNAOktybB-BD1gGH8f6uWtHKfZIT7CJT1sQkclPjnpB28Oosu70dumryPvhOyxZVXUgQpmd_qzqt6MvYCYfWDPfa8CaVPWciOHEHCrbyl8PMFEv2_z3z4CITDNA4IgRwZVxLXUCmfFneboFIlW3BUhADSCB0EICY37FtzhvUMwkDwwZw',
+                            }}
+                            style={styles.lorePhotoImg}
+                          />
+                          <View style={styles.loreFilmFormatBadge}>
+                            <Text style={styles.loreFilmFormatBadgeText}>35MM FILM</Text>
+                          </View>
+                        </View>
+                      </View>
+
+                      {/* Headline & Note */}
+                      <View style={styles.loreArticleBody}>
+                        <Text style={styles.loreArticleHeadline}>
+                          Той вечір у Львові: піца під дощем
+                        </Text>
+
+                        <View style={styles.loreQuoteCalloutBox}>
+                          <Text style={styles.loreQuoteCalloutText}>
+                            <Text style={styles.loreQuoteAuthorName}>Катерина: </Text>
+                            «Забігли в найближчу браму, ділили одну салямі на чотирьох, промокли до нитки, але сміялися так, що чуло все місто».
+                          </Text>
+                        </View>
+
+                        {/* Interaction and Reaction Pills */}
+                        <View style={styles.loreArticleFooter}>
+                          <View style={styles.loreReactionsRow}>
+                            {(['🍕', '🌧️', '❤️'] as const).map((em) => {
+                              const cnt = loreReactions[em] || 0;
+                              const isReacted = userLoreReacted[em];
+
+                              return (
+                                <TouchableOpacity
+                                  key={em}
+                                  style={[
+                                    styles.loreReactionPill,
+                                    isReacted && styles.loreReactionPillActive,
+                                  ]}
+                                  onPress={() => toggleLoreEmojiReaction(em)}
+                                  activeOpacity={0.8}
+                                >
+                                  <Text style={styles.loreReactionEmoji}>{em}</Text>
+                                  <Text
+                                    style={[
+                                      styles.loreReactionCount,
+                                      isReacted && { color: stitch.secondary },
+                                    ]}
+                                  >
+                                    {cnt}
+                                  </Text>
+                                </TouchableOpacity>
+                              );
+                            })}
+                          </View>
+
+                          <TouchableOpacity
+                            accessibilityLabel="Зберегти в закладки"
+                            style={styles.loreBookmarkBtn}
+                            onPress={() => setLoreBookmarkSaved((prev) => !prev)}
+                            activeOpacity={0.8}
+                          >
+                            <Feather
+                              name="bookmark"
+                              size={18}
+                              color={loreBookmarkSaved ? stitch.secondary : stitch.onSurfaceVariant}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
                     </View>
-                    <View style={styles.stitchPollTrack}>
-                      <View style={[styles.stitchPollFill, { width: '60%', backgroundColor: colors.terracotta }]} />
+                  )}
+
+                {/* 2. Distinctive Quote Keepsake Card */}
+                {(fondFilter === 'all' || fondFilter === 'quote') &&
+                  (loreRoomFilter === 'all' || loreRoomFilter === 'couple') && (
+                    <View style={styles.loreQuoteKeepsakeCard}>
+                      <View style={styles.loreArticleHeader}>
+                        <View style={styles.loreArticleHeaderLeft}>
+                          <View style={styles.loreRoomBadgeChipLowest}>
+                            <Text style={styles.loreRoomBadgeChipText}>ЧСМ ❤️</Text>
+                          </View>
+                          <Text style={styles.loreBulletDot}>•</Text>
+                          <Text style={styles.loreDateStamp}>8 травня</Text>
+                        </View>
+
+                        <View style={styles.lorePinnedByTag}>
+                          <Feather name="map-pin" size={12} color={stitch.secondary} />
+                          <Text style={styles.lorePinnedByText}>Закріплено Алексом</Text>
+                        </View>
+                      </View>
+
+                      {/* Typography Quote Layout */}
+                      <View style={styles.loreBigQuoteBlock}>
+                        <Text style={styles.loreDecorativeBigQuote}>“</Text>
+                        <Text style={styles.loreItalicQuoteText}>
+                          «Ти — моя улюблена неконтрольована катастрофа»
+                        </Text>
+                      </View>
+
+                      <View style={styles.loreQuoteCardFooter}>
+                        <Text style={styles.loreQuoteContextText}>Сказано на кухні о 03:12</Text>
+
+                        <View style={styles.loreForeverBadge}>
+                          <Ionicons name="heart" size={14} color={stitch.secondary} />
+                          <Text style={styles.loreForeverBadgeText}>Назавжди</Text>
+                        </View>
+                      </View>
+                    </View>
+                  )}
+
+                {/* 3. Compact Vote Highlight Card */}
+                {(fondFilter === 'all' || fondFilter === 'vote') &&
+                  (loreRoomFilter === 'all' || loreRoomFilter === 'friends') && (
+                    <View style={styles.loreVoteHighlightCard}>
+                      <View style={styles.loreArticleHeader}>
+                        <View style={styles.loreArticleHeaderLeft}>
+                          <View style={styles.loreRoomBadgeChip}>
+                            <Text style={styles.loreRoomBadgeChipText}>Банда з КПІ 🔥</Text>
+                          </View>
+                          <Text style={styles.loreBulletDot}>•</Text>
+                          <Text style={styles.loreDateStamp}>15 квітня</Text>
+                        </View>
+
+                        <TouchableOpacity
+                          accessibilityLabel="Експорт результату"
+                          style={styles.loreExportBtn}
+                          onPress={handleCopyProfileInviteCode}
+                          activeOpacity={0.8}
+                        >
+                          <Feather name="share-2" size={16} color={stitch.onSurfaceVariant} />
+                        </TouchableOpacity>
+                      </View>
+
+                      <View style={styles.loreVoteCardBody}>
+                        <View style={styles.loreVoteTitleRow}>
+                          <Feather name="check-circle" size={18} color={stitch.secondary} />
+                          <Text style={styles.loreVoteQuestionText}>
+                            Хто з нас найімовірніше виживе в зомбі-апокаліпсисі?
+                          </Text>
+                        </View>
+
+                        {/* Progress Indicators with Monograph Styling */}
+                        <View style={styles.lorePollBarsContainer}>
+                          {/* Winner */}
+                          <View style={styles.lorePollBarGroup}>
+                            <View style={styles.lorePollBarLabelRow}>
+                              <View style={styles.lorePollCandidateNameRow}>
+                                <Text style={styles.lorePollWinnerName}>Діма</Text>
+                                <View style={styles.loreWinnerMiniPill}>
+                                  <Text style={styles.loreWinnerMiniPillText}>ПЕРЕМОЖЕЦЬ</Text>
+                                </View>
+                              </View>
+                              <Text style={styles.lorePollWinnerPct}>60%</Text>
+                            </View>
+                            <View style={styles.lorePollTrack}>
+                              <View style={[styles.lorePollFillBar, { width: '60%', backgroundColor: stitch.primary }]} />
+                            </View>
+                          </View>
+
+                          {/* Runner-up */}
+                          <View style={styles.lorePollBarGroup}>
+                            <View style={styles.lorePollBarLabelRow}>
+                              <Text style={styles.lorePollRunnerName}>Оля</Text>
+                              <Text style={styles.lorePollRunnerPct}>25%</Text>
+                            </View>
+                            <View style={styles.lorePollTrack}>
+                              <View style={[styles.lorePollFillBar, { width: '25%', backgroundColor: stitch.outlineVariant }]} />
+                            </View>
+                          </View>
+                        </View>
+
+                        <View style={styles.loreVoteCardFooter}>
+                          <Text style={styles.loreTotalVotedText}>Всього проголосувало: 8 друзів</Text>
+                          <Text style={styles.loreVoteClosedNotice}>Голосування закрито</Text>
+                        </View>
+                      </View>
+                    </View>
+                  )}
+
+                {/* 4. Voice Memory Snippet Card */}
+                {(fondFilter === 'all' || fondFilter === 'quote') && (
+                  <View style={styles.loreVoiceSnippetCard}>
+                    <View style={styles.loreArticleHeader}>
+                      <View style={styles.loreArticleHeaderLeft}>
+                        <View style={styles.loreRoomBadgeChipLowest}>
+                          <Text style={styles.loreRoomBadgeChipText}>Аудіозапис</Text>
+                        </View>
+                        <Text style={styles.loreBulletDot}>•</Text>
+                        <Text style={styles.loreDateStamp}>23:40 після концерту</Text>
+                      </View>
+
+                      <Text style={styles.loreVoiceDurationText}>0:14</Text>
+                    </View>
+
+                    <Text style={styles.loreVoiceHeadline}>
+                      Нічне голосове зізнання Макса
+                    </Text>
+
+                    {/* Interactive Audio Waveform Artifact */}
+                    <View style={styles.loreWaveformArtifactBox}>
+                      <TouchableOpacity
+                        style={styles.loreAudioPlayBtn}
+                        onPress={() => setLoreAudioPlaying((prev) => !prev)}
+                        activeOpacity={0.85}
+                      >
+                        <Ionicons
+                          name={loreAudioPlaying ? 'pause' : 'play'}
+                          size={18}
+                          color="#FFFFFF"
+                        />
+                      </TouchableOpacity>
+
+                      {/* Tactile Waveform Bars */}
+                      <View style={styles.loreWaveformBarsRow}>
+                        {[10, 18, 26, 14, 22, 8, 18, 22, 12, 16, 26, 18, 12, 8, 14, 6].map((h, idx) => {
+                          const barBg =
+                            idx < 4
+                              ? stitch.secondary
+                              : idx < 7
+                              ? stitch.primary
+                              : stitch.outlineVariant;
+                          return (
+                            <View
+                              key={idx}
+                              style={[
+                                styles.loreWaveBar,
+                                {
+                                  height: loreAudioPlaying ? Math.max(6, (h * 1.2) % 28) : h,
+                                  backgroundColor: barBg,
+                                },
+                              ]}
+                            />
+                          );
+                        })}
+                      </View>
+
+                      <TouchableOpacity
+                        accessibilityLabel="Завантажити аудіо"
+                        style={styles.loreDownloadAudioBtn}
+                        onPress={() => {}}
+                        activeOpacity={0.8}
+                      >
+                        <Feather name="download" size={17} color={stitch.onSurfaceVariant} />
+                      </TouchableOpacity>
                     </View>
                   </View>
-
-                  <View style={styles.stitchPollItem}>
-                    <View style={styles.stitchPollRowText}>
-                      <Text style={styles.stitchPollName}>Оля</Text>
-                      <Text style={styles.stitchPollPct}>25%</Text>
-                    </View>
-                    <View style={styles.stitchPollTrack}>
-                      <View style={[styles.stitchPollFill, { width: '25%', backgroundColor: colors.inkSecondary }]} />
-                    </View>
-                  </View>
-                </View>
-
-                <View style={styles.stitchVoteArtifactFooter}>
-                  <Text style={styles.stitchVoteRoomSub}>Банда з КПІ 🔥</Text>
-                  <Text style={styles.stitchVoteExportLink}>ЕКСПОРТ</Text>
-                </View>
+                )}
               </View>
-            )}
+
+              {/* Editorial Export Action Bar (Друкована книга спогадів) */}
+              <View style={styles.loreExportBookCard}>
+                <View style={styles.loreExportIconCircle}>
+                  <Feather name="book" size={20} color={stitch.secondary} />
+                </View>
+
+                <View style={{ gap: 4 }}>
+                  <Text style={styles.loreExportBookTitle}>Зібрати друковану книгу спогадів</Text>
+                  <Text style={styles.loreExportBookDesc}>
+                    Створіть унікальне видання у твердій палітурці з вибраних моментів ваших просторів.
+                  </Text>
+                </View>
+
+                <TouchableOpacity
+                  style={styles.loreExportCtaBtn}
+                  onPress={() => setShowPhotobookModal(true)}
+                  activeOpacity={0.88}
+                >
+                  <Text style={styles.loreExportCtaBtnText}>
+                    Сформувати PDF або замовити друк
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         )}
 
@@ -2324,6 +2651,70 @@ export default function HomeScreen() {
           </Text>
         </TouchableOpacity>
       </View>
+
+      {/* Photobook Modal */}
+      <Modal
+        visible={showPhotobookModal}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setShowPhotobookModal(false)}
+      >
+        <View style={styles.photobookModalOverlay}>
+          <View style={styles.photobookModalCard}>
+            <View style={styles.photobookModalHeader}>
+              <View>
+                <Text style={styles.photobookModalLabel}>ФОТОКНИГА СПОГАДІВ</Text>
+                <Text style={styles.photobookModalTitle}>Друкований літопис KAPSA</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setShowPhotobookModal(false)}
+                style={styles.photobookModalCloseBtn}
+              >
+                <Feather name="x" size={20} color={stitch.primary} />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.photobookPreviewMatting}>
+              <Image
+                source={{
+                  uri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB0qpBpw5l9Os6ZxasZ9DBmaU0h7RBOrvQpYp3JFzGvxFrIrvQqJas3XYyyO-ep1lGsHp1BDknNAOktybB-BD1gGH8f6uWtHKfZIT7CJT1sQkclPjnpB28Oosu70dumryPvhOyxZVXUgQpmd_qzqt6MvYCYfWDPfa8CaVPWciOHEHCrbyl8PMFEv2_z3z4CITDNA4IgRwZVxLXUCmfFneboFIlW3BUhADSCB0EICY37FtzhvUMwkDwwZw',
+                }}
+                style={styles.photobookPreviewImg}
+              />
+              <View style={styles.photobookPreviewOverlay}>
+                <Text style={styles.photobookPreviewTitle}>Банда з КПІ • 2025</Text>
+                <Text style={styles.photobookPreviewSubtitle}>Том I: 32 золоті спогади</Text>
+              </View>
+            </View>
+
+            <View style={styles.photobookModalOptions}>
+              <TouchableOpacity
+                style={styles.photobookPdfBtn}
+                onPress={() => {
+                  setShowPhotobookModal(false);
+                  Alert.alert('PDF сформовано', 'Цифрову версію літопису підготовлено для експорту.');
+                }}
+                activeOpacity={0.88}
+              >
+                <Feather name="download" size={16} color={stitch.primary} />
+                <Text style={styles.photobookPdfBtnText}>Завантажити цифровий PDF</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.photobookPrintBtn}
+                onPress={() => {
+                  setShowPhotobookModal(false);
+                  Alert.alert('Замовлення друку', 'Менеджер звʼяжеться для уточнення доставки твердої палітурки.');
+                }}
+                activeOpacity={0.88}
+              >
+                <Feather name="book" size={16} color="#FFFFFF" />
+                <Text style={styles.photobookPrintBtnText}>Замовити преміум друк</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -5697,262 +6088,675 @@ const styles = StyleSheet.create({
     color: colors.inkPrimary,
   },
 
-  // SCREEN 2 (ФОНД / LORE)
-  stitchLoreCanvas: {
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 28,
-    gap: 20,
+  // =========================================================================
+  // SCREEN 4: LORE — АРХІВ СПОГАДІВ (ЗОЛОТИЙ ФОНД)
+  // =========================================================================
+  loreScreenContainer: {
+    paddingBottom: 24,
   },
-  stitchLoreSubheader: {
+  loreTopNavBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: stitch.outlineVariant,
+    backgroundColor: stitch.surface,
   },
-  stitchLoreMetaLabel: {
-    fontSize: 10,
-    fontWeight: '700',
-    letterSpacing: 1.2,
-    color: colors.inkSecondary,
-    textTransform: 'uppercase',
+  loreNavClockBtn: {
+    padding: 4,
   },
-  stitchLoreScreenTitle: {
+  loreBrandWordmark: {
     fontFamily: fonts.serif,
     fontSize: 24,
     fontWeight: '400',
-    color: colors.inkPrimary,
     letterSpacing: -0.5,
-    marginTop: 2,
+    color: stitch.primary,
   },
-  stitchLoreRoomPill: {
+  loreNavRightActions: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    backgroundColor: colors.paperContainerLow,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colors.paperBorder,
-  },
-  stitchLoreRoomPillText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: colors.inkPrimary,
-  },
-  stitchLoreFiltersRow: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  stitchLoreFilterPill: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-    backgroundColor: colors.paperContainerLow,
-    borderWidth: 1,
-    borderColor: colors.paperBorder,
-  },
-  stitchLoreFilterPillActive: {
-    backgroundColor: colors.inkPrimary,
-    borderColor: colors.inkPrimary,
-  },
-  stitchLoreFilterPillText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: colors.inkSecondary,
-  },
-  stitchLoreFilterPillTextActive: {
-    color: '#FFFFFF',
-  },
-  stitchPhotoArtifactCard: {
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: colors.paperBorder,
-    borderRadius: 14,
-    padding: 16,
     gap: 12,
   },
-  stitchPhotoArtifactTopRow: {
+  loreSearchBtn: {
+    padding: 2,
+  },
+  loreNavAvatarBtn: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+  },
+  loreNavAvatarImg: {
+    width: '100%',
+    height: '100%',
+  },
+  loreContentCanvas: {
+    paddingHorizontal: 20,
+    paddingTop: 18,
+    gap: 20,
+  },
+  loreHeaderSection: {
+    gap: 6,
+  },
+  loreMetaHeaderRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  stitchPhotoArtifactMeta: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: colors.inkSecondary,
-    letterSpacing: 0.8,
-  },
-  stitchPhotoArtifactDate: {
-    fontSize: 10,
+  loreChronicleLabel: {
+    fontSize: 11,
     fontWeight: '600',
-    color: colors.inkMuted,
+    letterSpacing: 1.2,
+    color: stitch.secondary,
+    textTransform: 'uppercase',
   },
-  stitchPhotoArtifactImgWrap: {
-    position: 'relative',
-    width: '100%',
-    height: 220,
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  stitchPhotoArtifactImg: {
-    width: '100%',
-    height: '100%',
-  },
-  stitchPhotoArtifactStarBadge: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
+  lorePhotobookLink: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(0,0,0,0.65)',
+  },
+  lorePhotobookLinkText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: stitch.onSurfaceVariant,
+  },
+  loreHeadlineTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 28,
+    fontWeight: '400',
+    letterSpacing: -0.3,
+    color: stitch.primary,
+  },
+  loreHeadlineSubtitle: {
+    fontSize: 14,
+    color: stitch.onSurfaceVariant,
+  },
+  loreRoomTabsRow: {
+    flexDirection: 'row',
+    gap: 8,
+    paddingBottom: 2,
+  },
+  loreRoomTab: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 8,
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+  },
+  loreRoomTabActive: {
+    backgroundColor: stitch.primary,
+    borderColor: stitch.primary,
+  },
+  loreRoomTabText: {
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 0.5,
+    color: stitch.onSurface,
+  },
+  loreRoomTabTextActive: {
+    color: stitch.surface,
+  },
+  loreMediaFiltersRow: {
+    flexDirection: 'row',
+    gap: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: stitch.outlineVariant,
+    paddingBottom: 8,
+  },
+  loreMediaFilterTab: {
+    paddingBottom: 4,
+  },
+  loreMediaFilterTabActive: {
+    borderBottomWidth: 2,
+    borderBottomColor: stitch.primary,
+  },
+  loreMediaFilterText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: stitch.onSurfaceVariant,
+    letterSpacing: 0.4,
+  },
+  loreMediaFilterTextActive: {
+    color: stitch.primary,
+  },
+  loreStreamSpace: {
+    gap: 18,
+  },
+  loreArticleCard: {
+    backgroundColor: stitch.surfaceContainerLowest,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    borderRadius: 8,
+    padding: 14,
+    gap: 12,
+  },
+  loreArticleHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  loreArticleHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  loreRoomBadgeChip: {
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  loreRoomBadgeChipLowest: {
+    backgroundColor: stitch.surfaceContainerLowest,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  loreRoomBadgeChipText: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: stitch.onSurfaceVariant,
+  },
+  loreBulletDot: {
+    fontSize: 10,
+    color: stitch.outline,
+  },
+  loreDateStamp: {
+    fontSize: 11,
+    color: stitch.onSurfaceVariant,
+  },
+  loreGoldenRecordPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: stitch.secondaryFixed,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 4,
+  },
+  loreGoldenRecordText: {
+    fontSize: 10,
+    fontWeight: '600',
+    letterSpacing: 0.5,
+    color: stitch.secondary,
+  },
+  lorePhotoMatting: {
+    backgroundColor: stitch.surfaceContainerLow,
+    padding: 8,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(204, 197, 189, 0.6)',
+  },
+  lorePhotoFrame: {
+    position: 'relative',
+    width: '100%',
+    height: 220,
+    borderRadius: 3,
+    overflow: 'hidden',
+    backgroundColor: stitch.surfaceContainer,
+  },
+  lorePhotoImg: {
+    width: '100%',
+    height: '100%',
+  },
+  loreFilmFormatBadge: {
+    position: 'absolute',
+    bottom: 8,
+    right: 8,
+    backgroundColor: 'rgba(0,0,0,0.75)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 3,
+  },
+  loreFilmFormatBadgeText: {
+    fontSize: 9,
+    fontWeight: '700',
+    letterSpacing: 1.5,
+    color: '#FFFFFF',
+  },
+  loreArticleBody: {
+    gap: 10,
+  },
+  loreArticleHeadline: {
+    fontFamily: fonts.serif,
+    fontSize: 20,
+    fontWeight: '500',
+    color: stitch.primary,
+    letterSpacing: -0.2,
+  },
+  loreQuoteCalloutBox: {
+    backgroundColor: 'rgba(245, 243, 240, 0.7)',
+    borderLeftWidth: 2,
+    borderLeftColor: stitch.secondary,
+    padding: 10,
+    borderRadius: 4,
+  },
+  loreQuoteCalloutText: {
+    fontSize: 13,
+    color: stitch.onSurface,
+    lineHeight: 18,
+  },
+  loreQuoteAuthorName: {
+    fontWeight: '600',
+    color: stitch.primary,
+  },
+  loreArticleFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 4,
+  },
+  loreReactionsRow: {
+    flexDirection: 'row',
+    gap: 6,
+  },
+  loreReactionPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
   },
-  stitchPhotoArtifactStarText: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    letterSpacing: 0.8,
+  loreReactionPillActive: {
+    borderColor: stitch.secondary,
+    backgroundColor: stitch.surfaceContainerLowest,
   },
-  stitchPhotoArtifactTitle: {
-    fontFamily: fonts.serif,
-    fontSize: 17,
-    fontWeight: '600',
-    color: colors.inkPrimary,
-    lineHeight: 22,
+  loreReactionEmoji: {
+    fontSize: 12,
   },
-  stitchPhotoArtifactDesc: {
-    fontSize: 13,
-    color: colors.inkSecondary,
-    lineHeight: 18,
-  },
-  stitchPhotoArtifactFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingTop: 8,
-    borderTopWidth: 1,
-    borderTopColor: colors.paperBorder,
-  },
-  stitchPhotoReactionsRow: {
-    flexDirection: 'row',
-    gap: 6,
-  },
-  stitchPhotoReactionBadge: {
+  loreReactionCount: {
     fontSize: 11,
-    backgroundColor: colors.paperContainerLow,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    color: colors.inkPrimary,
-  },
-  stitchPhotoShareLink: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  stitchPhotoShareText: {
-    fontSize: 11,
-    color: colors.inkSecondary,
     fontWeight: '600',
+    color: stitch.onSurface,
   },
-  stitchQuoteArtifactCard: {
-    backgroundColor: colors.paperContainerLow,
+  loreBookmarkBtn: {
+    padding: 4,
+  },
+  loreQuoteKeepsakeCard: {
+    backgroundColor: stitch.surfaceContainerLow,
     borderWidth: 1,
-    borderColor: colors.paperBorder,
-    borderRadius: 14,
+    borderColor: stitch.outlineVariant,
+    borderRadius: 8,
     padding: 18,
     gap: 12,
   },
-  stitchQuoteArtifactTopRow: {
+  lorePinnedByTag: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 4,
   },
-  stitchQuoteArtifactMeta: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: colors.terracotta,
-    letterSpacing: 0.8,
-  },
-  stitchQuoteArtifactDate: {
+  lorePinnedByText: {
     fontSize: 10,
     fontWeight: '600',
-    color: colors.inkSecondary,
+    letterSpacing: 0.5,
+    color: stitch.secondary,
   },
-  stitchQuoteArtifactText: {
+  loreBigQuoteBlock: {
+    alignItems: 'center',
+    paddingVertical: 6,
+    gap: 4,
+  },
+  loreDecorativeBigQuote: {
+    fontSize: 36,
+    lineHeight: 36,
     fontFamily: fonts.serif,
-    fontSize: 19,
-    fontStyle: 'italic',
-    color: colors.inkPrimary,
-    lineHeight: 26,
+    color: 'rgba(171, 52, 37, 0.35)',
   },
-  stitchQuoteArtifactAuthorRow: {
+  loreItalicQuoteText: {
+    fontFamily: fonts.serif,
+    fontSize: 20,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    color: stitch.primary,
+    lineHeight: 26,
+    letterSpacing: -0.2,
+  },
+  loreQuoteCardFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: colors.paperBorder,
+    borderTopColor: 'rgba(204, 197, 189, 0.6)',
   },
-  stitchQuoteAuthorAvatar: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+  loreQuoteContextText: {
+    fontSize: 10,
+    color: stitch.onSurfaceVariant,
   },
-  stitchQuoteAuthorName: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: colors.inkPrimary,
-  },
-  stitchVoteArtifactCard: {
-    backgroundColor: '#FFFFFF',
+  loreForeverBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 4,
+    backgroundColor: 'rgba(255, 218, 212, 0.4)',
     borderWidth: 1,
-    borderColor: colors.paperBorder,
-    borderRadius: 14,
+    borderColor: 'rgba(171, 52, 37, 0.2)',
+  },
+  loreForeverBadgeText: {
+    fontSize: 10,
+    fontWeight: '600',
+    letterSpacing: 0.5,
+    color: stitch.secondary,
+  },
+  loreVoteHighlightCard: {
+    backgroundColor: stitch.surfaceContainerLowest,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    borderRadius: 8,
     padding: 16,
     gap: 12,
   },
-  stitchVoteArtifactTopRow: {
+  loreExportBtn: {
+    padding: 2,
+  },
+  loreVoteCardBody: {
+    gap: 12,
+  },
+  loreVoteTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+  },
+  loreVoteQuestionText: {
+    flex: 1,
+    fontFamily: fonts.serif,
+    fontSize: 17,
+    fontWeight: '500',
+    color: stitch.primary,
+    lineHeight: 22,
+  },
+  lorePollBarsContainer: {
+    gap: 10,
+  },
+  lorePollBarGroup: {
+    gap: 4,
+  },
+  lorePollBarLabelRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  stitchVoteArtifactMeta: {
+  lorePollCandidateNameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  lorePollWinnerName: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: stitch.primary,
+  },
+  loreWinnerMiniPill: {
+    backgroundColor: stitch.surfaceContainerHigh,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    borderRadius: 3,
+  },
+  loreWinnerMiniPillText: {
+    fontSize: 9,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    color: stitch.secondary,
+  },
+  lorePollWinnerPct: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: stitch.primary,
+    fontFamily: Platform.select({ web: 'monospace', default: 'Courier' }),
+  },
+  lorePollRunnerName: {
+    fontSize: 12,
+    color: stitch.onSurfaceVariant,
+  },
+  lorePollRunnerPct: {
+    fontSize: 12,
+    color: stitch.onSurfaceVariant,
+    fontFamily: Platform.select({ web: 'monospace', default: 'Courier' }),
+  },
+  lorePollTrack: {
+    width: '100%',
+    height: 7,
+    borderRadius: 4,
+    backgroundColor: stitch.surfaceContainer,
+    overflow: 'hidden',
+  },
+  lorePollFillBar: {
+    height: '100%',
+    borderRadius: 4,
+  },
+  loreVoteCardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 4,
+  },
+  loreTotalVotedText: {
+    fontSize: 11,
+    color: stitch.onSurfaceVariant,
+  },
+  loreVoteClosedNotice: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: stitch.secondary,
+  },
+  loreVoiceSnippetCard: {
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    borderRadius: 8,
+    padding: 16,
+    gap: 10,
+  },
+  loreVoiceDurationText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: stitch.secondary,
+    fontFamily: Platform.select({ web: 'monospace', default: 'Courier' }),
+  },
+  loreVoiceHeadline: {
+    fontFamily: fonts.serif,
+    fontSize: 17,
+    fontWeight: '500',
+    color: stitch.primary,
+  },
+  loreWaveformArtifactBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: stitch.surfaceContainerLowest,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    padding: 10,
+    borderRadius: 6,
+  },
+  loreAudioPlayBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: stitch.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loreWaveformBarsRow: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    height: 30,
+    paddingHorizontal: 4,
+  },
+  loreWaveBar: {
+    flex: 1,
+    borderRadius: 2,
+    maxWidth: 4,
+  },
+  loreDownloadAudioBtn: {
+    padding: 4,
+  },
+  loreExportBookCard: {
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    borderRadius: 8,
+    padding: 18,
+    backgroundColor: stitch.surfaceContainerLow,
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 6,
+  },
+  loreExportIconCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: stitch.surfaceContainerLowest,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loreExportBookTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 17,
+    fontWeight: '600',
+    color: stitch.primary,
+    textAlign: 'center',
+  },
+  loreExportBookDesc: {
+    fontSize: 12,
+    color: stitch.onSurfaceVariant,
+    textAlign: 'center',
+    lineHeight: 17,
+    paddingHorizontal: 12,
+  },
+  loreExportCtaBtn: {
+    width: '100%',
+    backgroundColor: stitch.primary,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 4,
+  },
+  loreExportCtaBtnText: {
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 1,
+    color: stitch.surface,
+    textTransform: 'uppercase',
+  },
+
+  // PHOTOBOOK MODAL STYLES
+  photobookModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(27, 28, 26, 0.65)',
+    justifyContent: 'flex-end',
+  },
+  photobookModalCard: {
+    backgroundColor: stitch.surface,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 22,
+    gap: 16,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+  },
+  photobookModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  photobookModalLabel: {
     fontSize: 10,
     fontWeight: '700',
-    color: colors.inkSecondary,
-    letterSpacing: 0.8,
+    letterSpacing: 1.2,
+    color: stitch.secondary,
+    textTransform: 'uppercase',
   },
-  stitchVoteArtifactDate: {
-    fontSize: 10,
-    fontWeight: '600',
-    color: colors.inkSecondary,
+  photobookModalTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 20,
+    fontWeight: '500',
+    color: stitch.primary,
+    marginTop: 2,
   },
-  stitchVoteArtifactQuestion: {
+  photobookModalCloseBtn: {
+    padding: 4,
+  },
+  photobookPreviewMatting: {
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    padding: 10,
+    borderRadius: 8,
+  },
+  photobookPreviewImg: {
+    width: '100%',
+    height: 180,
+    borderRadius: 4,
+  },
+  photobookPreviewOverlay: {
+    paddingTop: 10,
+    alignItems: 'center',
+    gap: 2,
+  },
+  photobookPreviewTitle: {
     fontFamily: fonts.serif,
     fontSize: 16,
     fontWeight: '600',
-    color: colors.inkPrimary,
-    lineHeight: 22,
+    color: stitch.primary,
   },
-  stitchPollBarsWrap: {
+  photobookPreviewSubtitle: {
+    fontSize: 12,
+    color: stitch.onSurfaceVariant,
+  },
+  photobookModalOptions: {
     gap: 10,
+    marginTop: 4,
   },
-  stitchPollItem: {
-    gap: 4,
-  },
-  stitchPollRowText: {
+  photobookPdfBtn: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    paddingVertical: 13,
+    borderRadius: 8,
   },
-  stitchPollName: {
+  photobookPdfBtnText: {
     fontSize: 13,
-    color: colors.inkPrimary,
+    fontWeight: '600',
+    color: stitch.primary,
+  },
+  photobookPrintBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: stitch.primary,
+    paddingVertical: 13,
+    borderRadius: 8,
+  },
+  photobookPrintBtnText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: stitch.surface,
   },
 
   // WAITING SCREEN (SEALED TIL 21:00)
