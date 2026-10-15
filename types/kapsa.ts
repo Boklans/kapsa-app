@@ -22,6 +22,7 @@ export type RoundLifecycleState = 'scheduled' | 'open' | 'revealed' | 'archived'
 
 export interface TodayRound {
   round_id: string;
+  round_number?: number;
   round_date: string;
   reveal_at: string;
   is_fully_revealed: boolean;

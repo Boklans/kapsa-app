@@ -18,7 +18,7 @@ import {
   getKapsaEffectiveRoundDate,
 } from '@/types/kapsa';
 
-const DEMO_STORAGE_KEY = 'kapsa_demo_rooms_state_v1';
+const DEMO_STORAGE_KEY = 'kapsa_demo_rooms_state_v3';
 
 const getDeviceTimezone = (): string => {
   try {
@@ -134,7 +134,7 @@ const COUPLE_DECK_PROMPTS: DemoPromptOption[] = [
     id: 'cp-1',
     format: 'vote',
     deck: 'core',
-    question_text: 'Хто з нас двох довше збирається перед виходом з дому? 🪞',
+    question_text: '«Хто з нас найімовірніше спонтанно купить квитки й зникне на вікенд? ✨»',
   },
   {
     id: 'cp-2',
@@ -169,16 +169,96 @@ const COUPLE_DECK_PROMPTS: DemoPromptOption[] = [
 const createInitialDemoData = (): Record<string, DemoRoomBundle> => {
   const todayStr = new Date().toISOString().slice(0, 10);
   return {
-    'demo-friends': {
+    'demo-couple': {
       room: {
-        id: 'demo-friends',
-        name: 'Легенди двору',
-        type: 'friends',
-        invite_code: 'KAPS26',
+        id: 'demo-couple',
+        name: 'ЧСМ ❤️',
+        type: 'couple',
+        invite_code: 'LOVE182',
         timezone: 'Europe/Kyiv',
         reveal_hour: 21,
         is_premium: false,
-        streak_count: 7,
+        streak_count: 182,
+        longest_streak: 182,
+        active_deck: 'core',
+        created_by: 'demo-user-me',
+        created_at: new Date().toISOString(),
+      },
+      activeFormat: 'vote',
+      deckPrompts: COUPLE_DECK_PROMPTS,
+      promptsByFormat: {
+        vote: {
+          id: 'p-couple-vote',
+          question_text: 'Хто з нас найімовірніше спонтанно купить квитки й зникне на вікенд? ✨',
+        },
+        show: {
+          id: 'p-couple-show',
+          question_text:
+            'Покажи свій вид з вікна або робочого місця прямо в цю секунду 🌤️',
+        },
+        answer: {
+          id: 'p-couple-answer',
+          question_text:
+            'Яка маленька деталь у поведінці партнера цього тижня змусила тебе усміхнутися? ❤️',
+        },
+      },
+      members: [
+        {
+          user_id: 'demo-user-me',
+          display_name: 'Ти',
+          avatar_emoji: '😎',
+          has_answered: false,
+          answered_at: null,
+          response_id: null,
+          text_content: null,
+          media_path: null,
+          voted_for_user_id: null,
+          voted_for_name: null,
+          reactions: {},
+        },
+        {
+          user_id: 'u-max',
+          display_name: 'Макс',
+          avatar_emoji: '🦊',
+          has_answered: true,
+          answered_at: new Date(Date.now() - 48 * 60 * 1000).toISOString(),
+          response_id: 'resp-partner-1',
+          text_content: 'Ми вже на вокзалі, а ти ще шукаєш валізу 😂',
+          media_path:
+            'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80',
+          voted_for_user_id: 'demo-user-me',
+          voted_for_name: 'Ти',
+          reactions: { '❤️': ['u-max'] },
+        },
+      ],
+      lore: [
+        {
+          id: 'lore-demo-couple-1',
+          room_id: 'demo-couple',
+          round_id: `round-${todayStr}-couple-old`,
+          response_id: 'resp-couple-old-1',
+          pinned_by: 'demo-user-me',
+          created_at: new Date(Date.now() - 365 * 86400 * 1000).toISOString(),
+          question_text: 'Той вечір у Львові: піца під дощем...',
+          author_name: 'Макс',
+          author_emoji: '🦊',
+          text_content:
+            'Забігли в найближчу браму біля площі Ринок, ділили одну салямі на двох і рахували спалахи блискавок над ратушею.',
+          media_path: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&q=80',
+          voted_for_name: null,
+        },
+      ],
+    },
+    'demo-friends': {
+      room: {
+        id: 'demo-friends',
+        name: 'Банда з КПІ 🔥',
+        type: 'friends',
+        invite_code: 'KPI2026',
+        timezone: 'Europe/Kyiv',
+        reveal_hour: 21,
+        is_premium: false,
+        streak_count: 14,
         longest_streak: 14,
         active_deck: 'core',
         created_by: 'demo-user-me',
@@ -257,6 +337,20 @@ const createInitialDemoData = (): Record<string, DemoRoomBundle> => {
           reactions: {},
           is_nudged: false,
         },
+        {
+          user_id: 'u-artem',
+          display_name: 'Артем',
+          avatar_emoji: '🚀',
+          has_answered: false,
+          answered_at: null,
+          response_id: null,
+          text_content: null,
+          media_path: null,
+          voted_for_user_id: null,
+          voted_for_name: null,
+          reactions: {},
+          is_nudged: false,
+        },
       ],
       lore: [
         {
@@ -276,37 +370,35 @@ const createInitialDemoData = (): Record<string, DemoRoomBundle> => {
         },
       ],
     },
-    'demo-couple': {
+    'demo-podil': {
       room: {
-        id: 'demo-couple',
-        name: 'Наші моменти',
-        type: 'couple',
-        invite_code: 'LOVE02',
+        id: 'demo-podil',
+        name: 'Подільські кавомани ☕',
+        type: 'friends',
+        invite_code: 'PODIL4',
         timezone: 'Europe/Kyiv',
         reveal_hour: 21,
         is_premium: false,
-        streak_count: 19,
-        longest_streak: 19,
+        streak_count: 7,
+        longest_streak: 10,
         active_deck: 'core',
         created_by: 'demo-user-me',
         created_at: new Date().toISOString(),
       },
       activeFormat: 'vote',
-      deckPrompts: COUPLE_DECK_PROMPTS,
+      deckPrompts: FRIENDS_DECK_PROMPTS,
       promptsByFormat: {
         vote: {
-          id: 'p-couple-vote',
-          question_text: 'Хто з нас двох довше збирається перед виходом з дому? 🪞',
+          id: 'p-podil-vote',
+          question_text: 'Хто з нас вип’є 4 фільтр-кави поспіль і все одно піде спати? ☕',
         },
         show: {
-          id: 'p-couple-show',
-          question_text:
-            'Покажи свій вид з вікна або робочого місця прямо в цю секунду 🌤️',
+          id: 'p-podil-show',
+          question_text: 'Покажи свою чашку прямо зараз ☕',
         },
         answer: {
-          id: 'p-couple-answer',
-          question_text:
-            'Яка маленька деталь у поведінці партнера цього тижня змусила тебе усміхнутися? ❤️',
+          id: 'p-podil-answer',
+          question_text: 'Яка найкраща кав’ярня Києва для щирої розмови?',
         },
       },
       members: [
@@ -324,36 +416,46 @@ const createInitialDemoData = (): Record<string, DemoRoomBundle> => {
           reactions: {},
         },
         {
-          user_id: 'u-partner',
-          display_name: 'Сонечко',
-          avatar_emoji: '❤️',
-          has_answered: true,
-          answered_at: new Date(Date.now() - 12 * 60 * 1000).toISOString(),
-          response_id: 'resp-partner-1',
-          text_content: 'Кажеш "я вже у взутті", коли ще навіть футболку не обрав 😘',
-          media_path:
-            'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80',
-          voted_for_user_id: 'demo-user-me',
-          voted_for_name: 'Ти',
-          reactions: { '❤️': ['u-partner'] },
-        },
-      ],
-      lore: [
-        {
-          id: 'lore-demo-couple-1',
-          room_id: 'demo-couple',
-          round_id: `round-${todayStr}-couple-old`,
-          response_id: 'resp-couple-old-1',
-          pinned_by: 'demo-user-me',
-          created_at: new Date(Date.now() - 86400 * 1000 * 3).toISOString(),
-          question_text: 'Який наш спільний спогад миттєво піднімає тобі настрій? ✨',
-          author_name: 'Сонечко',
-          author_emoji: '❤️',
-          text_content:
-            'Як ми потрапили під зливу з піцою в руках і сміялися під дахом кіоску 🍕🌧️',
+          user_id: 'u-maria',
+          display_name: 'Марія',
+          avatar_emoji: '🌟',
+          has_answered: false,
+          answered_at: null,
+          response_id: null,
+          text_content: null,
+          media_path: null,
+          voted_for_user_id: null,
           voted_for_name: null,
+          reactions: {},
+        },
+        {
+          user_id: 'u-igor',
+          display_name: 'Ігор',
+          avatar_emoji: '🔥',
+          has_answered: false,
+          answered_at: null,
+          response_id: null,
+          text_content: null,
+          media_path: null,
+          voted_for_user_id: null,
+          voted_for_name: null,
+          reactions: {},
+        },
+        {
+          user_id: 'u-anna',
+          display_name: 'Анна',
+          avatar_emoji: '🐱',
+          has_answered: false,
+          answered_at: null,
+          response_id: null,
+          text_content: null,
+          media_path: null,
+          voted_for_user_id: null,
+          voted_for_name: null,
+          reactions: {},
         },
       ],
+      lore: [],
     },
   };
 };
@@ -416,6 +518,7 @@ const buildDemoView = (
 
   const todayRound: TodayRound = {
     round_id: roundId,
+    round_number: bundle.room.streak_count || 182,
     round_date: todayStr,
     reveal_at: revealAt,
     is_fully_revealed: allAnswered,

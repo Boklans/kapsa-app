@@ -22,6 +22,7 @@ import {
   fonts,
   getAvatarPhotoUri,
   PORTRAIT_AVATARS,
+  stitch,
 } from '@/constants/colors';
 import { AVATAR_EMOJIS, useAuthStore } from '@/store/authStore';
 import { useRoomStore } from '@/store/roomStore';
@@ -67,8 +68,8 @@ export default function HomeScreen() {
   } = useRoomStore();
 
   const [activeTab, setActiveTab] = useState<HomeTab>('today');
-  type TodayStage = 'vote' | 'waiting' | 'revealed';
-  const [todayStage, setTodayStage] = useState<TodayStage>('vote');
+  type TodayStage = 'hub' | 'vote' | 'waiting' | 'revealed';
+  const [todayStage, setTodayStage] = useState<TodayStage>('hub');
   const [countdownText, setCountdownText] = useState('05:18:42');
 
   const [roomType, setRoomType] = useState<RoomType>('friends');
@@ -140,17 +141,8 @@ export default function HomeScreen() {
   useEffect(() => {
     if (todayRound?.lifecycle_state === 'revealed' || todayRound?.is_fully_revealed) {
       setTodayStage('revealed');
-    } else if (todayRound?.lifecycle_state === 'open' || !todayRound?.lifecycle_state) {
-      const myCard = cards.find(
-        (c) => c.user_id === 'demo-user-me' || c.display_name === 'Ти' || c.display_name === displayName
-      );
-      if (myCard?.has_answered || isAnswerSealed) {
-        setTodayStage('waiting');
-      } else {
-        setTodayStage('vote');
-      }
     }
-  }, [todayRound?.lifecycle_state, todayRound?.is_fully_revealed, cards, isAnswerSealed, displayName]);
+  }, [todayRound?.lifecycle_state, todayRound?.is_fully_revealed]);
 
   const myMember = cards.find(
     (c) => c.user_id === 'demo-user-me' || c.display_name === 'Ти' || c.display_name === displayName
@@ -254,7 +246,39 @@ export default function HomeScreen() {
   const featuredRoom = currentRoom;
   const featuredQuestion =
     todayRound?.question_text ||
-    'Хто з нас найімовірніше заблукає навіть з Google Maps?';
+    'Хто з нас найімовірніше спонтанно купить квитки й зникне на вікенд? ✨';
+
+  const getUkrainianDateLine = () => {
+    const days = [
+      'Неділя',
+      'Понеділок',
+      'Вівторок',
+      'Середа',
+      'Четвер',
+      'Пʼятниця',
+      'Субота',
+    ];
+    const months = [
+      'січня',
+      'лютого',
+      'березня',
+      'квітня',
+      'травня',
+      'червня',
+      'липня',
+      'серпня',
+      'вересня',
+      'жовтня',
+      'листопада',
+      'грудня',
+    ];
+    const now = new Date();
+    const dayName = days[now.getDay()];
+    const dayNum = now.getDate();
+    const monthName = months[now.getMonth()];
+    const roundNum = todayRound?.round_number || 182;
+    return `${dayName}, ${dayNum} ${monthName} • Раунд #${roundNum}`;
+  };
   const featuredFormatLabel =
     todayRound?.prompt_format === 'show'
       ? 'Фото-момент'
@@ -454,46 +478,338 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* ================================================================= */}
-        {/* TOP CONTEXT BAR (Чистий лаконічний хедер у стилі Google Stitch)   */}
+        {/* TOP CONTEXT BAR (1-в-1 з Google Stitch TopAppBar)                 */}
         {/* ================================================================= */}
         {activeTab === 'today' && (
-          <View style={styles.stitchTopContextBar}>
-            <Text style={styles.stitchKapsaBrand}>KAPSA</Text>
-
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          <View style={styles.hubHeader}>
+            <View style={styles.hubHeaderLeft}>
               <TouchableOpacity
-                style={styles.stitchCapsuleIndicatorPill}
-                onPress={() => setActiveTab('circles')}
+                accessibilityLabel="Конфіденційність"
+                style={styles.hubHeaderIconBtn}
+                onPress={() => {}}
                 activeOpacity={0.8}
               >
-                <Text style={styles.stitchDotSecondary}>●</Text>
-                <Text style={styles.stitchCapsuleIndicatorName}>
-                  {featuredRoom ? featuredRoom.name : 'ЧСМ ❤️'}
-                </Text>
-                <Text style={styles.stitchCapsuleIndicatorStreak}>🔥 14</Text>
+                <Feather name="lock" size={17} color={stitch.onSurfaceVariant} />
               </TouchableOpacity>
+              <Text style={styles.hubHeaderRoundTag}>
+                РАУНД #{todayRound?.round_number || 182}
+              </Text>
+            </View>
 
+            <View style={styles.hubHeaderCenter}>
+              <Text style={styles.hubBrandTitle}>KAPSA</Text>
+            </View>
+
+            <View style={styles.hubHeaderRight}>
               <TouchableOpacity
-                style={styles.stitchHeaderAvatarBtn}
+                accessibilityLabel="Профіль користувача"
+                style={styles.hubHeaderAvatarBtn}
                 onPress={() => setActiveTab('memories')}
                 activeOpacity={0.85}
               >
                 <Image
                   source={{ uri: userPortraitUri }}
-                  style={styles.stitchHeaderAvatarImg}
+                  style={styles.hubHeaderAvatarImg}
                 />
+                <View style={styles.hubHeaderOnlineDot} />
               </TouchableOpacity>
             </View>
           </View>
         )}
 
         {/* ================================================================= */}
-        {/* ВКЛАДКА 1: TODAY — ЕКРАН 1 (ГОЛОСУВАННЯ) / ЕКРАН 5 (РОЗКРИТТЯ)    */}
+        {/* ВКЛАДКА 1: TODAY — ЕКРАН 1 (HOME HUB) / ЕКРАН 3 (ГОЛОСУВАННЯ) / ЕКРАН 2 (РОЗКРИТТЯ) */}
         {/* ================================================================= */}
         {activeTab === 'today' && (
-          todayStage === 'vote' ? (
-            /* SCREEN 1: РАУНД: ГОЛОСУВАННЯ ТА ВІДПОВІДЬ */
+          todayStage === 'hub' ? (
+            /* ============================================================= */
+            /* SCREEN 1: ГОЛОВНИЙ ЕКРАН ДНЯ (HOME HUB) — GOOGLE STITCH       */
+            /* ============================================================= */
+            <View style={styles.hubContainer}>
+              {/* Editorial Dateline & Sub-header */}
+              <View style={styles.hubDatelineRow}>
+                <Text style={styles.hubDatelineText}>
+                  {getUkrainianDateLine()}
+                </Text>
+                <View style={styles.hubDatelineTimer}>
+                  <Feather name="clock" size={13} color={stitch.onSurfaceVariant} />
+                  <Text style={styles.hubDatelineTimerText}>До 21:00</Text>
+                </View>
+              </View>
+
+              {/* Visual Focal Point: Daily Prompt Card (Editorial Living Photobook Frame) */}
+              <View style={styles.hubFocalCard}>
+                {/* Header Info within Prompt */}
+                <View style={styles.hubFocalHeader}>
+                  <Text style={styles.hubFocalRoomTag}>
+                    {featuredRoom
+                      ? `${featuredRoom.name} • ${featuredRoom.type === 'couple' ? 'Пара' : 'Компанія'}`
+                      : 'ЧСМ ❤️ • Пара'}
+                  </Text>
+                  <View
+                    style={[
+                      styles.hubFocalTurnBadge,
+                      (isAnswerSealed || myMember.has_answered) && styles.hubFocalSealedBadge,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.hubFocalTurnBadgeText,
+                        (isAnswerSealed || myMember.has_answered) && styles.hubFocalSealedBadgeText,
+                      ]}
+                    >
+                      {isAnswerSealed || myMember.has_answered ? 'ЗАПЕЧАТАНО' : 'ТВІЙ ХІД'}
+                    </Text>
+                  </View>
+                </View>
+
+                {/* The Central Prompt Typography */}
+                <View style={styles.hubFocalQuestionWrap}>
+                  <Text style={styles.hubFocalQuestionMeta}>ПИТАННЯ ДНЯ</Text>
+                  <Text style={styles.hubFocalQuestionText}>
+                    «{featuredQuestion}»
+                  </Text>
+                </View>
+
+                {/* Participant Pulse & Status */}
+                <View style={styles.hubFocalPulseSection}>
+                  <View style={styles.hubFocalPulseHeader}>
+                    <Text style={styles.hubFocalPulseTitle}>
+                      ПУЛЬС КАПСУЛИ • {isAnswerSealed || myMember.has_answered ? '2 з 2 відповіли' : '1 з 2 відповіли'}
+                    </Text>
+                    <Text style={styles.hubFocalPulseSub}>
+                      Макс запечатав о 19:42
+                    </Text>
+                  </View>
+
+                  {/* Avatars Row with Interaction Feedback */}
+                  <View style={styles.hubFocalAvatarsRow}>
+                    {/* Partner Avatar (Completed) */}
+                    <View style={styles.hubFocalAvatarCol}>
+                      <View style={styles.hubFocalAvatarWrap}>
+                        <Image
+                          source={{ uri: PORTRAIT_AVATARS['🦊'] }}
+                          style={styles.hubFocalAvatarImg}
+                        />
+                        <View style={styles.hubFocalCheckBadge}>
+                          <Feather name="check" size={11} color={stitch.primary} />
+                        </View>
+                      </View>
+                      <Text style={styles.hubFocalAvatarName}>Макс</Text>
+                      <Text style={styles.hubFocalAvatarSubDone}>хід зроблено</Text>
+                    </View>
+
+                    {/* Current User Avatar */}
+                    <View style={styles.hubFocalAvatarCol}>
+                      <View
+                        style={[
+                          styles.hubFocalAvatarWrap,
+                          !(isAnswerSealed || myMember.has_answered) && styles.hubFocalAvatarWrapActive,
+                        ]}
+                      >
+                        <Image
+                          source={{ uri: userPortraitUri }}
+                          style={styles.hubFocalAvatarImg}
+                        />
+                        {isAnswerSealed || myMember.has_answered ? (
+                          <View style={styles.hubFocalCheckBadge}>
+                            <Feather name="check" size={11} color={stitch.primary} />
+                          </View>
+                        ) : (
+                          <View style={styles.hubFocalYouBadge}>
+                            <Text style={styles.hubFocalYouBadgeText}>ТИ</Text>
+                          </View>
+                        )}
+                      </View>
+                      <Text
+                        style={[
+                          styles.hubFocalAvatarName,
+                          !(isAnswerSealed || myMember.has_answered) && styles.hubFocalAvatarNameActive,
+                        ]}
+                      >
+                        Ти
+                      </Text>
+                      <Text
+                        style={[
+                          styles.hubFocalAvatarSubDone,
+                          !(isAnswerSealed || myMember.has_answered) && styles.hubFocalAvatarSubAction,
+                        ]}
+                      >
+                        {isAnswerSealed || myMember.has_answered ? 'хід зроблено' : 'твій хід 🔥'}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+
+                {/* Primary Action Call to Action Button */}
+                {isAnswerSealed || myMember.has_answered ? (
+                  <TouchableOpacity
+                    style={styles.hubFocalWaitingBtn}
+                    onPress={() => setTodayStage('waiting')}
+                    activeOpacity={0.88}
+                  >
+                    <Feather name="lock" size={15} color={stitch.onSurfaceVariant} />
+                    <Text style={styles.hubFocalWaitingBtnText}>
+                      Капсулу запечатано • Розкриття о 21:00
+                    </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={styles.hubFocalPrimaryBtn}
+                    onPress={() => setTodayStage('vote')}
+                    activeOpacity={0.88}
+                  >
+                    <Text style={styles.hubFocalPrimaryBtnText}>Відповісти на питання</Text>
+                    <Feather name="arrow-right" size={17} color="#FFFFFF" />
+                  </TouchableOpacity>
+                )}
+              </View>
+
+              {/* Secondary Section: My Rooms (Мої кімнати (2)) */}
+              <View style={styles.hubRoomsSection}>
+                <View style={styles.hubRoomsHeader}>
+                  <Text style={styles.hubRoomsTitle}>
+                    МОЇ КІМНАТИ ({Math.max(rooms.length, 2)})
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.hubRoomsCreateBtn}
+                    onPress={() => setActiveTab('create')}
+                    activeOpacity={0.8}
+                  >
+                    <Feather name="plus" size={13} color={stitch.secondary} />
+                    <Text style={styles.hubRoomsCreateBtnText}>Створити</Text>
+                  </TouchableOpacity>
+                </View>
+
+                {/* Room 1: Банда з КПІ 🔥 */}
+                <TouchableOpacity
+                  style={styles.hubRoomCard}
+                  onPress={() => {
+                    const r = rooms.find((item) => item.name.includes('КПІ')) || rooms[1] || rooms[0];
+                    if (r) {
+                      loadRoomDashboard(r.id);
+                      router.push(`/room/${r.id}`);
+                    } else {
+                      setActiveTab('circles');
+                    }
+                  }}
+                  activeOpacity={0.85}
+                >
+                  <View style={styles.hubRoomCardLeft}>
+                    <View style={styles.hubRoomCardImgWrap}>
+                      <Image
+                        source={{
+                          uri: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80',
+                        }}
+                        style={styles.hubRoomCardImg}
+                      />
+                    </View>
+                    <View style={styles.hubRoomCardInfo}>
+                      <Text style={styles.hubRoomCardTitle}>Банда з КПІ 🔥</Text>
+                      <View style={styles.hubRoomCardStatusRow}>
+                        <View style={styles.hubRoomStatusDot} />
+                        <Text style={styles.hubRoomCardStatusText}>
+                          2 з 5 відповіли • Розкриття о 21:00
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                  <View style={styles.hubRoomCardRight}>
+                    <Text style={styles.hubRoomMembersMeta}>5 учасників</Text>
+                    <Feather name="arrow-up-right" size={16} color={stitch.outline} />
+                  </View>
+                </TouchableOpacity>
+
+                {/* Room 2: Подільські кавомани ☕ */}
+                <TouchableOpacity
+                  style={styles.hubRoomCard}
+                  onPress={() => {
+                    const r = rooms.find((item) => item.name.includes('кавомани')) || rooms[2] || rooms[0];
+                    if (r) {
+                      loadRoomDashboard(r.id);
+                      router.push(`/room/${r.id}`);
+                    } else {
+                      setActiveTab('circles');
+                    }
+                  }}
+                  activeOpacity={0.85}
+                >
+                  <View style={styles.hubRoomCardLeft}>
+                    <View style={styles.hubRoomCardImgWrap}>
+                      <Image
+                        source={{
+                          uri: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&q=80',
+                        }}
+                        style={styles.hubRoomCardImg}
+                      />
+                    </View>
+                    <View style={styles.hubRoomCardInfo}>
+                      <Text style={styles.hubRoomCardTitle}>Подільські кавомани ☕</Text>
+                      <View style={styles.hubRoomCardStatusRow}>
+                        <View style={[styles.hubRoomStatusDot, { backgroundColor: stitch.secondary }]} />
+                        <Text style={[styles.hubRoomCardStatusText, { color: stitch.secondary, fontWeight: '600' }]}>
+                          Очікуємо твою відповідь
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                  <View style={styles.hubRoomCardRight}>
+                    <Text style={styles.hubRoomMembersMeta}>4 учасники</Text>
+                    <Feather name="arrow-up-right" size={16} color={stitch.outline} />
+                  </View>
+                </TouchableOpacity>
+              </View>
+
+              {/* Quiet Card at the Bottom: Memory of the Day from Lore */}
+              <View style={styles.hubLoreCard}>
+                <View style={styles.hubLoreCardHeader}>
+                  <View style={styles.hubLoreCardHeaderLeft}>
+                    <Feather name="bookmark" size={14} color={stitch.secondary} />
+                    <Text style={styles.hubLoreCardTag}>СПОГАД ЦЬОГО ДНЯ З LORE</Text>
+                  </View>
+                  <Text style={styles.hubLoreCardTime}>Рік тому</Text>
+                </View>
+
+                <View style={styles.hubLoreCardBody}>
+                  <View style={styles.hubLoreCardImgWrap}>
+                    <Image
+                      source={{
+                        uri: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&q=80',
+                      }}
+                      style={styles.hubLoreCardImg}
+                    />
+                  </View>
+                  <View style={styles.hubLoreCardContent}>
+                    <Text style={styles.hubLoreCardQuote}>
+                      «Той вечір у Львові: піца під дощем...»
+                    </Text>
+                    <Text style={styles.hubLoreCardExcerpt} numberOfLines={2}>
+                      Забігли в найближчу браму біля площі Ринок, ділили одну салямі на двох і рахували спалахи блискавок над ратушею.
+                    </Text>
+                    <TouchableOpacity
+                      onPress={() => setActiveTab('fond')}
+                      activeOpacity={0.8}
+                    >
+                      <Text style={styles.hubLoreCardLink}>
+                        Гортати фотокапсулу →
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </View>
+          ) : todayStage === 'vote' ? (
+            /* SCREEN 3: РАУНД: ГОЛОСУВАННЯ ТА ВІДПОВІДЬ */
             <View style={styles.stitchVoteCanvas}>
+              {/* Back to Home Hub button */}
+              <TouchableOpacity
+                style={styles.voteBackButton}
+                onPress={() => setTodayStage('hub')}
+                activeOpacity={0.8}
+              >
+                <Feather name="arrow-left" size={15} color={colors.inkPrimary} />
+                <Text style={styles.voteBackButtonText}>На головну</Text>
+              </TouchableOpacity>
               {/* Ritual Number & Date Ribbon */}
               <View style={styles.stitchRibbonRow}>
                 <View style={styles.stitchRibbonLeft}>
@@ -733,6 +1049,15 @@ export default function HomeScreen() {
             /* SCREEN 2: ЗАПЕЧАТАНО СУРГУЧЕМ (WAITING STATE ДО 21:00)        */
             /* ============================================================= */
             <View style={styles.stitchSealedWaitingCanvas}>
+              {/* Back to Home Hub button */}
+              <TouchableOpacity
+                style={styles.voteBackButton}
+                onPress={() => setTodayStage('hub')}
+                activeOpacity={0.8}
+              >
+                <Feather name="arrow-left" size={15} color={colors.inkPrimary} />
+                <Text style={styles.voteBackButtonText}>На головну</Text>
+              </TouchableOpacity>
               {/* Ribbon */}
               <View style={styles.stitchRibbonRow}>
                 <View style={styles.stitchRibbonLeft}>
@@ -3345,6 +3670,465 @@ const styles = StyleSheet.create({
   },
   stitchNavTabLabelActive: {
     fontWeight: '700',
+    color: colors.inkPrimary,
+  },
+
+  // =========================================================================
+  // HOME HUB (SCREEN 1) STYLES — 1-В-1 З GOOGLE STITCH DESIGN
+  // =========================================================================
+  hubHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: stitch.outlineVariant,
+    backgroundColor: stitch.surface,
+  },
+  hubHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  hubHeaderIconBtn: {
+    padding: 2,
+  },
+  hubHeaderRoundTag: {
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: stitch.onSurfaceVariant,
+  },
+  hubHeaderCenter: {
+    alignItems: 'center',
+  },
+  hubBrandTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 22,
+    letterSpacing: 4,
+    color: stitch.primary,
+    fontWeight: '400',
+  },
+  hubHeaderRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  hubHeaderAvatarBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    position: 'relative',
+  },
+  hubHeaderAvatarImg: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 16,
+  },
+  hubHeaderOnlineDot: {
+    position: 'absolute',
+    bottom: -1,
+    right: -1,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: stitch.secondary,
+    borderWidth: 1.5,
+    borderColor: stitch.surface,
+  },
+  hubContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 32,
+    gap: 24,
+  },
+  hubDatelineRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: stitch.outlineVariant,
+    paddingBottom: 10,
+  },
+  hubDatelineText: {
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: stitch.onSurfaceVariant,
+  },
+  hubDatelineTimer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  hubDatelineTimerText: {
+    fontSize: 11,
+    fontWeight: '500',
+    color: stitch.onSurfaceVariant,
+  },
+  hubFocalCard: {
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    borderRadius: 8,
+    padding: 20,
+    gap: 16,
+  },
+  hubFocalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  hubFocalRoomTag: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: stitch.primary,
+    letterSpacing: 0.5,
+  },
+  hubFocalTurnBadge: {
+    backgroundColor: stitch.secondaryFixed,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 4,
+  },
+  hubFocalTurnBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: stitch.secondary,
+    letterSpacing: 0.8,
+  },
+  hubFocalSealedBadge: {
+    backgroundColor: stitch.surfaceContainerHighest,
+  },
+  hubFocalSealedBadgeText: {
+    color: stitch.onSurfaceVariant,
+  },
+  hubFocalQuestionWrap: {
+    gap: 6,
+  },
+  hubFocalQuestionMeta: {
+    fontSize: 10,
+    fontWeight: '600',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: stitch.onSurfaceVariant,
+  },
+  hubFocalQuestionText: {
+    fontFamily: fonts.serif,
+    fontSize: 22,
+    fontStyle: 'italic',
+    lineHeight: 30,
+    color: stitch.primary,
+  },
+  hubFocalPulseSection: {
+    borderTopWidth: 1,
+    borderTopColor: stitch.outlineVariant,
+    paddingTop: 14,
+    gap: 12,
+  },
+  hubFocalPulseHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  hubFocalPulseTitle: {
+    fontSize: 10,
+    fontWeight: '600',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: stitch.onSurfaceVariant,
+  },
+  hubFocalPulseSub: {
+    fontSize: 11,
+    color: stitch.onSurfaceVariant,
+  },
+  hubFocalAvatarsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 24,
+  },
+  hubFocalAvatarCol: {
+    alignItems: 'center',
+    gap: 4,
+  },
+  hubFocalAvatarWrap: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    position: 'relative',
+    backgroundColor: stitch.surface,
+  },
+  hubFocalAvatarWrapActive: {
+    borderWidth: 2,
+    borderColor: stitch.secondary,
+  },
+  hubFocalAvatarImg: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 24,
+  },
+  hubFocalCheckBadge: {
+    position: 'absolute',
+    bottom: -3,
+    right: -3,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    width: 18,
+    height: 18,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  hubFocalYouBadge: {
+    position: 'absolute',
+    bottom: -3,
+    right: -3,
+    backgroundColor: stitch.secondary,
+    borderRadius: 3,
+    paddingHorizontal: 4,
+    paddingVertical: 1,
+  },
+  hubFocalYouBadgeText: {
+    fontSize: 9,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    letterSpacing: -0.5,
+  },
+  hubFocalAvatarName: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: stitch.onSurface,
+  },
+  hubFocalAvatarNameActive: {
+    fontWeight: '600',
+    color: stitch.primary,
+  },
+  hubFocalAvatarSubDone: {
+    fontSize: 10,
+    color: stitch.onSurfaceVariant,
+  },
+  hubFocalAvatarSubAction: {
+    color: stitch.secondary,
+    fontWeight: '600',
+  },
+  hubFocalPrimaryBtn: {
+    backgroundColor: stitch.secondary,
+    borderRadius: 6,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginTop: 4,
+  },
+  hubFocalPrimaryBtnText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    letterSpacing: 0.2,
+  },
+  hubFocalWaitingBtn: {
+    backgroundColor: stitch.surfaceContainer,
+    borderRadius: 6,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    marginTop: 4,
+  },
+  hubFocalWaitingBtnText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: stitch.onSurfaceVariant,
+  },
+  hubRoomsSection: {
+    gap: 12,
+  },
+  hubRoomsHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: stitch.outlineVariant,
+    paddingBottom: 8,
+  },
+  hubRoomsTitle: {
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: stitch.onSurface,
+  },
+  hubRoomsCreateBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  hubRoomsCreateBtnText: {
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: stitch.secondary,
+  },
+  hubRoomCard: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    borderRadius: 8,
+    padding: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  hubRoomCardLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    flex: 1,
+  },
+  hubRoomCardImgWrap: {
+    width: 44,
+    height: 44,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    overflow: 'hidden',
+    backgroundColor: stitch.surfaceContainer,
+  },
+  hubRoomCardImg: {
+    width: '100%',
+    height: '100%',
+  },
+  hubRoomCardInfo: {
+    gap: 3,
+    flex: 1,
+  },
+  hubRoomCardTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 16,
+    fontWeight: '600',
+    color: stitch.primary,
+  },
+  hubRoomCardStatusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  hubRoomStatusDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: stitch.secondary,
+  },
+  hubRoomCardStatusText: {
+    fontSize: 12,
+    color: stitch.onSurfaceVariant,
+  },
+  hubRoomCardRight: {
+    alignItems: 'flex-end',
+    gap: 4,
+    paddingLeft: 8,
+  },
+  hubRoomMembersMeta: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: stitch.onSurfaceVariant,
+    letterSpacing: 0.4,
+  },
+  hubLoreCard: {
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    borderRadius: 8,
+    padding: 16,
+    gap: 12,
+  },
+  hubLoreCardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  hubLoreCardHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  hubLoreCardTag: {
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: stitch.onSurfaceVariant,
+  },
+  hubLoreCardTime: {
+    fontSize: 11,
+    color: stitch.onSurfaceVariant,
+  },
+  hubLoreCardBody: {
+    flexDirection: 'row',
+    gap: 14,
+    alignItems: 'flex-start',
+  },
+  hubLoreCardImgWrap: {
+    width: 76,
+    height: 92,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    overflow: 'hidden',
+    backgroundColor: stitch.surface,
+  },
+  hubLoreCardImg: {
+    width: '100%',
+    height: '100%',
+  },
+  hubLoreCardContent: {
+    flex: 1,
+    gap: 5,
+  },
+  hubLoreCardQuote: {
+    fontFamily: fonts.serif,
+    fontSize: 15,
+    fontStyle: 'italic',
+    fontWeight: '500',
+    color: stitch.primary,
+    lineHeight: 20,
+  },
+  hubLoreCardExcerpt: {
+    fontSize: 12,
+    lineHeight: 17,
+    color: stitch.onSurfaceVariant,
+  },
+  hubLoreCardLink: {
+    fontSize: 11,
+    fontWeight: '600',
+    textDecorationLine: 'underline',
+    color: stitch.primary,
+    marginTop: 4,
+  },
+  voteBackButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 8,
+    alignSelf: 'flex-start',
+  },
+  voteBackButtonText: {
+    fontSize: 12,
+    fontWeight: '600',
     color: colors.inkPrimary,
   },
 
