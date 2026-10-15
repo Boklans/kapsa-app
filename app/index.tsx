@@ -1612,222 +1612,321 @@ export default function HomeScreen() {
         )}
 
         {/* ================================================================= */}
-        {/* ВКЛАДКА 2: CIRCLES — ЕКРАН 3 З GOOGLE STITCH (Кімнати та спілки)   */}
+        {/* ВКЛАДКА 2: CIRCLES — ЕКРАН 5 З GOOGLE STITCH (Кімнати та спілки)   */}
         {/* ================================================================= */}
         {activeTab === 'circles' && (
-          <View style={styles.stitchCirclesContainer}>
-            {/* Header Intro */}
-            <View style={styles.stitchCirclesIntro}>
-              <View style={styles.stitchSectionHeaderRow}>
-                <Text style={styles.stitchSectionTagMuted}>ПРОСТОРИ ТА СПІЛКИ</Text>
-                <Text style={styles.stitchSectionTagSecondary}>3 АКТИВНІ КІМНАТИ</Text>
-              </View>
-              <Text style={styles.stitchScreenTitle}>Кімнати</Text>
-              <Text style={styles.stitchCirclesSubtitle}>
-                Приватні осередки для пари та невеликих компаній до 8 друзів.
-              </Text>
-            </View>
+          <View style={styles.circlesScreenContainer}>
+            {/* TopAppBar Component */}
+            <View style={styles.circlesTopNavBar}>
+              <TouchableOpacity
+                accessibilityLabel="Приватні простори"
+                style={styles.circlesNavClockBtn}
+                onPress={() => {}}
+                activeOpacity={0.8}
+              >
+                <Feather name="lock" size={19} color={stitch.primary} />
+              </TouchableOpacity>
 
-            {/* Quick Join Code Strip */}
-            <View style={styles.stitchQuickJoinStrip}>
-              <View style={styles.stitchQuickJoinLeft}>
-                <View style={styles.stitchQuickJoinIconWrap}>
-                  <Feather name="key" size={15} color={colors.inkSecondary} />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.stitchQuickJoinTitle}>МАЄШ КОД ЗАПРОШЕННЯ?</Text>
-                  <Text style={styles.stitchQuickJoinSub}>Приєднатися до кола друзів</Text>
-                </View>
+              <View style={styles.circlesBrandCenter}>
+                <Text style={styles.circlesBrandTitle}>KAPSA</Text>
+                <Text style={styles.circlesBrandSub}>ПРИВАТНІ ПРОСТОРИ</Text>
               </View>
 
               <TouchableOpacity
-                style={styles.stitchQuickJoinBtn}
-                onPress={() => setShowQuickJoinInput((prev) => !prev)}
+                accessibilityLabel="Профіль користувача"
+                style={styles.circlesNavAvatarBtn}
+                onPress={() => setActiveTab('memories')}
                 activeOpacity={0.85}
               >
-                <Text style={styles.stitchQuickJoinBtnText}>ВВЕСТИ КОД</Text>
+                <Image
+                  source={{ uri: userPortraitUri }}
+                  style={styles.circlesNavAvatarImg}
+                />
+                <View style={styles.circlesOnlineDot} />
               </TouchableOpacity>
             </View>
 
-            {showQuickJoinInput && (
-              <View style={styles.stitchJoinInputRow}>
-                <TextInput
-                  style={[styles.editorialInput, { flex: 1, textTransform: 'uppercase' }]}
-                  placeholder="KAPS26"
-                  placeholderTextColor={colors.inkMuted}
-                  autoCapitalize="characters"
-                  maxLength={6}
-                  value={inviteCode}
-                  onChangeText={setInviteCode}
-                />
-                <TouchableOpacity
-                  style={styles.saveProfileBtn}
-                  onPress={handleOpenJoinScreen}
-                >
-                  <Text style={styles.saveProfileBtnText}>Увійти →</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-
-            {/* Duo Capsule: Category 1 (Featured Intimate Pair) */}
-            <View style={styles.stitchCapsuleSection}>
-              <View style={styles.stitchCapsuleSectionHeader}>
-                <View style={styles.stitchCapsuleHeaderLeft}>
-                  <Ionicons name="heart" size={15} color={colors.terracotta} />
-                  <Text style={styles.stitchCapsuleSectionTitle}>
-                    ОСОБИСТА КАПСУЛА · ПАРА
-                  </Text>
+            <View style={styles.circlesContentCanvas}>
+              {/* Section 1: Editorial Header Section */}
+              <View style={styles.circlesHeaderSection}>
+                <View style={styles.circlesHeaderRow}>
+                  <Text style={styles.circlesHeadlineTitle}>Кімнати</Text>
+                  <Text style={styles.circlesActiveCountTag}>3 активні</Text>
                 </View>
-                <Text style={styles.stitchSectionTagSecondary}>ТВІЙ ХІД</Text>
+                <Text style={styles.circlesHeaderDesc}>
+                  Закриті капсули для пари та компаній до 8 друзів. Тихий простір без шуму та нескінченних стрічок.
+                </Text>
               </View>
 
-              {/* Duo Card */}
-              <TouchableOpacity
-                style={styles.stitchDuoCard}
-                activeOpacity={0.9}
-                onPress={() => setActiveTab('today')}
-              >
-                <View style={styles.stitchDuoTopRow}>
-                  <View style={styles.stitchDuoAvatarsAndName}>
-                    <View style={styles.stitchOverlappingAvatarsWrap}>
-                      <Image
-                        source={{ uri: userPortraitUri }}
-                        style={styles.stitchOverlapAvatar1}
-                      />
-                      <Image
-                        source={{ uri: getAvatarPhotoUri(undefined, 2) }}
-                        style={styles.stitchOverlapAvatar2}
-                      />
-                    </View>
-                    <View>
-                      <Text style={styles.stitchDuoRoomName}>ЧСМ ❤️</Text>
-                      <Text style={styles.stitchDuoRoomSub}>Катерина & Макс</Text>
-                    </View>
+              {/* Section 2: Join Room Action Card */}
+              <View style={styles.circlesJoinCard}>
+                <View style={styles.circlesJoinHeaderRow}>
+                  <View style={styles.circlesJoinTitleLeft}>
+                    <Feather name="key" size={16} color={stitch.onSurfaceVariant} />
+                    <Text style={styles.circlesJoinTitleText}>Маєш код запрошення?</Text>
                   </View>
+                  <Text style={styles.circlesSecretKeyLabel}>СЕКРЕТНИЙ КЛЮЧ</Text>
+                </View>
 
-                  <View style={styles.stitchStreakBadge}>
-                    <Text style={styles.stitchStreakBadgeText}>14 ДНІВ В СИНКУ 🔥</Text>
+                <View style={styles.circlesJoinInputRow}>
+                  <TextInput
+                    style={styles.circlesJoinTextInput}
+                    placeholder="#KAPS-8492"
+                    placeholderTextColor={stitch.outlineVariant}
+                    autoCapitalize="characters"
+                    maxLength={10}
+                    value={inviteCode}
+                    onChangeText={setInviteCode}
+                  />
+                  <TouchableOpacity
+                    style={styles.circlesJoinBtn}
+                    onPress={handleOpenJoinScreen}
+                    activeOpacity={0.88}
+                  >
+                    <Text style={styles.circlesJoinBtnText}>Приєднатися</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {/* Section 3: Особиста капсула • Пара (1) */}
+              <View style={styles.circlesCategorySection}>
+                <View style={styles.circlesCategoryHeaderRow}>
+                  <View style={styles.circlesCategoryTitleLeft}>
+                    <Text style={styles.circlesCategoryTitleText}>ОСОБИСТА КАПСУЛА</Text>
+                    <Text style={styles.circlesBulletDot}>•</Text>
+                    <Text style={styles.circlesCategorySubtitle}>Пара (1)</Text>
+                  </View>
+                  <View style={styles.circlesStreakPill}>
+                    <Text style={styles.circlesStreakPillText}>14 днів у синку 🔥</Text>
                   </View>
                 </View>
 
-                <View style={styles.stitchDuoQuestionBlock}>
-                  <Text style={styles.stitchDuoQuestionLabel}>ДЕННЕ ПИТАННЯ #182 • ДО 21:00</Text>
-                  <Text style={styles.stitchDuoQuestionText}>
-                    «Хто з нас найімовірніше заснув би просто посеред гучної вечірки? ✨»
-                  </Text>
-                </View>
+                {/* Intimate Couple Card */}
+                <View style={styles.circlesCoupleCard}>
+                  <View style={styles.circlesCoupleCardTop}>
+                    <View style={styles.circlesCoupleMetaLeft}>
+                      {/* Dual Avatar Overlay */}
+                      <View style={styles.circlesDualAvatarsWrap}>
+                        <Image
+                          source={{ uri: userPortraitUri }}
+                          style={styles.circlesDualAvatar1}
+                        />
+                        <Image
+                          source={{ uri: PORTRAIT_AVATARS['🦊'] }}
+                          style={styles.circlesDualAvatar2}
+                        />
+                      </View>
+                      <View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                          <Text style={styles.circlesRoomNameTitle}>ЧСМ</Text>
+                          <Text style={{ fontSize: 13 }}>❤️</Text>
+                        </View>
+                        <Text style={styles.circlesRoomMembersSubtitle}>Катерина & Макс</Text>
+                      </View>
+                    </View>
 
-                <View style={styles.stitchDuoStatusRow}>
-                  <View style={styles.stitchDuoPulseLeft}>
-                    <View style={styles.stitchPulseDot} />
-                    <Text style={styles.stitchDuoPulseText}>
-                      Макс уже запечатав відповідь ⏳
+                    {/* Active Badge */}
+                    <View style={styles.circlesYourTurnBadge}>
+                      <View style={styles.circlesPulsingDot} />
+                      <Text style={styles.circlesYourTurnText}>ТВІЙ ХІД</Text>
+                    </View>
+                  </View>
+
+                  {/* Prompt Question (Newsreader Serif) */}
+                  <View style={styles.circlesDailyPromptBox}>
+                    <Text style={styles.circlesDailyPromptTag}>СПІЛЬНЕ ПИТАННЯ ДНЯ</Text>
+                    <Text style={styles.circlesDailyPromptText}>
+                      «Хто з нас найімовірніше засне посеред гучної вечірки? ✨»
                     </Text>
                   </View>
 
-                  <TouchableOpacity
-                    style={styles.stitchAnswerNowBtn}
-                    onPress={() => setActiveTab('today')}
-                    activeOpacity={0.85}
-                  >
-                    <Text style={styles.stitchAnswerNowBtnText}>ВІДПОВІСТИ →</Text>
-                  </TouchableOpacity>
-                </View>
-              </TouchableOpacity>
-            </View>
+                  {/* Member Status and Action */}
+                  <View style={styles.circlesCoupleCardFooter}>
+                    <View style={styles.circlesLockStatusRow}>
+                      <Feather name="lock" size={14} color={stitch.secondary} />
+                      <Text style={styles.circlesLockStatusText}>Макс запечатав о 19:42</Text>
+                    </View>
 
-            {/* Circles / Groups: Category 2 */}
-            <View style={styles.stitchCapsuleSection}>
-              <View style={styles.stitchCapsuleSectionHeader}>
-                <View style={styles.stitchCapsuleHeaderLeft}>
-                  <Feather name="users" size={15} color={colors.inkPrimary} />
-                  <Text style={styles.stitchCapsuleSectionTitle}>
-                    КОМПАНІЇ ДРУЗІВ · СПІЛКИ
-                  </Text>
+                    <TouchableOpacity
+                      style={styles.circlesAnswerBtn}
+                      onPress={() => {
+                        setTodayStage('vote');
+                        setActiveTab('today');
+                      }}
+                      activeOpacity={0.85}
+                    >
+                      <Text style={styles.circlesAnswerBtnText}>Відповісти</Text>
+                      <Feather name="arrow-right" size={15} color={stitch.primary} />
+                    </TouchableOpacity>
+                  </View>
                 </View>
-                <Text style={styles.stitchSectionTagMuted}>2 КІМНАТИ</Text>
               </View>
 
-              {/* Group Card 1: Банда з КПІ */}
-              <TouchableOpacity
-                style={styles.stitchGroupCard}
-                activeOpacity={0.88}
-                onPress={() => {
-                  const friendsRoom = rooms.find((r) => r.type === 'friends') || rooms[0];
-                  if (friendsRoom) router.push(`/room/${friendsRoom.id}`);
-                }}
-              >
-                <View style={styles.stitchGroupCardTop}>
-                  <View style={{ flex: 1 }}>
-                    <View style={styles.stitchGroupNameRow}>
-                      <Text style={styles.stitchGroupName}>Банда з КПІ 🔥</Text>
-                      <View style={styles.stitchCountTag}>
-                        <Text style={styles.stitchCountTagText}>5 ДРУЗІВ</Text>
+              {/* Section 4: Компанії друзів • Спілки (2) */}
+              <View style={styles.circlesCategorySection}>
+                <View style={styles.circlesCategoryHeaderRow}>
+                  <View style={styles.circlesCategoryTitleLeft}>
+                    <Text style={styles.circlesCategoryTitleText}>КОМПАНІЇ ДРУЗІВ</Text>
+                    <Text style={styles.circlesBulletDot}>•</Text>
+                    <Text style={styles.circlesCategorySubtitle}>Спілки (2)</Text>
+                  </View>
+                  <Text style={styles.circlesLimitText}>Ліміт до 8 осіб</Text>
+                </View>
+
+                {/* Room Card 1: Банда з КПІ 🔥 */}
+                <View style={styles.circlesRoomCard}>
+                  <View style={styles.circlesRoomCardTop}>
+                    <View>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                        <Text style={styles.circlesRoomNameTitle}>Банда з КПІ</Text>
+                        <Text style={{ fontSize: 13 }}>🔥</Text>
+                      </View>
+                      <Text style={styles.circlesRoomMembersSubtitle}>
+                        5 учасників • Щоденний ритуал о 21:00
+                      </Text>
+                    </View>
+
+                    <View style={styles.circlesUnsealedBadge}>
+                      <Text style={styles.circlesUnsealedBadgeText}>Розпечатано 🔓</Text>
+                    </View>
+                  </View>
+
+                  {/* Avatars Stack Row */}
+                  <View style={styles.circlesReflectionsStrip}>
+                    <View style={styles.circlesAvatarStackRow}>
+                      <Image
+                        source={{ uri: getAvatarPhotoUri(undefined, 1) }}
+                        style={styles.circlesStackAvatar}
+                      />
+                      <Image
+                        source={{ uri: getAvatarPhotoUri(undefined, 2) }}
+                        style={[styles.circlesStackAvatar, { marginLeft: -8 }]}
+                      />
+                      <Image
+                        source={{ uri: getAvatarPhotoUri(undefined, 3) }}
+                        style={[styles.circlesStackAvatar, { marginLeft: -8 }]}
+                      />
+                      <View style={styles.circlesStackPlus}>
+                        <Text style={styles.circlesStackPlusText}>+2</Text>
                       </View>
                     </View>
-                    <Text style={styles.stitchGroupSub}>Раунд #42: «Вечір на даху: коли забули ключі...»</Text>
+                    <Text style={styles.circlesReflectionsText}>3 нові рефлексії від друзів</Text>
                   </View>
 
-                  <View style={styles.stitchStatusPillOpen}>
-                    <Feather name="unlock" size={12} color={colors.terracotta} />
-                    <Text style={styles.stitchStatusPillOpenText}>ВІДКРИТО</Text>
+                  <View style={styles.circlesRoomCardFooter}>
+                    <Text style={styles.circlesArchiveSavedText}>Архів дня збережено</Text>
+                    <TouchableOpacity
+                      style={styles.circlesViewResultsBtn}
+                      onPress={() => {
+                        setTodayStage('revealed');
+                        setActiveTab('today');
+                      }}
+                      activeOpacity={0.85}
+                    >
+                      <Text style={styles.circlesViewResultsBtnText}>Переглянути підсумки</Text>
+                      <Feather name="arrow-right" size={14} color={stitch.primary} />
+                    </TouchableOpacity>
                   </View>
                 </View>
 
-                <View style={styles.stitchGroupFooter}>
-                  <View style={styles.stitchGroupAvatarStack}>
-                    <Image source={{ uri: getAvatarPhotoUri(undefined, 1) }} style={styles.stitchStackImg} />
-                    <Image source={{ uri: getAvatarPhotoUri(undefined, 2) }} style={[styles.stitchStackImg, { marginLeft: -8 }]} />
-                    <Image source={{ uri: getAvatarPhotoUri(undefined, 3) }} style={[styles.stitchStackImg, { marginLeft: -8 }]} />
-                  </View>
-                  <Text style={styles.stitchGroupFeedbackText}>3 нові реакції від друзів</Text>
-                </View>
-              </TouchableOpacity>
-
-              {/* Group Card 2: Подільські кавомани */}
-              <TouchableOpacity
-                style={styles.stitchGroupCard}
-                activeOpacity={0.88}
-                onPress={() => {
-                  const room = rooms[1] || rooms[0];
-                  if (room) router.push(`/room/${room.id}`);
-                }}
-              >
-                <View style={styles.stitchGroupCardTop}>
-                  <View style={{ flex: 1 }}>
-                    <View style={styles.stitchGroupNameRow}>
-                      <Text style={styles.stitchGroupName}>Подільські кавомани ☕</Text>
-                      <View style={styles.stitchCountTag}>
-                        <Text style={styles.stitchCountTagText}>4 ДРУЗІВ</Text>
+                {/* Room Card 2: Подільські кавомани ☕ */}
+                <View style={styles.circlesRoomCard}>
+                  <View style={styles.circlesRoomCardTop}>
+                    <View>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                        <Text style={styles.circlesRoomNameTitle}>Подільські кавомани</Text>
+                        <Text style={{ fontSize: 13 }}>☕</Text>
                       </View>
+                      <Text style={styles.circlesRoomMembersSubtitle}>
+                        4 учасники • Поділ, Київ
+                      </Text>
                     </View>
-                    <Text style={styles.stitchGroupSub}>«Яку річ ти давно хотів спробувати разом?»</Text>
+
+                    <View style={styles.circlesTimerBadge}>
+                      <Feather name="clock" size={11} color={stitch.secondary} />
+                      <Text style={styles.circlesTimerBadgeText}>До 21:00</Text>
+                    </View>
                   </View>
 
-                  <View style={styles.stitchStatusPillPending}>
-                    <Text style={styles.stitchStatusPillPendingText}>2/4 ГОТОВО · ДО 21:00</Text>
+                  {/* Pending Status Bar */}
+                  <View style={styles.circlesProgressBarWrap}>
+                    <View style={styles.circlesProgressHeaderRow}>
+                      <Text style={styles.circlesProgressRatioText}>2 з 4 відповіли</Text>
+                      <Text style={styles.circlesWaitingMoreText}>ОЧІКУЄМО ЩЕ 2</Text>
+                    </View>
+                    <View style={styles.circlesProgressTrack}>
+                      <View style={[styles.circlesProgressFill, { width: '50%' }]} />
+                    </View>
                   </View>
-                </View>
 
-                <View style={styles.stitchGroupFooter}>
-                  <View style={styles.stitchGroupAvatarStack}>
-                    <Image source={{ uri: getAvatarPhotoUri(undefined, 4) }} style={styles.stitchStackImg} />
-                    <Image source={{ uri: getAvatarPhotoUri(undefined, 5) }} style={[styles.stitchStackImg, { marginLeft: -8 }]} />
+                  {/* Status and Members pending icons */}
+                  <View style={styles.circlesRoomCardFooter}>
+                    <View style={styles.circlesPendingStatusLeft}>
+                      <View style={styles.circlesMiniStackRow}>
+                        {/* Member who answered 1 */}
+                        <View style={styles.circlesMiniAvatarWrap}>
+                          <Image
+                            source={{ uri: getAvatarPhotoUri(undefined, 4) }}
+                            style={styles.circlesMiniAvatar}
+                          />
+                          <View style={styles.circlesMiniCheckBadge}>
+                            <Feather name="check" size={7} color="#FFFFFF" />
+                          </View>
+                        </View>
+                        {/* Member who answered 2 */}
+                        <View style={[styles.circlesMiniAvatarWrap, { marginLeft: -6 }]}>
+                          <Image
+                            source={{ uri: getAvatarPhotoUri(undefined, 5) }}
+                            style={styles.circlesMiniAvatar}
+                          />
+                          <View style={styles.circlesMiniCheckBadge}>
+                            <Feather name="check" size={7} color="#FFFFFF" />
+                          </View>
+                        </View>
+                        {/* Pending avatar 1 */}
+                        <View style={[styles.circlesMiniAvatarPending, { marginLeft: -6 }]}>
+                          <Feather name="lock" size={9} color={stitch.outline} />
+                        </View>
+                        {/* Pending avatar 2 */}
+                        <View style={[styles.circlesMiniAvatarPending, { marginLeft: -6 }]}>
+                          <Feather name="lock" size={9} color={stitch.outline} />
+                        </View>
+                      </View>
+                      <Text style={styles.circlesEnvelopeSealedText}>Твій конверт запечатано ✓</Text>
+                    </View>
+
+                    <TouchableOpacity
+                      style={styles.circlesStatusLinkBtn}
+                      onPress={() => {
+                        setTodayStage('waiting');
+                        setActiveTab('today');
+                      }}
+                      activeOpacity={0.85}
+                    >
+                      <Text style={styles.circlesStatusLinkText}>Статус</Text>
+                      <Feather name="chevron-right" size={14} color={stitch.onSurfaceVariant} />
+                    </TouchableOpacity>
                   </View>
-                  <Text style={styles.stitchGroupFeedbackText}>Очікуємо ще 2 відповіді</Text>
                 </View>
-              </TouchableOpacity>
+              </View>
+
+              {/* Section 5: Primary Action: Create New Room */}
+              <View style={styles.circlesCreateActionWrap}>
+                <TouchableOpacity
+                  style={styles.circlesCreateDashedBtn}
+                  onPress={() => setActiveTab('create')}
+                  activeOpacity={0.85}
+                >
+                  <Feather name="plus" size={18} color={stitch.secondary} />
+                  <Text style={styles.circlesCreateDashedBtnText}>
+                    Створити нову кімнату
+                  </Text>
+                </TouchableOpacity>
+                <Text style={styles.circlesEncryptionNotice}>
+                  Спільні капсули завжди захищені наскрізним шифруванням
+                </Text>
+              </View>
             </View>
-
-            {/* Bottom Create Room Action */}
-            <TouchableOpacity
-              style={styles.stitchCreateRoomDashedBtn}
-              onPress={() => setActiveTab('create')}
-              activeOpacity={0.85}
-            >
-              <Feather name="plus" size={16} color={colors.inkPrimary} />
-              <Text style={styles.stitchCreateRoomDashedBtnText}>+ СТВОРИТИ КІМНАТУ</Text>
-            </TouchableOpacity>
           </View>
         )}
 
@@ -6757,6 +6856,567 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '600',
     color: stitch.surface,
+  },
+
+  // SCREEN 5: ROOMS & CIRCLES (КІМНАТИ ТА СПІЛКИ)
+  circlesScreenContainer: {
+    paddingBottom: 32,
+  },
+  circlesTopNavBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: stitch.outlineVariant,
+    backgroundColor: stitch.surface,
+  },
+  circlesNavClockBtn: {
+    padding: 4,
+  },
+  circlesBrandCenter: {
+    alignItems: 'center',
+  },
+  circlesBrandTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 24,
+    fontWeight: '400',
+    letterSpacing: -0.5,
+    color: stitch.primary,
+  },
+  circlesBrandSub: {
+    fontSize: 9,
+    fontWeight: '700',
+    letterSpacing: 1.5,
+    color: stitch.secondary,
+    textTransform: 'uppercase',
+    marginTop: 1,
+  },
+  circlesNavAvatarBtn: {
+    position: 'relative',
+  },
+  circlesNavAvatarImg: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+  },
+  circlesOnlineDot: {
+    position: 'absolute',
+    bottom: -1,
+    right: -1,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#22C55E',
+    borderWidth: 1.5,
+    borderColor: stitch.surface,
+  },
+  circlesContentCanvas: {
+    paddingHorizontal: 20,
+    paddingTop: 18,
+    gap: 22,
+  },
+  circlesHeaderSection: {
+    gap: 6,
+  },
+  circlesHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    gap: 10,
+  },
+  circlesHeadlineTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 32,
+    fontWeight: '400',
+    color: stitch.primary,
+    letterSpacing: -0.8,
+  },
+  circlesActiveCountTag: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: stitch.secondary,
+    backgroundColor: stitch.secondaryFixed,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  circlesHeaderDesc: {
+    fontSize: 13,
+    color: stitch.onSurfaceVariant,
+    lineHeight: 19,
+  },
+  circlesJoinCard: {
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    borderRadius: 8,
+    padding: 14,
+    gap: 10,
+  },
+  circlesJoinHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  circlesJoinTitleLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  circlesJoinTitleText: {
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    color: stitch.primary,
+  },
+  circlesSecretKeyLabel: {
+    fontSize: 10,
+    color: stitch.outline,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  circlesJoinInputRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  circlesJoinTextInput: {
+    flex: 1,
+    backgroundColor: stitch.surfaceContainerLowest,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    borderRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    fontSize: 13,
+    color: stitch.primary,
+    fontFamily: Platform.select({ web: 'monospace', default: 'Courier' }),
+    letterSpacing: 1,
+  },
+  circlesJoinBtn: {
+    backgroundColor: stitch.primary,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  circlesJoinBtnText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: stitch.surface,
+  },
+  circlesCategorySection: {
+    gap: 12,
+  },
+  circlesCategoryHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(204, 197, 189, 0.4)',
+    paddingBottom: 6,
+  },
+  circlesCategoryTitleLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  circlesCategoryTitleText: {
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 1.2,
+    color: stitch.primary,
+    textTransform: 'uppercase',
+  },
+  circlesBulletDot: {
+    fontSize: 10,
+    color: stitch.outline,
+  },
+  circlesCategorySubtitle: {
+    fontSize: 11,
+    color: stitch.onSurfaceVariant,
+  },
+  circlesStreakPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: stitch.secondaryFixed,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  circlesStreakPillText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: stitch.secondary,
+  },
+  circlesLimitText: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: stitch.outline,
+  },
+  circlesCoupleCard: {
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    borderRadius: 8,
+    padding: 16,
+    gap: 14,
+  },
+  circlesCoupleCardTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  circlesCoupleMetaLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    flex: 1,
+  },
+  circlesDualAvatarsWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: 52,
+    height: 36,
+  },
+  circlesDualAvatar1: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 2,
+    borderColor: stitch.surface,
+  },
+  circlesDualAvatar2: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 2,
+    borderColor: stitch.surface,
+    marginLeft: -14,
+  },
+  circlesRoomNameTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: stitch.primary,
+  },
+  circlesRoomMembersSubtitle: {
+    fontSize: 11,
+    color: stitch.onSurfaceVariant,
+    marginTop: 1,
+  },
+  circlesYourTurnBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: stitch.surface,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 4,
+  },
+  circlesPulsingDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: stitch.secondary,
+  },
+  circlesYourTurnText: {
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    color: stitch.secondary,
+    textTransform: 'uppercase',
+  },
+  circlesDailyPromptBox: {
+    backgroundColor: stitch.surface,
+    borderLeftWidth: 2,
+    borderLeftColor: stitch.secondary,
+    borderRadius: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    gap: 4,
+  },
+  circlesDailyPromptTag: {
+    fontSize: 9,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    color: stitch.onSurfaceVariant,
+    textTransform: 'uppercase',
+  },
+  circlesDailyPromptText: {
+    fontFamily: fonts.serif,
+    fontSize: 15,
+    fontStyle: 'italic',
+    color: stitch.primary,
+    lineHeight: 21,
+  },
+  circlesCoupleCardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(204, 197, 189, 0.4)',
+    paddingTop: 10,
+  },
+  circlesLockStatusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  circlesLockStatusText: {
+    fontSize: 12,
+    color: stitch.onSurfaceVariant,
+  },
+  circlesAnswerBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  circlesAnswerBtnText: {
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    color: stitch.primary,
+  },
+  circlesRoomCard: {
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    borderRadius: 8,
+    padding: 16,
+    gap: 12,
+  },
+  circlesRoomCardTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  circlesUnsealedBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: stitch.surface,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 4,
+  },
+  circlesUnsealedBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    color: stitch.primary,
+    textTransform: 'uppercase',
+  },
+  circlesReflectionsStrip: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: stitch.surface,
+    borderWidth: 1,
+    borderColor: 'rgba(204, 197, 189, 0.6)',
+    borderRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  circlesAvatarStackRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  circlesStackAvatar: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: stitch.surface,
+  },
+  circlesStackPlus: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: stitch.surface,
+    backgroundColor: stitch.surfaceContainerHigh,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  circlesStackPlusText: {
+    fontSize: 9,
+    fontWeight: '700',
+    color: stitch.onSurface,
+  },
+  circlesReflectionsText: {
+    fontSize: 12,
+    color: stitch.onSurface,
+  },
+  circlesRoomCardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 4,
+  },
+  circlesArchiveSavedText: {
+    fontSize: 10,
+    color: stitch.onSurfaceVariant,
+  },
+  circlesViewResultsBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  circlesViewResultsBtnText: {
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    color: stitch.primary,
+  },
+  circlesTimerBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: stitch.surface,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 4,
+  },
+  circlesTimerBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    color: stitch.secondary,
+    textTransform: 'uppercase',
+  },
+  circlesProgressBarWrap: {
+    gap: 6,
+  },
+  circlesProgressHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  circlesProgressRatioText: {
+    fontSize: 12,
+    color: stitch.onSurfaceVariant,
+  },
+  circlesWaitingMoreText: {
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    color: stitch.onSurfaceVariant,
+    textTransform: 'uppercase',
+  },
+  circlesProgressTrack: {
+    width: '100%',
+    height: 4,
+    backgroundColor: stitch.surfaceContainerHigh,
+    borderRadius: 2,
+    overflow: 'hidden',
+  },
+  circlesProgressFill: {
+    height: '100%',
+    backgroundColor: stitch.primary,
+    borderRadius: 2,
+  },
+  circlesPendingStatusLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  circlesMiniStackRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  circlesMiniAvatarWrap: {
+    position: 'relative',
+  },
+  circlesMiniAvatar: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: stitch.surface,
+  },
+  circlesMiniCheckBadge: {
+    position: 'absolute',
+    bottom: -1,
+    right: -1,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: stitch.primary,
+    borderWidth: 1,
+    borderColor: stitch.surface,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  circlesMiniAvatarPending: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    borderStyle: 'dashed',
+    backgroundColor: stitch.surfaceContainer,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  circlesEnvelopeSealedText: {
+    fontSize: 11,
+    color: stitch.onSurfaceVariant,
+  },
+  circlesStatusLinkBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+  },
+  circlesStatusLinkText: {
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    color: stitch.onSurfaceVariant,
+  },
+  circlesCreateActionWrap: {
+    gap: 8,
+    alignItems: 'center',
+    paddingTop: 6,
+  },
+  circlesCreateDashedBtn: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderColor: stitch.outlineVariant,
+    borderRadius: 8,
+    paddingVertical: 14,
+    backgroundColor: stitch.surfaceContainerLow,
+  },
+  circlesCreateDashedBtnText: {
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    color: stitch.primary,
+  },
+  circlesEncryptionNotice: {
+    fontSize: 11,
+    color: stitch.onSurfaceVariant,
+    opacity: 0.75,
+    textAlign: 'center',
   },
 
   // WAITING SCREEN (SEALED TIL 21:00)
