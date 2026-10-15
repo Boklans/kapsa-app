@@ -162,6 +162,7 @@ export default function HomeScreen() {
   const [selectedCandidate, setSelectedCandidate] = useState<'you' | 'maks'>('maks');
   const [selectedCandidateId, setSelectedCandidateId] = useState<string>('maks');
   const [candidNoteText, setCandidNoteText] = useState('');
+  const [attachedPhotoUri, setAttachedPhotoUri] = useState<string | null>(null);
   const [isAnswerSealed, setIsAnswerSealed] = useState(false);
   const [fondFilter, setFondFilter] = useState<'all' | 'photo' | 'quote' | 'vote'>('all');
   const [homeReactions, setHomeReactions] = useState<Record<string, number>>({
@@ -257,6 +258,27 @@ export default function HomeScreen() {
     has_answered: true,
   };
 
+  const handlePickRoundPhoto = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.8,
+        base64: true,
+      });
+      if (!result.canceled && result.assets[0]) {
+        const asset = result.assets[0];
+        const customUri = asset.base64
+          ? `data:${asset.mimeType || 'image/jpeg'};base64,${asset.base64}`
+          : asset.uri;
+        setAttachedPhotoUri(customUri);
+      }
+    } catch {
+      // Ignore cancel
+    }
+  };
+
   const handleSealAnswer = async () => {
     const rId = currentRoom?.id || 'demo-couple';
     const roundId = todayRound?.round_id || `round-${rId}-vote`;
@@ -268,6 +290,7 @@ export default function HomeScreen() {
         roundId,
         textContent: candidNoteText.trim(),
         votedForUserId: targetVotedId,
+        mediaPath: attachedPhotoUri || undefined,
       });
     } catch {}
 
@@ -1158,6 +1181,40 @@ export default function HomeScreen() {
                   </View>
                 </View>
 
+                {/* 35mm Photo Moment Attachment */}
+                <View style={styles.votePhotoAttachSection}>
+                  <Text style={styles.voteCommentLabel}>
+                    ФОТОКАРТКА 35MM <Text style={styles.voteCommentLabelSub}>(необовʼязково)</Text>
+                  </Text>
+                  {attachedPhotoUri ? (
+                    <View style={styles.voteAttachedPhotoFrame}>
+                      <Image source={{ uri: attachedPhotoUri }} style={styles.voteAttachedPhotoImg} />
+                      <View style={styles.voteAttachedPhotoBadge}>
+                        <Feather name="camera" size={11} color="#FFFFFF" />
+                        <Text style={styles.voteAttachedPhotoBadgeText}>35MM FILM • ДОДАНО ДО ХОДУ</Text>
+                      </View>
+                      <TouchableOpacity
+                        style={styles.voteRemovePhotoBtn}
+                        onPress={() => setAttachedPhotoUri(null)}
+                        activeOpacity={0.8}
+                      >
+                        <Feather name="x" size={13} color="#FFFFFF" />
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.voteAttachPhotoBtn}
+                      onPress={handlePickRoundPhoto}
+                      activeOpacity={0.85}
+                    >
+                      <Feather name="camera" size={15} color={stitch.secondary} />
+                      <Text style={styles.voteAttachPhotoBtnText}>
+                        Додати знімок до сьогоднішнього раунду
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+
                 {/* Blind Submission Room Status Section (Пульс кімнати) */}
                 <View style={styles.votePulseCard}>
                   <View style={styles.votePulseHeaderRow}>
@@ -1324,6 +1381,14 @@ export default function HomeScreen() {
                     <Text style={styles.stitchMyChoiceNote}>
                       «{candidNoteText.trim()}»
                     </Text>
+                  )}
+                  {attachedPhotoUri && (
+                    <View style={{ marginTop: 8, flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                      <Feather name="camera" size={13} color={colors.terracotta} />
+                      <Text style={{ fontSize: 11, fontWeight: '600', color: colors.inkPrimary }}>
+                        Фотокартка 35mm додана до конверта 📷
+                      </Text>
+                    </View>
                   )}
                 </View>
               </View>
@@ -5556,6 +5621,70 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: stitch.outline,
     fontFamily: Platform.select({ web: 'monospace', default: 'Courier' }),
+  },
+  votePhotoAttachSection: {
+    gap: 8,
+  },
+  voteAttachPhotoBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderColor: stitch.outlineVariant,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    justifyContent: 'center',
+  },
+  voteAttachPhotoBtnText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: stitch.primary,
+  },
+  voteAttachedPhotoFrame: {
+    position: 'relative',
+    width: '100%',
+    height: 180,
+    borderRadius: 8,
+    overflow: 'hidden',
+    backgroundColor: stitch.surfaceContainerHigh,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+  },
+  voteAttachedPhotoImg: {
+    width: '100%',
+    height: '100%',
+  },
+  voteAttachedPhotoBadge: {
+    position: 'absolute',
+    bottom: 8,
+    left: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+  },
+  voteAttachedPhotoBadgeText: {
+    fontSize: 9,
+    fontWeight: '700',
+    letterSpacing: 1,
+    color: '#FFFFFF',
+  },
+  voteRemovePhotoBtn: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   votePulseCard: {
     backgroundColor: 'rgba(245, 243, 240, 0.6)',

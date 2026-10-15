@@ -67,6 +67,7 @@ export default function LoreDetailScreen() {
   const [comments, setComments] = useState<CommentItem[]>(INITIAL_COMMENTS);
   const [newComment, setNewComment] = useState('');
   const [showPhotobookBanner, setShowPhotobookBanner] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const toggleReaction = (emoji: string) => {
     setUserReacted((prev) => {
@@ -298,13 +299,33 @@ export default function LoreDetailScreen() {
 
             <TouchableOpacity
               style={styles.addReactionBtn}
-              onPress={() => toggleReaction('🔥')}
+              onPress={() => setShowEmojiPicker((prev) => !prev)}
               activeOpacity={0.85}
             >
               <Feather name="smile" size={14} color={stitch.onSurfaceVariant} />
-              <Text style={styles.addReactionBtnText}>+ Додати емоцію</Text>
+              <Text style={styles.addReactionBtnText}>
+                {showEmojiPicker ? 'Сховати' : '+ Додати емоцію'}
+              </Text>
             </TouchableOpacity>
           </View>
+
+          {showEmojiPicker && (
+            <View style={styles.quickEmojiBar}>
+              {['🔥', '🥺', '✨', '🎉', '☕', '👏'].map((em) => (
+                <TouchableOpacity
+                  key={em}
+                  style={styles.quickEmojiItemBtn}
+                  onPress={() => {
+                    toggleReaction(em);
+                    setShowEmojiPicker(false);
+                  }}
+                  activeOpacity={0.8}
+                >
+                  <Text style={{ fontSize: 18 }}>{em}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
         </View>
 
         {/* 7. Inside Jokes & Intimate Comments Thread */}
@@ -755,6 +776,23 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: stitch.onSurfaceVariant,
   },
+  quickEmojiBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    marginTop: 4,
+  },
+  quickEmojiItemBtn: {
+    padding: 6,
+    borderRadius: 6,
+    backgroundColor: stitch.surface,
+  },
   commentsSection: {
     gap: 12,
     borderTopWidth: 1,
@@ -899,3 +937,4 @@ const styles = StyleSheet.create({
     color: stitch.onSurface,
   },
 });
+

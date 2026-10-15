@@ -113,7 +113,7 @@ export const stitch = {
   secondary: '#AB3425',
   secondaryContainer: '#FC6F5A',
   secondaryFixed: '#FFDAD4',
-  outline: '#7C766F',
+  outline: '#605E5C',
   outlineVariant: '#CCC5BD',
   error: '#BA1A1A',
   errorContainer: '#FFDAD6',
