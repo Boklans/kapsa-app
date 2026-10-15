@@ -105,6 +105,7 @@ export const stitch = {
   surfaceContainer: '#EFEEEB',
   surfaceContainerHigh: '#EAE8E5',
   surfaceContainerHighest: '#E4E2DF',
+  surfaceVariant: '#E4E2DF',
   surfaceDim: '#DBDDA7',
   onSurface: '#1B1C1A',
   onSurfaceVariant: '#4A4640',

@@ -43,6 +43,75 @@ const DECK_LIST: { tag: DeckTag; label: string }[] = [
   { tag: 'nostalgia', label: 'Спогади 📼' },
 ];
 
+const CANDIDATES_SCREEN3 = [
+  {
+    id: 'maks',
+    name: 'Макс',
+    defaultRole: 'УЧАСНИК',
+    avatar:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuB2g6TJjAxHbVjdL8CyOoSkg7rEBd_hSRrmGDucQEDO-jyWblWN5TlVkoFR16UhTyFQ51qKAuOAXsK4owuf7sx1q5-oBBNZVhDqFUKmz9Jj9mzjCE8nvUStneHdVYgRNy-2xl5nkIGU8zLW5GDWukZQlDZ0-7glG0F9qCkzaWYRpVtqd_Mh02uFHvtJNJNILdjs3DrmgiN3zGX7S164clalkganf3Z60AQiCDeZzDOcxBcnd8Jd7jjyrA',
+  },
+  {
+    id: 'olya',
+    name: 'Оля',
+    defaultRole: 'УЧАСНИЦЯ',
+    avatar:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDxF_kJY7gkytdKek0PUzAEn1mFSGw29L9mjY2atwrgc6ikQgTADFqQ2E0FqS4CxXlhzYGkIUmTREDT2idVyvma5XLjhff4HSHB0Y11Lh0odpq4Mtg98muRpwe958pQ6YPo4YnE2RhcNcBVawxL9jE2sFdVR9RvsJ9djPuP1T_h-A-6lnXoIuZkm1kHhuLCboK8aSVaK1COyF7NO4fjibaFDpiLOV_SjbxJPxuQs0emE_uxDASwc8hroA',
+  },
+  {
+    id: 'dima',
+    name: 'Діма',
+    defaultRole: 'УЧАСНИК',
+    avatar:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAsBQc5ca0OUVPYeJzkD7Z4EX50nOi5qLj-_zAFKbD5WJGmoGB0Ox20zgsAP5UEHswitq28s6PC5lRe3qFobyPN9_A6bMaA52tGVrEIt4J234n0xUvuh7di2mr1RQ0sHxVdkx1uOmSyzhn5vG0rYb3r1moco7XV3YrUV5VfAx0O8NU2ZNOGBLnujgtoT73IkdWO7WgQmQdAiQAZWuzygxZZwVPSHIyFUUbmX93unVr39gR5rd_ei_cb4w',
+  },
+  {
+    id: 'kateryna',
+    name: 'Катерина',
+    defaultRole: 'УЧАСНИЦЯ',
+    avatar:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuC9kAMJJSaWSy23laTbCUmsvE7xiJmvRcEesDzx039NGOYfZo6Vi0cmmMf8NCqj0l9raaKRPyxyl4GFHoknk-D7U1n47TOBYCjVn1TrtlciP-JrQXn4kfC3tELzDLHgJSrILfCPme0_PLwsqlmTtNv-MuUNz-6GgrthAptc1GnaeexZmhCXoF7eG0ziO-u1_AL95MKjpOqi4Jq-1fQG14vAaG5p_C6gN0zxNrDTH14w_pwn_3aTgFtyaQ',
+  },
+];
+
+const PULSE_MEMBERS_SCREEN3 = [
+  {
+    id: 'anya',
+    name: 'Аня',
+    avatar:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBqXBbF1OEK_sIQiDDU5zNmYgAkyB8TQgXN68Fw0Y92nbunA5jw9KtbIiZfRSkpQlKGfye6r4LZmuSZNPpNJbx1Jkn0FFXoRERcGPbf-f5NlNzRNKfmL8AdiwgFmusHY5g9yEPVtKmrCLNsdOeJfuVn1NF1RU18tHQoteBApcAa3psNScIlbQ_LPG8sojbtsoNyT3x8fZ0om9j0kK3dUBv5GTKhJzBZbyh3rgd-zVT1b2pRYW7d4i1HzQ',
+    status: 'locked' as const,
+  },
+  {
+    id: 'taras',
+    name: 'Тарас',
+    avatar:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDWeU_3DVP1edG6XXFn3DDLZHlnnrZnwKgcFyNgbEdrQhyAmW1u9W9Ad8kSHOIOu8W7h9GoMc0m5fwcgobHYMSuPBS7_YTZy3mbpqYPJnuffbc521woWp13Q9IJwCUlXaO3ANjHR9vWeP9r6RvQOQOYKl6ZoUrmaCJMNdJB_s6eMcmqpS-Jne8VHVaDU08tqSkpFqb7kJfvkitQ0WpT8dRQfhJ5rZ2LySQ36--GEnzIdNyyP17mIyTAlg',
+    status: 'locked' as const,
+  },
+  {
+    id: 'me',
+    name: 'Ти',
+    avatar:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDTgDUSIQbDsZ_nqpnuDlUgpniEZY98glp7A2RpgnjAgggzpaUXOnzVm67_B4exesY8dMdPE0zPEcOxU0xpVCS65VR3DAQn5gdKA0BdXWRBPKJioSt1sXELjK4qKdcnhG1e2DV87rLjT-e2qP9eRA3-RXBM-wfiCfqno_gI4RjrQOAzL3bwJG_8OiCO_iyCVYKCdOL-LlAMqiitRarB73CTPGpEx7vMmiT2tCyKVR-bJ2TFqHnPsxWtNg',
+    status: 'me' as const,
+  },
+  {
+    id: 'olya',
+    name: 'Оля',
+    avatar:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDxF_kJY7gkytdKek0PUzAEn1mFSGw29L9mjY2atwrgc6ikQgTADFqQ2E0FqS4CxXlhzYGkIUmTREDT2idVyvma5XLjhff4HSHB0Y11Lh0odpq4Mtg98muRpwe958pQ6YPo4YnE2RhcNcBVawxL9jE2sFdVR9RvsJ9djPuP1T_h-A-6lnXoIuZkm1kHhuLCboK8aSVaK1COyF7NO4fjibaFDpiLOV_SjbxJPxuQs0emE_uxDASwc8hroA',
+    status: 'waiting' as const,
+  },
+  {
+    id: 'dima',
+    name: 'Діма',
+    avatar:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAsBQc5ca0OUVPYeJzkD7Z4EX50nOi5qLj-_zAFKbD5WJGmoGB0Ox20zgsAP5UEHswitq28s6PC5lRe3qFobyPN9_A6bMaA52tGVrEIt4J234n0xUvuh7di2mr1RQ0sHxVdkx1uOmSyzhn5vG0rYb3r1moco7XV3YrUV5VfAx0O8NU2ZNOGBLnujgtoT73IkdWO7WgQmQdAiQAZWuzygxZZwVPSHIyFUUbmX93unVr39gR5rd_ei_cb4w',
+    status: 'waiting' as const,
+  },
+];
+
 const REVEAL_HOURS = [20, 21, 22];
 
 type HomeTab = 'today' | 'circles' | 'fond' | 'memories' | 'create';
@@ -87,8 +156,9 @@ export default function HomeScreen() {
   const [showQuickJoinInput, setShowQuickJoinInput] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
-  // Стан для Екрана 1 (Today)
+  // Стан для Екрана 3 (Голосування дня)
   const [selectedCandidate, setSelectedCandidate] = useState<'you' | 'maks'>('maks');
+  const [selectedCandidateId, setSelectedCandidateId] = useState<string>('maks');
   const [candidNoteText, setCandidNoteText] = useState('');
   const [isAnswerSealed, setIsAnswerSealed] = useState(false);
   const [fondFilter, setFondFilter] = useState<'all' | 'photo' | 'quote' | 'vote'>('all');
@@ -165,7 +235,7 @@ export default function HomeScreen() {
   const handleSealAnswer = async () => {
     const rId = currentRoom?.id || 'demo-couple';
     const roundId = todayRound?.round_id || `round-${rId}-vote`;
-    const targetVotedId = selectedCandidate === 'maks' ? partnerMember.user_id : myMember.user_id;
+    const targetVotedId = selectedCandidateId || (selectedCandidate === 'maks' ? partnerMember.user_id : myMember.user_id);
 
     try {
       await submitRoundResponse({
@@ -480,7 +550,7 @@ export default function HomeScreen() {
         {/* ================================================================= */}
         {/* TOP CONTEXT BAR (1-в-1 з Google Stitch TopAppBar)                 */}
         {/* ================================================================= */}
-        {activeTab === 'today' && (
+        {activeTab === 'today' && todayStage === 'hub' && (
           <View style={styles.hubHeader}>
             <View style={styles.hubHeaderLeft}>
               <TouchableOpacity
@@ -799,249 +869,231 @@ export default function HomeScreen() {
               </View>
             </View>
           ) : todayStage === 'vote' ? (
-            /* SCREEN 3: РАУНД: ГОЛОСУВАННЯ ТА ВІДПОВІДЬ */
-            <View style={styles.stitchVoteCanvas}>
-              {/* Back to Home Hub button */}
-              <TouchableOpacity
-                style={styles.voteBackButton}
-                onPress={() => setTodayStage('hub')}
-                activeOpacity={0.8}
-              >
-                <Feather name="arrow-left" size={15} color={colors.inkPrimary} />
-                <Text style={styles.voteBackButtonText}>На головну</Text>
-              </TouchableOpacity>
-              {/* Ritual Number & Date Ribbon */}
-              <View style={styles.stitchRibbonRow}>
-                <View style={styles.stitchRibbonLeft}>
-                  <Text style={styles.stitchRibbonMeta}>
-                    Капсула #19 · 24 жовтня
-                  </Text>
-                  <View style={styles.stitchRibbonDot} />
-                  <Text style={styles.stitchRibbonSub}>Дует (2)</Text>
-                </View>
-
+            /* ============================================================= */
+            /* SCREEN 3: РАУНД: ГОЛОСУВАННЯ (BEFORE SUBMISSION)              */
+            /* ============================================================= */
+            <View style={styles.voteScreenWrapper}>
+              {/* Top Bar Component */}
+              <View style={styles.voteTopBarHeader}>
                 <TouchableOpacity
-                  style={styles.stitchRibbonRight}
-                  onPress={() => setActiveTab('fond')}
+                  style={styles.voteBackToRoomsBtn}
+                  onPress={() => setTodayStage('hub')}
+                  activeOpacity={0.8}
                 >
-                  <Feather name="star" size={12} color={colors.terracotta} />
-                  <Text style={styles.stitchRibbonLoreLink}>Lore (6) ★</Text>
+                  <Feather name="arrow-left" size={17} color={stitch.onSurfaceVariant} />
+                  <Text style={styles.voteBackToRoomsText}>До кімнат</Text>
                 </TouchableOpacity>
-              </View>
 
-              {/* Expressive Monograph Question Card */}
-              <View style={styles.stitchQuestionCard}>
-                <View style={styles.stitchQuestionTopRow}>
-                  <View style={styles.stitchFormatTag}>
-                    <Text style={styles.stitchFormatTagText}>ПИТАННЯ ДНЯ</Text>
+                <View style={styles.voteTopRightPills}>
+                  <View style={styles.voteRoomBadge}>
+                    <Text style={styles.voteRoomBadgeName} numberOfLines={1}>
+                      {currentRoom?.name || 'Банда з КПІ 🔥'}
+                    </Text>
+                    <Feather name="lock" size={12} color={stitch.onSurfaceVariant} />
                   </View>
-                  <View style={styles.stitchBlindBadge}>
-                    <Feather name="lock" size={11} color={colors.inkSecondary} />
-                    <Text style={styles.stitchBlindBadgeText}>НАОСЛІП</Text>
+
+                  <View style={styles.voteTimerBadge}>
+                    <Feather name="clock" size={12} color={stitch.secondary} />
+                    <Text style={styles.voteTimerBadgeText}>До 21:00</Text>
                   </View>
-                </View>
-
-                <Text style={styles.stitchQuestionTitle}>
-                  «{featuredQuestion}»
-                </Text>
-
-                {/* Deck chips */}
-                <View style={styles.stitchDeckPillsRow}>
-                  {DECK_LIST.map((d) => {
-                    const isCur = selectedDeck === d.tag;
-                    return (
-                      <TouchableOpacity
-                        key={d.tag}
-                        style={[styles.stitchDeckPill, isCur && styles.stitchDeckPillActive]}
-                        onPress={() => handleSelectDeck(d.tag)}
-                      >
-                        <Text style={[styles.stitchDeckPillText, isCur && styles.stitchDeckPillTextActive]}>
-                          {d.label}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  })}
                 </View>
               </View>
 
-              {/* Blind Submission Notice */}
-              <View style={styles.stitchBlindNoticeCard}>
-                <View style={styles.stitchBlindNoticeIconWrap}>
-                  <Feather name="lock" size={15} color={colors.terracotta} />
+              <View style={styles.voteMainContent}>
+                {/* Category Chip & Meta */}
+                <View style={styles.voteCategoryMetaRow}>
+                  <View style={styles.voteCategoryPill}>
+                    <View style={styles.voteCategoryDot} />
+                    <Text style={styles.voteCategoryPillText}>
+                      Голосування дня • Раунд #{todayRound?.round_number || 182}
+                    </Text>
+                  </View>
+                  <Text style={styles.voteProgressText}>2/5 ГОТОВО</Text>
                 </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.stitchBlindNoticeTitle}>
-                    Таємний вибір.
+
+                {/* Main Daily Prompt */}
+                <View style={styles.votePromptSection}>
+                  <Text style={styles.votePromptTitle}>
+                    «{featuredQuestion || 'Хто з нас найімовірніше заснув би просто посеред гучної вечірки? ✨'}»
                   </Text>
-                  <Text style={styles.stitchBlindNoticeText}>
-                    Твоя відповідь залишається запечатаною в капсулі, доки ви обидва не зробите свій хід або не настане 21:00.
+                  <Text style={styles.votePromptSubtext}>
+                    Обери одного учасника. Твій вибір залишиться таємницею до моменту запечатування о 21:00.
                   </Text>
                 </View>
-              </View>
 
-              {/* Candid Choice Selection (Two candidate cards) */}
-              <View style={styles.stitchCandidateSection}>
-                <View style={styles.stitchCandidateSectionHeader}>
-                  <Text style={styles.stitchCandidateSectionTitle}>ТВІЙ ВИБІР</Text>
-                  <Text style={styles.stitchCandidateSectionSub}>Оберіть одну особу</Text>
+                {/* Delicate Monograph Rule Divider */}
+                <View style={styles.voteDividerRule} />
+
+                {/* Interactive Participant Voting Grid (2x2) */}
+                <View style={styles.voteGridSection}>
+                  <View style={styles.voteGridHeaderRow}>
+                    <Text style={styles.voteGridHeaderTitle}>Твій кандидат</Text>
+                    <View style={styles.voteGridVotesCountRow}>
+                      <Feather name="check-circle" size={13} color={stitch.secondary} />
+                      <Text style={styles.voteGridVotesCountText}>1 голос</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.vote2x2Grid}>
+                    {CANDIDATES_SCREEN3.map((candidate) => {
+                      const isSelected = selectedCandidateId === candidate.id;
+                      return (
+                        <TouchableOpacity
+                          key={candidate.id}
+                          style={[
+                            styles.voteCandidateCard,
+                            isSelected && styles.voteCandidateCardSelected,
+                          ]}
+                          onPress={() => {
+                            setSelectedCandidateId(candidate.id);
+                            setSelectedCandidate(candidate.id === 'maks' ? 'maks' : 'you');
+                          }}
+                          activeOpacity={0.88}
+                        >
+                          {isSelected && (
+                            <View style={styles.voteCandidateActiveBadge}>
+                              <Feather name="check" size={12} color="#FFFFFF" />
+                            </View>
+                          )}
+
+                          <View
+                            style={[
+                              styles.voteCandidateAvatarWrap,
+                              isSelected && styles.voteCandidateAvatarWrapSelected,
+                            ]}
+                          >
+                            <Image
+                              source={{ uri: candidate.avatar }}
+                              style={styles.voteCandidateAvatarImg}
+                            />
+                          </View>
+
+                          <Text style={styles.voteCandidateName}>{candidate.name}</Text>
+                          <Text
+                            style={[
+                              styles.voteCandidateRoleText,
+                              isSelected && styles.voteCandidateRoleTextSelected,
+                            ]}
+                          >
+                            {isSelected ? 'ТВІЙ ВИБІР' : candidate.defaultRole}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
                 </View>
 
-                <View style={styles.stitchCandidateGrid}>
-                  {/* Option 1: You */}
-                  <TouchableOpacity
-                    style={[
-                      styles.stitchCandidateCard,
-                      selectedCandidate === 'you' && styles.stitchCandidateCardSelected,
-                    ]}
-                    onPress={() => setSelectedCandidate('you')}
-                    activeOpacity={0.88}
-                  >
-                    <View style={styles.stitchCandidateCardTop}>
-                      <View style={styles.stitchCandidateAvatarWrap}>
-                        <Image
-                          source={{ uri: userPortraitUri }}
-                          style={styles.stitchCandidateAvatarImg}
-                        />
+                {/* Optional Comment / Inside Joke Field */}
+                <View style={styles.voteCommentSection}>
+                  <Text style={styles.voteCommentLabel}>
+                    ЧОМУ САМЕ ВІН/ВОНА? <Text style={styles.voteCommentLabelSub}>(необовʼязково)</Text>
+                  </Text>
+                  <View style={styles.voteCommentInputBox}>
+                    <TextInput
+                      style={styles.voteCommentTextInput}
+                      placeholder="Додай жарт або спогад..."
+                      placeholderTextColor={stitch.outline}
+                      multiline
+                      maxLength={140}
+                      value={candidNoteText}
+                      onChangeText={setCandidNoteText}
+                    />
+                    <View style={styles.voteCommentFooterRow}>
+                      <View style={styles.voteCommentLockRow}>
+                        <Feather name="lock" size={12} color={stitch.outline} />
+                        <Text style={styles.voteCommentLockText}>Збережеться у літописі</Text>
                       </View>
-                      <View style={[
-                        styles.stitchCandidateRadioCircle,
-                        selectedCandidate === 'you' && styles.stitchCandidateRadioCircleSelected,
-                      ]}>
-                        {selectedCandidate === 'you' && (
-                          <View style={styles.stitchCandidateRadioDot} />
-                        )}
-                      </View>
+                      <Text style={styles.voteCommentCounterText}>{candidNoteText.length}/140</Text>
                     </View>
-
-                    <View style={styles.stitchCandidateCardBottom}>
-                      <Text style={styles.stitchCandidateName}>Ти</Text>
-                      <Text style={styles.stitchCandidateRole}>Катерина · Автор капсули</Text>
-                    </View>
-                  </TouchableOpacity>
-
-                  {/* Option 2: Maks (Partner - Selected by default) */}
-                  <TouchableOpacity
-                    style={[
-                      styles.stitchCandidateCard,
-                      selectedCandidate === 'maks' && styles.stitchCandidateCardSelected,
-                    ]}
-                    onPress={() => setSelectedCandidate('maks')}
-                    activeOpacity={0.88}
-                  >
-                    <View style={styles.stitchCandidateCardTop}>
-                      <View style={styles.stitchCandidateAvatarWrap}>
-                        <Image
-                          source={{ uri: PORTRAIT_AVATARS['🦊'] }}
-                          style={styles.stitchCandidateAvatarImg}
-                        />
-                      </View>
-                      <View style={[
-                        styles.stitchCandidateRadioCircle,
-                        selectedCandidate === 'maks' && styles.stitchCandidateRadioCircleSelected,
-                      ]}>
-                        {selectedCandidate === 'maks' && (
-                          <Feather name="check" size={11} color="#FFFFFF" />
-                        )}
-                      </View>
-                    </View>
-
-                    <View style={styles.stitchCandidateCardBottom}>
-                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
-                        <Text style={styles.stitchCandidateName}>Макс</Text>
-                        <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: colors.terracotta }} />
-                      </View>
-                      <Text style={styles.stitchCandidateRole}>Співучасник дуету</Text>
-                    </View>
-                  </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
 
-              {/* Optional Memory / Candid Note Field */}
-              <View style={styles.stitchNoteSection}>
-                <Text style={styles.stitchNoteLabel}>
-                  КОМЕНТАР АБО ІСТОРІЯ <Text style={{ textTransform: 'none', fontWeight: '400', color: colors.inkSecondary }}>(необов'язково)</Text>
-                </Text>
-                <View style={styles.stitchNoteInputBox}>
-                  <TextInput
-                    style={styles.stitchNoteInput}
-                    placeholder="Додай коротку репліку або спогад до вибору: наприклад, про випадок у поїзді..."
-                    placeholderTextColor={colors.inkMuted}
-                    multiline
-                    maxLength={140}
-                    value={candidNoteText}
-                    onChangeText={setCandidNoteText}
-                  />
-                  <View style={styles.stitchNoteFooterRow}>
-                    <View style={styles.stitchNoteLockedNotice}>
-                      <Feather name="lock" size={11} color={colors.inkSecondary} />
-                      <Text style={styles.stitchNoteLockedNoticeText}>
-                        Залишиться прихованим до 21:00
-                      </Text>
+                {/* Blind Submission Room Status Section (Пульс кімнати) */}
+                <View style={styles.votePulseCard}>
+                  <View style={styles.votePulseHeaderRow}>
+                    <View style={styles.votePulseTitleLeft}>
+                      <View style={styles.votePulseLiveDot} />
+                      <Text style={styles.votePulseCardTitle}>Пульс кімнати</Text>
                     </View>
-                    <Text style={styles.stitchNoteCounterText}>
-                      {candidNoteText.length}/140
+                    <Text style={styles.votePulseRatioText}>2 з 5 зробили хід</Text>
+                  </View>
+
+                  <View style={styles.votePulseMembersRow}>
+                    {PULSE_MEMBERS_SCREEN3.map((m) => {
+                      const isMe = m.status === 'me';
+                      const isWaiting = m.status === 'waiting';
+                      const isLocked = m.status === 'locked';
+
+                      return (
+                        <View
+                          key={m.id}
+                          style={[
+                            styles.votePulseMemberCol,
+                            isWaiting && { opacity: 0.5 },
+                          ]}
+                        >
+                          <View
+                            style={[
+                              styles.votePulseMemberAvatarWrap,
+                              isLocked && styles.votePulseMemberAvatarWrapLocked,
+                              isMe && styles.votePulseMemberAvatarWrapMe,
+                            ]}
+                          >
+                            <Image
+                              source={{ uri: m.avatar }}
+                              style={styles.votePulseMemberAvatarImg}
+                            />
+                            {isLocked && (
+                              <View style={styles.votePulseLockBadge}>
+                                <Feather name="lock" size={9} color="#FFFFFF" />
+                              </View>
+                            )}
+                            {isMe && (
+                              <View style={styles.votePulseEditBadge}>
+                                <Feather name="edit-2" size={9} color="#FFFFFF" />
+                              </View>
+                            )}
+                            {isWaiting && (
+                              <View style={styles.votePulseWaitingBadge}>
+                                <Feather name="clock" size={9} color={stitch.outline} />
+                              </View>
+                            )}
+                          </View>
+                          <Text
+                            style={[
+                              styles.votePulseMemberName,
+                              isMe && styles.votePulseMemberNameBold,
+                            ]}
+                          >
+                            {m.name}
+                          </Text>
+                        </View>
+                      );
+                    })}
+                  </View>
+
+                  <View style={styles.votePulseBlurFooterRow}>
+                    <Feather name="eye-off" size={13} color={stitch.outline} />
+                    <Text style={styles.votePulseBlurFooterText}>
+                      Відповіді розмиті до загального відкриття
                     </Text>
                   </View>
                 </View>
-              </View>
 
-              {/* Room Pulse / Participation Status */}
-              <View style={styles.stitchPulseBox}>
-                <View style={styles.stitchPulseHeaderRow}>
-                  <Text style={styles.stitchPulseHeaderTitle}>ПУЛЬС КІМНАТИ</Text>
-                  <Text style={styles.stitchPulseHeaderCount}>1 з 2 запечатано</Text>
+                {/* Primary Action CTA */}
+                <View style={styles.voteSealActionWrap}>
+                  <TouchableOpacity
+                    style={styles.voteSealActionBtn}
+                    onPress={handleSealAnswer}
+                    activeOpacity={0.88}
+                  >
+                    <Text style={styles.voteSealActionBtnText}>Запечатати свій хід</Text>
+                    <Feather name="lock" size={16} color="#FFFFFF" />
+                  </TouchableOpacity>
+                  <Text style={styles.voteSealActionNotice}>
+                    Після запечатування вибір змінити не можна
+                  </Text>
                 </View>
-
-                <View style={styles.stitchPulseTilesRow}>
-                  {/* Status: Maks */}
-                  <View style={styles.stitchPulseTile}>
-                    <View style={styles.stitchPulseAvatarWrap}>
-                      <Image
-                        source={{ uri: getAvatarPhotoUri(undefined, 2) }}
-                        style={styles.stitchPulseAvatar}
-                      />
-                      <View style={styles.stitchPulseCheckBadge}>
-                        <Feather name="check" size={9} color="#FFFFFF" />
-                      </View>
-                    </View>
-                    <View>
-                      <Text style={styles.stitchPulseMemberName}>Макс</Text>
-                      <Text style={styles.stitchPulseMemberStatusDone}>Запечатав відповідь</Text>
-                    </View>
-                  </View>
-
-                  {/* Status: You */}
-                  <View style={styles.stitchPulseTile}>
-                    <View style={styles.stitchPulseAvatarWrap}>
-                      <Image
-                        source={{ uri: userPortraitUri }}
-                        style={[styles.stitchPulseAvatar, { opacity: 0.7 }]}
-                      />
-                      <View style={styles.stitchPulseWaitingBadge}>
-                        <Text style={{ fontSize: 9, color: colors.inkSecondary, fontWeight: '700' }}>…</Text>
-                      </View>
-                    </View>
-                    <View>
-                      <Text style={styles.stitchPulseMemberName}>Ти</Text>
-                      <Text style={styles.stitchPulseMemberStatusPending}>Очікуємо твій хід</Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-
-              {/* Action Button: Seal Answer */}
-              <View style={styles.stitchSealActionWrap}>
-                <TouchableOpacity
-                  style={styles.stitchSealPrimaryBtn}
-                  onPress={handleSealAnswer}
-                  activeOpacity={0.88}
-                >
-                  <Feather name="lock" size={17} color="#FFFFFF" />
-                  <Text style={styles.stitchSealPrimaryBtnText}>Запечатати відповідь</Text>
-                </TouchableOpacity>
-                <Text style={styles.stitchSealSubtext}>
-                  Відповіді стануть доступними в розділі <Text style={{ fontWeight: '600', color: colors.inkPrimary }}>Сьогодні</Text> одразу о 21:00
-                </Text>
               </View>
             </View>
           ) : todayStage === 'waiting' ? (
@@ -4616,6 +4668,430 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: colors.inkSecondary,
     lineHeight: 16,
+  },
+
+  // =========================================================================
+  // SCREEN 3: РАУНД ГОЛОСУВАННЯ (BEFORE SUBMISSION)
+  // =========================================================================
+  voteScreenWrapper: {
+    paddingBottom: 28,
+  },
+  voteTopBarHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(204, 197, 189, 0.4)',
+    backgroundColor: stitch.surface,
+  },
+  voteBackToRoomsBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 4,
+  },
+  voteBackToRoomsText: {
+    fontSize: 12,
+    fontWeight: '600',
+    letterSpacing: 0.8,
+    color: stitch.onSurfaceVariant,
+    textTransform: 'uppercase',
+  },
+  voteTopRightPills: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  voteRoomBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: stitch.surfaceContainer,
+    borderWidth: 1,
+    borderColor: 'rgba(204, 197, 189, 0.4)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+    maxWidth: 140,
+  },
+  voteRoomBadgeName: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: stitch.onSurface,
+  },
+  voteTimerBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: 'rgba(204, 197, 189, 0.4)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  voteTimerBadgeText: {
+    fontSize: 10,
+    fontWeight: '600',
+    letterSpacing: 0.5,
+    color: stitch.secondary,
+    textTransform: 'uppercase',
+  },
+  voteMainContent: {
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    gap: 20,
+  },
+  voteCategoryMetaRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  voteCategoryPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: stitch.surfaceContainer,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  voteCategoryDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: stitch.secondary,
+  },
+  voteCategoryPillText: {
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 0.6,
+    color: stitch.onSurfaceVariant,
+    textTransform: 'uppercase',
+  },
+  voteProgressText: {
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 0.8,
+    color: stitch.outline,
+  },
+  votePromptSection: {
+    gap: 8,
+  },
+  votePromptTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 24,
+    fontWeight: '400',
+    color: stitch.primary,
+    lineHeight: 32,
+    letterSpacing: -0.2,
+  },
+  votePromptSubtext: {
+    fontSize: 13,
+    color: stitch.onSurfaceVariant,
+    lineHeight: 18,
+  },
+  voteDividerRule: {
+    height: 1,
+    backgroundColor: 'rgba(204, 197, 189, 0.6)',
+  },
+  voteGridSection: {
+    gap: 12,
+  },
+  voteGridHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  voteGridHeaderTitle: {
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 0.8,
+    color: stitch.onSurfaceVariant,
+    textTransform: 'uppercase',
+  },
+  voteGridVotesCountRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  voteGridVotesCountText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: stitch.secondary,
+  },
+  vote2x2Grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+  voteCandidateCard: {
+    width: '48%',
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: 'rgba(204, 197, 189, 0.6)',
+    borderRadius: 14,
+    padding: 14,
+    alignItems: 'center',
+    position: 'relative',
+  },
+  voteCandidateCardSelected: {
+    borderWidth: 2,
+    borderColor: stitch.secondary,
+    backgroundColor: stitch.surfaceContainerLowest,
+  },
+  voteCandidateActiveBadge: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: stitch.secondary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  voteCandidateAvatarWrap: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    padding: 2,
+    borderWidth: 1,
+    borderColor: 'rgba(204, 197, 189, 0.6)',
+    backgroundColor: stitch.surfaceVariant,
+    marginBottom: 8,
+    overflow: 'hidden',
+  },
+  voteCandidateAvatarWrapSelected: {
+    borderColor: stitch.secondary,
+    backgroundColor: stitch.surfaceContainer,
+  },
+  voteCandidateAvatarImg: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 30,
+  },
+  voteCandidateName: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: stitch.onSurface,
+  },
+  voteCandidateRoleText: {
+    fontSize: 10,
+    fontWeight: '500',
+    letterSpacing: 0.6,
+    color: stitch.outline,
+    marginTop: 2,
+    textTransform: 'uppercase',
+  },
+  voteCandidateRoleTextSelected: {
+    color: stitch.secondary,
+    fontWeight: '600',
+  },
+  voteCommentSection: {
+    gap: 8,
+  },
+  voteCommentLabel: {
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 0.8,
+    color: stitch.onSurfaceVariant,
+    textTransform: 'uppercase',
+  },
+  voteCommentLabelSub: {
+    fontWeight: '400',
+    textTransform: 'none',
+    color: stitch.outline,
+  },
+  voteCommentInputBox: {
+    backgroundColor: stitch.surfaceContainerLow,
+    borderWidth: 1,
+    borderColor: 'rgba(204, 197, 189, 0.7)',
+    borderRadius: 12,
+    padding: 12,
+    gap: 8,
+  },
+  voteCommentTextInput: {
+    fontSize: 14,
+    color: stitch.onSurface,
+    minHeight: 52,
+    textAlignVertical: 'top',
+    lineHeight: 20,
+  },
+  voteCommentFooterRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(204, 197, 189, 0.3)',
+  },
+  voteCommentLockRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  voteCommentLockText: {
+    fontSize: 11,
+    color: stitch.outline,
+  },
+  voteCommentCounterText: {
+    fontSize: 11,
+    color: stitch.outline,
+    fontFamily: Platform.select({ web: 'monospace', default: 'Courier' }),
+  },
+  votePulseCard: {
+    backgroundColor: 'rgba(245, 243, 240, 0.6)',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(204, 197, 189, 0.4)',
+    padding: 16,
+    gap: 12,
+  },
+  votePulseHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  votePulseTitleLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  votePulseLiveDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: stitch.secondary,
+  },
+  votePulseCardTitle: {
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 0.8,
+    color: stitch.onSurface,
+    textTransform: 'uppercase',
+  },
+  votePulseRatioText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: stitch.onSurfaceVariant,
+  },
+  votePulseMembersRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 4,
+  },
+  votePulseMemberCol: {
+    alignItems: 'center',
+    gap: 4,
+  },
+  votePulseMemberAvatarWrap: {
+    position: 'relative',
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    padding: 1,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+  },
+  votePulseMemberAvatarWrapLocked: {
+    borderColor: 'rgba(171, 52, 37, 0.6)',
+  },
+  votePulseMemberAvatarWrapMe: {
+    borderWidth: 2,
+    borderStyle: 'dashed',
+    borderColor: stitch.primary,
+  },
+  votePulseMemberAvatarImg: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 20,
+  },
+  votePulseLockBadge: {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: stitch.secondary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  votePulseEditBadge: {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: stitch.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  votePulseWaitingBadge: {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: stitch.surfaceVariant,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  votePulseMemberName: {
+    fontSize: 10,
+    color: stitch.onSurfaceVariant,
+  },
+  votePulseMemberNameBold: {
+    fontWeight: '700',
+    color: stitch.primary,
+  },
+  votePulseBlurFooterRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(204, 197, 189, 0.3)',
+  },
+  votePulseBlurFooterText: {
+    fontSize: 11,
+    color: stitch.outline,
+  },
+  voteSealActionWrap: {
+    gap: 8,
+    marginTop: 4,
+  },
+  voteSealActionBtn: {
+    width: '100%',
+    backgroundColor: stitch.secondary,
+    borderRadius: 10,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  voteSealActionBtnText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    letterSpacing: 0.3,
+  },
+  voteSealActionNotice: {
+    textAlign: 'center',
+    fontSize: 10,
+    fontWeight: '600',
+    letterSpacing: 0.8,
+    color: stitch.outline,
+    textTransform: 'uppercase',
   },
 
   // =========================================================================
