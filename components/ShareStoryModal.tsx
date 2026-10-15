@@ -6,9 +6,9 @@ import {
   Modal,
   TouchableOpacity,
   Share,
-  Image,
   ScrollView,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { colors, fonts } from '@/constants/colors';
 import { Room, RoundCard, TodayRound } from '@/types/kapsa';
 

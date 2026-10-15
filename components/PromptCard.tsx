@@ -5,9 +5,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  Image,
   ActivityIndicator,
 } from 'react-native';
+import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { colors, DECK_THEMES } from '@/constants/colors';
 import { PromptFormat, RoomType, RoundCard, TodayRound } from '@/types/kapsa';

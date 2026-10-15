@@ -6,10 +6,10 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
-  Image,
   ActivityIndicator,
   Modal,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';

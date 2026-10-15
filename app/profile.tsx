@@ -6,18 +6,23 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
-  Image,
   TextInput,
   Switch,
   Share,
   Platform,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from 'expo-router';
 import { fonts, getAvatarPhotoUri, PORTRAIT_AVATARS, stitch } from '@/constants/colors';
 import { AVATAR_EMOJIS, useAuthStore } from '@/store/authStore';
 import { useRoomStore } from '@/store/roomStore';
+import {
+  scheduleDailyCapsuleNotification,
+  cancelAllDailyNotifications,
+  sendTestLocalNotification,
+} from '@/lib/notifications';
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -31,6 +36,22 @@ export default function ProfileScreen() {
   const [isCopiedProfileCode, setIsCopiedProfileCode] = useState(false);
   const [dailyReminderEnabled, setDailyReminderEnabled] = useState(true);
   const [friendMoveNotificationEnabled, setFriendMoveNotificationEnabled] = useState(true);
+  const [testNotificationSent, setTestNotificationSent] = useState(false);
+
+  const handleToggleDailyReminder = async (val: boolean) => {
+    setDailyReminderEnabled(val);
+    if (val) {
+      await scheduleDailyCapsuleNotification(21, 0);
+    } else {
+      await cancelAllDailyNotifications();
+    }
+  };
+
+  const handleSendTestNotification = async () => {
+    setTestNotificationSent(true);
+    await sendTestLocalNotification();
+    setTimeout(() => setTestNotificationSent(false), 3000);
+  };
 
   const friendlyName = displayName === 'Ти' ? 'Катерина' : displayName;
   const userPortraitUri = getAvatarPhotoUri(avatarEmoji, 0);
@@ -308,16 +329,39 @@ export default function ProfileScreen() {
                   <Text style={styles.prefItemTitle}>Щоденне нагадування</Text>
                 </View>
                 <Text style={styles.prefItemSub}>
-                  М'який пуш о 19:30, якщо хід ще не запечатано
+                  М'який пуш о 21:00 про розкриття раунду
                 </Text>
               </View>
               <Switch
                 value={dailyReminderEnabled}
-                onValueChange={setDailyReminderEnabled}
+                onValueChange={handleToggleDailyReminder}
                 trackColor={{ false: stitch.outlineVariant, true: stitch.secondary }}
                 thumbColor="#FFFFFF"
               />
             </View>
+
+            {/* Test Notification Action */}
+            <TouchableOpacity
+              style={styles.testNotifBtn}
+              onPress={handleSendTestNotification}
+              activeOpacity={0.75}
+            >
+              <Feather
+                name={testNotificationSent ? 'check-circle' : 'send'}
+                size={13}
+                color={testNotificationSent ? '#2E7D32' : stitch.secondary}
+              />
+              <Text
+                style={[
+                  styles.testNotifBtnText,
+                  testNotificationSent && { color: '#2E7D32' },
+                ]}
+              >
+                {testNotificationSent
+                  ? 'Сповіщення надіслано на пристрій!'
+                  : 'Надіслати тестове сповіщення'}
+              </Text>
+            </TouchableOpacity>
 
             {/* Item 3: Move Notification */}
             <View style={styles.prefItem}>
@@ -827,6 +871,21 @@ const styles = StyleSheet.create({
   prefItemSub: {
     fontSize: 12,
     color: stitch.onSurfaceVariant,
+  },
+  testNotifBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    backgroundColor: 'rgba(171, 52, 37, 0.05)',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(204, 197, 189, 0.4)',
+  },
+  testNotifBtnText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: stitch.secondary,
   },
   timeTag: {
     backgroundColor: stitch.surface,

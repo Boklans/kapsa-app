@@ -9,11 +9,10 @@ import {
   ActivityIndicator,
   Share,
   Platform,
-  Image,
-  ImageBackground,
   Modal,
   TextInput,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';

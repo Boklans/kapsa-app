@@ -7,14 +7,13 @@ import {
   TextInput,
   SafeAreaView,
   ScrollView,
-  Image,
-  ImageBackground,
   Platform,
   Share,
   Switch,
   Modal,
   Alert,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import Svg, { Path } from 'react-native-svg';

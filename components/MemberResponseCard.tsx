@@ -4,9 +4,9 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Image,
   Animated,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { colors } from '@/constants/colors';
 import { PromptFormat, RoomType, RoundCard } from '@/types/kapsa';
 

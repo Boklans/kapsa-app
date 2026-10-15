@@ -2,6 +2,10 @@ import React, { useEffect } from 'react';
 import { View, StyleSheet, Platform, StatusBar } from 'react-native';
 import { Stack, ThemeProvider, DefaultTheme } from 'expo-router';
 import { colors } from '@/constants/colors';
+import {
+  registerForPushNotificationsAsync,
+  scheduleDailyCapsuleNotification,
+} from '@/lib/notifications';
 import { useAuthStore } from '@/store/authStore';
 import { useRoomStore } from '@/store/roomStore';
 
@@ -55,6 +59,9 @@ export default function KapsaRootLayout() {
 
     initializeAuth().then(() => {
       fetchMyRooms();
+      registerForPushNotificationsAsync().then(() => {
+        scheduleDailyCapsuleNotification(21, 0);
+      });
     });
   }, [initializeAuth, fetchMyRooms]);
 
