@@ -1206,9 +1206,30 @@ export default function HomeScreen() {
               </View>
             </View>
           ) : (
-            /* SCREEN 5: РОЗКРИТТЯ ВІДПОВІДЕЙ 21:00 */
+            /* ============================================================= */
+            /* SCREEN 2: РАУНД РОЗПЕЧАТАНО О 21:00 (REVEALED) — GOOGLE STITCH */
+            /* ============================================================= */
             <View style={styles.stitchRevealedCanvas}>
-              {/* 1. Unveiling Celebration Badge & Prompt */}
+              {/* Top Navigation Row */}
+              <View style={styles.revealedTopNavRow}>
+                <TouchableOpacity
+                  style={styles.revealedBackBtn}
+                  onPress={() => setTodayStage('hub')}
+                  activeOpacity={0.8}
+                >
+                  <Feather name="arrow-left" size={17} color={stitch.primary} />
+                  <Text style={styles.revealedBackBtnText}>На головну</Text>
+                </TouchableOpacity>
+
+                <View style={styles.revealedRoomBadge}>
+                  <View style={styles.revealedRoomBadgeDot} />
+                  <Text style={styles.revealedRoomBadgeName}>
+                    {featuredRoom?.name || 'Банда з КПІ 🔥'}
+                  </Text>
+                </View>
+              </View>
+
+              {/* 1. Unveiling Celebration Badge & Tags */}
               <View style={styles.stitchUnveilSection}>
                 <View style={styles.stitchUnveilTopRow}>
                   <View style={styles.stitchWaxSealPill}>
@@ -1226,108 +1247,103 @@ export default function HomeScreen() {
                   </View>
                 </View>
 
-                <Text style={styles.stitchRevealedQuestion}>
-                  «Хто з нас найімовірніше заснув би просто посеред гучної вечірки? ✨»
-                </Text>
-                <View style={styles.stitchMonographRule} />
+                {/* Daily Question / Prompt */}
+                <View style={styles.revealedQuestionWrap}>
+                  <Text style={styles.revealedQuestionMeta}>ПИТАННЯ ДНЯ</Text>
+                  <Text style={styles.stitchRevealedQuestion}>
+                    «{featuredQuestion || 'Хто з нас найімовірніше заснув би просто посеред гучної вечірки? ✨'}»
+                  </Text>
+                  <View style={styles.stitchMonographRule} />
+                </View>
               </View>
 
-              {/* 2. The Reveal Banner (Match Status) */}
+              {/* 2. The Consensus Match Banner */}
               <View style={styles.stitchMatchBanner}>
                 <View style={styles.stitchMatchIconWrap}>
-                  <Ionicons name="sparkles" size={20} color={colors.terracotta} />
+                  <Ionicons name="sparkles" size={20} color={stitch.secondary} />
                 </View>
                 <View style={{ flex: 1 }}>
                   <View style={styles.stitchMatchBadgeRow}>
                     <Text style={styles.stitchMatchBadgeText}>ОДНОГОЛОСНО</Text>
-                    <Text style={styles.stitchMatchRatioText}>· 2 з 2 співпали</Text>
+                    <Text style={styles.stitchMatchRatioText}>• 4 з 5 збіглися</Text>
                   </View>
                   <Text style={styles.stitchMatchTitle}>
-                    100% ЗБІГ! Всі проголосували за Макса 😂
+                    80% ЗБІГ! Всі вказали на Макса 😂
                   </Text>
                   <Text style={styles.stitchMatchDesc}>
-                    Жодних сумнівів: титул «соні вечора» беззаперечно переходить до Максима.
+                    Жодних сумнівів: титул «соні вечора» беззаперечно переходить до Максима. Навіть диван у клубі пам'ятає цей тріумф.
                   </Text>
                 </View>
               </View>
 
-              {/* 3. Voting Breakdown Cards */}
+              {/* 3. Voting Breakdown Cards (Asymmetric Bento Grid) */}
               <View style={styles.stitchBreakdownSection}>
                 <View style={styles.stitchBreakdownHeaderRow}>
                   <Text style={styles.stitchBreakdownHeaderTitle}>РЕЗУЛЬТАТИ ГОЛОСУВАННЯ</Text>
+                  <Text style={styles.stitchBreakdownCountText}>5 учасників</Text>
                 </View>
 
                 <View style={styles.stitchBreakdownGrid}>
-                  {/* Winner Card */}
+                  {/* Winner Card (Макс) */}
                   <View style={styles.stitchWinnerCard}>
-                    <View style={styles.stitchBreakdownCenterCol}>
-                      <View style={styles.stitchBreakdownAvatarWrap}>
-                        <Image
-                          source={{ uri: PORTRAIT_AVATARS['🦊'] }}
-                          style={styles.stitchBreakdownAvatarImg}
-                        />
-                        <View style={styles.stitchWinnerCheckCircle}>
-                          <Feather name="check" size={12} color="#FFFFFF" />
-                        </View>
-                      </View>
-                      <Text style={styles.stitchBreakdownCandidateName}>Макс</Text>
-                      <Text style={styles.stitchBreakdownWinnerPct}>100% ГОЛОСІВ</Text>
+                    <View style={styles.stitchWinnerBadge}>
+                      <Feather name="check" size={10} color="#FFFFFF" />
+                      <Text style={styles.stitchWinnerBadgeText}>ПЕРЕМОЖЕЦЬ</Text>
                     </View>
 
-                    <View style={styles.stitchBreakdownFooter}>
-                      <Text style={styles.stitchBreakdownFooterText}>
-                        Ти + Макс обрали його
-                      </Text>
+                    <View style={styles.stitchBreakdownAvatarWrap}>
+                      <Image
+                        source={{ uri: PORTRAIT_AVATARS['🦊'] }}
+                        style={styles.stitchBreakdownAvatarImg}
+                      />
+                      <View style={styles.stitchWinnerCheckCircle}>
+                        <Feather name="check" size={11} color="#FFFFFF" />
+                      </View>
                     </View>
+
+                    <Text style={styles.stitchBreakdownCandidateName}>Макс</Text>
+                    <Text style={styles.stitchBreakdownWinnerPct}>4 голоси (80%)</Text>
+
+                    <View style={styles.winnerProgressBarBg}>
+                      <View style={[styles.winnerProgressBarFill, { width: '80%' }]} />
+                    </View>
+
+                    <Text style={styles.stitchBreakdownVotersSub}>
+                      Ти, Катерина, Оля, Влад
+                    </Text>
                   </View>
 
-                  {/* Runner-up Card */}
+                  {/* Runner-up Card (Діма) */}
                   <View style={styles.stitchRunnerUpCard}>
-                    <View style={styles.stitchBreakdownCenterCol}>
-                      <View style={styles.stitchBreakdownAvatarWrap}>
-                        <Image
-                          source={{ uri: userPortraitUri }}
-                          style={[styles.stitchBreakdownAvatarImg, { opacity: 0.7 }]}
-                        />
-                      </View>
-                      <Text style={styles.stitchBreakdownCandidateName}>Катерина (Ти)</Text>
-                      <Text style={styles.stitchBreakdownMutedPct}>0 ГОЛОСІВ</Text>
+                    <View style={styles.stitchBreakdownAvatarWrap}>
+                      <Image
+                        source={{ uri: PORTRAIT_AVATARS['🔥'] || getAvatarPhotoUri(undefined, 2) }}
+                        style={styles.stitchBreakdownAvatarImg}
+                      />
                     </View>
 
-                    <View style={styles.stitchBreakdownFooter}>
-                      <Text style={styles.stitchBreakdownFooterText}>0 голосів</Text>
+                    <Text style={styles.stitchBreakdownCandidateName}>Діма</Text>
+                    <Text style={styles.stitchBreakdownMutedPct}>1 голос (20%)</Text>
+
+                    <View style={styles.winnerProgressBarBg}>
+                      <View style={[styles.runnerUpProgressBarFill, { width: '20%' }]} />
                     </View>
+
+                    <Text style={styles.stitchBreakdownVotersSub}>
+                      Проголосував сам Макс
+                    </Text>
                   </View>
                 </View>
               </View>
 
-              {/* 4. Unsealed Responses & Stories */}
+              {/* 4. Revealed Comments & Stories Feed */}
               <View style={styles.stitchStoriesSection}>
-                <Text style={styles.stitchStoriesSectionTitle}>РОЗПЕЧАТАНІ КОМЕНТАРІ ТА ІСТОРІЇ</Text>
-
-                {/* Story 1: You */}
-                <View style={styles.stitchStoryCard}>
-                  <View style={styles.stitchStoryHeaderRow}>
-                    <View style={styles.stitchStoryAuthorRow}>
-                      <Image
-                        source={{ uri: userPortraitUri }}
-                        style={styles.stitchStoryMiniAvatar}
-                      />
-                      <Text style={styles.stitchStoryAuthorName}>Ти (Катерина) <Text style={{ color: colors.terracotta }}>АВТОР</Text></Text>
-                      <Text style={styles.stitchStoryTime}>• Внесено о 20:14</Text>
-                    </View>
-                    <View style={styles.stitchStoryLocationTag}>
-                      <Text style={styles.stitchStoryLocationText}>🔒</Text>
-                    </View>
-                  </View>
-
-                  <Text style={styles.stitchStoryQuote}>
-                    «{candidNoteText || 'Пам\'ятаєш ту поїздку до Львова, коли ти заснув на дивані в клубі о першій ночі з келихом сидру в руці? 😂 Це було легендарно.'}»
-                  </Text>
-                  <Text style={{ fontSize: 11, color: colors.inkMuted, marginTop: 4 }}>📍 Львів, листопад 2023</Text>
+                <View style={styles.stitchStoriesHeaderRow}>
+                  <Text style={styles.stitchStoriesSectionTitle}>РОЗПЕЧАТАНІ КОМЕНТАРІ ТА ІСТОРІЇ</Text>
+                  <Text style={styles.stitchStoriesCountText}>2 нотатки</Text>
                 </View>
 
-                {/* Story 2: Maks */}
+                {/* Story 1: Maks (Self confession & Voice note) */}
                 <View style={styles.stitchStoryCard}>
                   <View style={styles.stitchStoryHeaderRow}>
                     <View style={styles.stitchStoryAuthorRow}>
@@ -1338,55 +1354,92 @@ export default function HomeScreen() {
                       <Text style={styles.stitchStoryAuthorName}>Макс</Text>
                       <Text style={styles.stitchStoryTime}>• Внесено о 19:42</Text>
                     </View>
-                    <View style={styles.stitchStoryLocationTag}>
-                      <Text style={styles.stitchStoryLocationText}>🔒</Text>
-                    </View>
+                    <Feather name="unlock" size={14} color={stitch.outline} />
                   </View>
 
                   <Text style={styles.stitchStoryQuote}>
                     «Я навіть не сперечаюся. Моє ліжко — це святе місце, а вечірки після 23:00 — це вже подвиг. Здався сам! 😴»
                   </Text>
+
+                  {/* Mini Voice Note Component */}
+                  <View style={styles.stitchVoiceArtifactCard}>
+                    <TouchableOpacity
+                      style={styles.stitchVoicePlayBtn}
+                      onPress={() => setIsPlayingAudioHome((prev) => !prev)}
+                      activeOpacity={0.85}
+                    >
+                      <Ionicons
+                        name={isPlayingAudioHome ? 'pause' : 'play'}
+                        size={18}
+                        color="#FFFFFF"
+                      />
+                    </TouchableOpacity>
+
+                    <View style={{ flex: 1, gap: 4 }}>
+                      <View style={styles.stitchVoiceWaveformRow}>
+                        {[8, 14, 20, 24, 16, 22, 26, 18, 20, 12, 16, 24, 14, 10, 18, 12].map((h, i) => (
+                          <View
+                            key={i}
+                            style={[
+                              styles.stitchWaveBar,
+                              { height: h },
+                              isPlayingAudioHome && i % 2 === 0 && { backgroundColor: stitch.secondary },
+                            ]}
+                          />
+                        ))}
+                      </View>
+                      <View style={styles.stitchVoiceMetaRow}>
+                        <Text style={styles.stitchVoiceTitle}>Голосове зізнання Макса</Text>
+                        <Text style={styles.stitchVoiceDuration}>0:14</Text>
+                      </View>
+                    </View>
+                  </View>
                 </View>
 
-                {/* Voice Note Snippet Artifact */}
-                <View style={styles.stitchVoiceArtifactCard}>
-                  <TouchableOpacity
-                    style={styles.stitchVoicePlayBtn}
-                    onPress={() => setIsPlayingAudioHome((prev) => !prev)}
-                    activeOpacity={0.85}
-                  >
-                    <Ionicons
-                      name={isPlayingAudioHome ? 'pause' : 'play'}
-                      size={18}
-                      color="#FFFFFF"
-                    />
-                  </TouchableOpacity>
-
-                  <View style={{ flex: 1, gap: 4 }}>
-                    <View style={styles.stitchVoiceWaveformRow}>
-                      {[6, 12, 18, 24, 14, 20, 26, 16, 22, 10, 18, 25, 12, 8, 19, 14].map((h, i) => (
-                        <View
-                          key={i}
-                          style={[
-                            styles.stitchWaveBar,
-                            { height: h },
-                            isPlayingAudioHome && i % 2 === 0 && { backgroundColor: colors.terracotta },
-                          ]}
-                        />
-                      ))}
+                {/* Story 2: Kateryna (Story & Matting Photo Artifact) */}
+                <View style={styles.stitchStoryCard}>
+                  <View style={styles.stitchStoryHeaderRow}>
+                    <View style={styles.stitchStoryAuthorRow}>
+                      <Image
+                        source={{ uri: userPortraitUri }}
+                        style={styles.stitchStoryMiniAvatar}
+                      />
+                      <Text style={styles.stitchStoryAuthorName}>Катерина</Text>
+                      <View style={styles.stitchAuthorTag}>
+                        <Text style={styles.stitchAuthorTagText}>АВТОР</Text>
+                      </View>
+                      <Text style={styles.stitchStoryTime}>• Внесено о 20:14</Text>
                     </View>
-                    <View style={styles.stitchVoiceMetaRow}>
-                      <Text style={styles.stitchVoiceTitle}>Голосове зізнання Макса</Text>
-                      <Text style={styles.stitchVoiceDuration}>0:14</Text>
+                    <Feather name="unlock" size={14} color={stitch.outline} />
+                  </View>
+
+                  <Text style={styles.stitchStoryQuote}>
+                    «{candidNoteText || 'Пам\'ятаєш ту поїздку до Львова, коли ти заснув на дивані в клубі о першій ночі з келихом сидру в руці? 😂 Це було легендарно.'}»
+                  </Text>
+
+                  {/* Matting Photo Artifact */}
+                  <View style={styles.revealedPhotoArtifact}>
+                    <View style={styles.revealedPhotoWrap}>
+                      <Image
+                        source={{
+                          uri: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80',
+                        }}
+                        style={styles.revealedPhotoImg}
+                      />
+                    </View>
+                    <View style={styles.revealedPhotoFooter}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                        <Feather name="map-pin" size={11} color={stitch.onSurfaceVariant} />
+                        <Text style={styles.revealedPhotoLocation}>Львів, листопад 2023</Text>
+                      </View>
+                      <Text style={styles.revealedPhotoArchive}>Архів #49</Text>
                     </View>
                   </View>
                 </View>
               </View>
 
-              {/* 5. Emotional Reactions & Discussion */}
+              {/* 5. Duet Reactions & Quick Chat */}
               <View style={styles.stitchReactionsSection}>
-                <Text style={styles.stitchReactionsTitle}>РЕАКЦІЇ ДУЕТУ</Text>
-
                 <View style={styles.stitchEmojiChipsRow}>
                   {Object.entries(homeReactions).map(([em, cnt]) => {
                     const isActive = Boolean(userHomeReacted[em]);
@@ -1401,7 +1454,7 @@ export default function HomeScreen() {
                         activeOpacity={0.8}
                       >
                         <Text style={styles.stitchEmojiText}>{em}</Text>
-                        <Text style={[styles.stitchEmojiCount, isActive && { color: colors.terracotta }]}>
+                        <Text style={[styles.stitchEmojiCount, isActive && { color: stitch.secondary }]}>
                           {cnt}
                         </Text>
                       </TouchableOpacity>
@@ -1414,7 +1467,7 @@ export default function HomeScreen() {
                   <TextInput
                     style={styles.stitchQuickReplyInput}
                     placeholder="Напиши щось Максу..."
-                    placeholderTextColor={colors.inkMuted}
+                    placeholderTextColor={stitch.onSurfaceVariant}
                     value={quickReplyHome}
                     onChangeText={setQuickReplyHome}
                   />
@@ -1432,72 +1485,51 @@ export default function HomeScreen() {
                 </View>
               </View>
 
-              {/* 6. Editorial Actions: Save to Lore & Share */}
+              {/* 6. Primary Action Group: Golden Lore & Share */}
               <View style={styles.stitchActionsRow}>
+                {/* Golden Lore Button */}
                 <TouchableOpacity
                   style={[
-                    styles.stitchSaveLoreBtn,
-                    hasSavedLoreHome && styles.stitchSaveLoreBtnActive,
+                    styles.goldenLoreBtn,
+                    hasSavedLoreHome && styles.goldenLoreBtnSaved,
                   ]}
                   onPress={handleToggleLoreSave}
                   activeOpacity={0.88}
                 >
                   <Ionicons
-                    name={hasSavedLoreHome ? 'star' : 'star-outline'}
-                    size={16}
-                    color={hasSavedLoreHome ? '#C4A46C' : colors.inkPrimary}
+                    name="star"
+                    size={18}
+                    color={hasSavedLoreHome ? '#5C4715' : '#1B1C1A'}
                   />
-                  <Text style={styles.stitchSaveLoreBtnText}>
-                    {hasSavedLoreHome ? 'Збережено в Lore ★' : 'Зберегти в Lore ★'}
+                  <Text style={styles.goldenLoreBtnText}>
+                    {hasSavedLoreHome ? 'Збережено в Lore ★' : 'Зберегти в Lore (Золотий фонд)'}
                   </Text>
                 </TouchableOpacity>
 
+                {/* Secondary Share Button */}
                 <TouchableOpacity
                   style={styles.stitchShareStoryBtn}
                   onPress={handleCopyProfileInviteCode}
                   activeOpacity={0.88}
                 >
-                  <Feather name="share-2" size={15} color={colors.inkPrimary} />
-                  <Text style={styles.stitchShareStoryBtnText}>Поділитися</Text>
-                </TouchableOpacity>
-              </View>
-
-              {/* Bottom Test Controls */}
-              <View style={{ gap: 8, marginTop: 6 }}>
-                <TouchableOpacity
-                  style={{
-                    paddingVertical: 12,
-                    alignItems: 'center',
-                    backgroundColor: colors.paperElevated,
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    borderColor: colors.paperBorder,
-                  }}
-                  onPress={() => setTodayStage('waiting')}
-                  activeOpacity={0.85}
-                >
-                  <Text style={{ fontSize: 12, fontWeight: '700', color: colors.inkPrimary }}>
-                    🔒 Повернутися до запечатаного стану (Очікування 21:00)
-                  </Text>
+                  <Feather name="share-2" size={15} color={stitch.primary} />
+                  <Text style={styles.stitchShareStoryBtnText}>Поділитися карткою спогаду</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={{
-                    paddingVertical: 10,
-                    alignItems: 'center',
-                  }}
-                  onPress={() => {
-                    if (currentRoom) resetDemoMyResponse(currentRoom.id);
-                    setIsAnswerSealed(false);
-                    setTodayStage('vote');
-                  }}
-                  activeOpacity={0.85}
-                >
-                  <Text style={{ fontSize: 11, fontWeight: '600', color: colors.inkSecondary }}>
-                    🔄 Скинути хід та проголосувати заново
-                  </Text>
-                </TouchableOpacity>
+                <Text style={styles.revealedAutoCloseText}>
+                  Капсула закриється автоматично через 18 годин
+                </Text>
               </View>
+
+              {/* Return to Hub */}
+              <TouchableOpacity
+                style={styles.returnToHubBtn}
+                onPress={() => setTodayStage('hub')}
+                activeOpacity={0.85}
+              >
+                <Feather name="arrow-left" size={14} color={stitch.primary} />
+                <Text style={styles.returnToHubBtnText}>Повернутися до огляду дня</Text>
+              </TouchableOpacity>
             </View>
           )
         )}
@@ -4586,7 +4618,184 @@ const styles = StyleSheet.create({
     lineHeight: 16,
   },
 
-  // SCREEN 5 (REVEALED MATCH)
+  // =========================================================================
+  // SCREEN 2: РАУНД РОЗПЕЧАТАНО О 21:00 (REVEALED) STYLES
+  // =========================================================================
+  revealedTopNavRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  revealedBackBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 4,
+  },
+  revealedBackBtnText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: stitch.primary,
+  },
+  revealedRoomBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
+    backgroundColor: stitch.surfaceContainer,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+  },
+  revealedRoomBadgeDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: stitch.secondary,
+  },
+  revealedRoomBadgeName: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: stitch.onSurface,
+  },
+  revealedQuestionWrap: {
+    gap: 6,
+    marginTop: 6,
+  },
+  revealedQuestionMeta: {
+    fontSize: 10,
+    fontWeight: '600',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
+    color: stitch.onSurfaceVariant,
+  },
+  stitchBreakdownCountText: {
+    fontSize: 11,
+    color: stitch.onSurfaceVariant,
+  },
+  winnerProgressBarBg: {
+    width: '100%',
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: stitch.surfaceContainerHigh,
+    marginTop: 10,
+    overflow: 'hidden',
+  },
+  winnerProgressBarFill: {
+    height: '100%',
+    borderRadius: 3,
+    backgroundColor: stitch.secondary,
+  },
+  runnerUpProgressBarFill: {
+    height: '100%',
+    borderRadius: 3,
+    backgroundColor: stitch.outline,
+  },
+  stitchBreakdownVotersSub: {
+    fontSize: 10,
+    color: stitch.onSurfaceVariant,
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  stitchStoriesHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  stitchStoriesCountText: {
+    fontSize: 11,
+    color: stitch.onSurfaceVariant,
+  },
+  stitchAuthorTag: {
+    backgroundColor: stitch.surfaceContainerHigh,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    borderRadius: 3,
+  },
+  stitchAuthorTagText: {
+    fontSize: 9,
+    fontWeight: '700',
+    color: stitch.secondary,
+    letterSpacing: 0.5,
+  },
+  revealedPhotoArtifact: {
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    backgroundColor: stitch.surface,
+    padding: 8,
+    borderRadius: 8,
+    marginTop: 8,
+  },
+  revealedPhotoWrap: {
+    width: '100%',
+    height: 180,
+    borderRadius: 6,
+    overflow: 'hidden',
+    backgroundColor: stitch.surfaceContainerHigh,
+  },
+  revealedPhotoImg: {
+    width: '100%',
+    height: '100%',
+  },
+  revealedPhotoFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 8,
+    paddingHorizontal: 4,
+  },
+  revealedPhotoLocation: {
+    fontSize: 10,
+    color: stitch.onSurfaceVariant,
+  },
+  revealedPhotoArchive: {
+    fontSize: 10,
+    color: stitch.onSurfaceVariant,
+  },
+  goldenLoreBtn: {
+    width: '100%',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    backgroundColor: '#EAD8A6',
+    borderWidth: 1,
+    borderColor: '#D1BE85',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  goldenLoreBtnSaved: {
+    backgroundColor: '#E0CC94',
+  },
+  goldenLoreBtnText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#1B1C1A',
+    letterSpacing: 0.3,
+  },
+  revealedAutoCloseText: {
+    fontSize: 10,
+    color: stitch.onSurfaceVariant,
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  returnToHubBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingVertical: 12,
+    marginTop: 8,
+  },
+  returnToHubBtnText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: stitch.primary,
+  },
   stitchRevealedCanvas: {
     paddingHorizontal: 20,
     paddingTop: 16,
