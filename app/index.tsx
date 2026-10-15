@@ -468,15 +468,15 @@ export default function HomeScreen() {
     return (
       <SafeAreaView style={styles.safeArea}>
         {/* Top Editorial Header (Task-oriented navigation) */}
-        <View style={styles.createTopNavBar}>
-          <View style={styles.createNavLeft}>
+        <View style={styles.universalTopNavBar}>
+          <View style={styles.navSlotLeft}>
             <TouchableOpacity
-              style={styles.createNavBackBtn}
+              accessibilityLabel="До кімнат"
+              style={styles.navSlotIconBtn}
               onPress={() => setActiveTab('circles')}
-              activeOpacity={0.8}
+              activeOpacity={0.75}
             >
-              <Feather name="arrow-left" size={18} color={stitch.onSurfaceVariant} />
-              <Text style={styles.createNavBackText}>До кімнат</Text>
+              <Feather name="arrow-left" size={20} color={stitch.onSurfaceVariant} />
             </TouchableOpacity>
           </View>
 
@@ -484,9 +484,9 @@ export default function HomeScreen() {
             <Text style={styles.universalBrandTitle}>KAPSA</Text>
           </View>
 
-          <View style={styles.createNavRight}>
+          <View style={styles.navSlotRight}>
             <View style={styles.createStepBadge}>
-              <Text style={styles.createStepBadgeText}>Крок 1 з 2</Text>
+              <Text style={styles.createStepBadgeText}>1 з 2</Text>
             </View>
           </View>
         </View>
@@ -722,49 +722,85 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      {/* ================================================================= */}
+      {/* UNIFIED PERSISTENT TOP APP BAR (STITCH EDITORIAL MASTHEAD)        */}
+      {/* ================================================================= */}
+      <View style={styles.universalTopNavBar}>
+        <View style={styles.navSlotLeft}>
+          {activeTab === 'memories' ? (
+            <TouchableOpacity
+              accessibilityLabel="Головна"
+              style={styles.navSlotIconBtn}
+              onPress={() => setActiveTab('today')}
+              activeOpacity={0.75}
+            >
+              <Feather name="arrow-left" size={20} color={stitch.onSurfaceVariant} />
+            </TouchableOpacity>
+          ) : activeTab === 'today' && todayStage !== 'hub' ? (
+            <TouchableOpacity
+              accessibilityLabel="До кімнат"
+              style={styles.navSlotIconBtn}
+              onPress={() => setTodayStage('hub')}
+              activeOpacity={0.75}
+            >
+              <Feather name="arrow-left" size={20} color={stitch.onSurfaceVariant} />
+            </TouchableOpacity>
+          ) : activeTab === 'fond' ? (
+            <TouchableOpacity
+              accessibilityLabel="Архів"
+              style={styles.navSlotIconBtn}
+              onPress={() => {}}
+              activeOpacity={0.75}
+            >
+              <Feather name="clock" size={19} color={stitch.onSurfaceVariant} />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              accessibilityLabel="Приватність"
+              style={styles.navSlotIconBtn}
+              onPress={() => {}}
+              activeOpacity={0.75}
+            >
+              <Feather name="lock" size={19} color={stitch.onSurfaceVariant} />
+            </TouchableOpacity>
+          )}
+        </View>
+
+        <View style={styles.universalHeaderCenter} pointerEvents="none">
+          <Text style={styles.universalBrandTitle}>KAPSA</Text>
+        </View>
+
+        <View style={styles.navSlotRight}>
+          {activeTab === 'memories' ? (
+            <TouchableOpacity
+              accessibilityLabel="Поділитися"
+              style={styles.navSlotIconBtn}
+              onPress={handleCopyProfileInviteCode}
+              activeOpacity={0.75}
+            >
+              <Feather name="share-2" size={19} color={stitch.onSurfaceVariant} />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              accessibilityLabel="Профіль"
+              style={styles.navAvatarBtn}
+              onPress={() => setActiveTab('memories')}
+              activeOpacity={0.85}
+            >
+              <Image
+                source={{ uri: userPortraitUri }}
+                style={styles.navAvatarImg}
+              />
+              <View style={styles.navOnlineDot} />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+
       <ScrollView
         contentContainerStyle={styles.container}
         showsVerticalScrollIndicator={false}
       >
-        {/* ================================================================= */}
-        {/* TOP CONTEXT BAR (1-в-1 з Google Stitch TopAppBar)                 */}
-        {/* ================================================================= */}
-        {activeTab === 'today' && todayStage === 'hub' && (
-          <View style={styles.hubHeader}>
-            <View style={styles.hubHeaderLeft}>
-              <TouchableOpacity
-                accessibilityLabel="Конфіденційність"
-                style={styles.hubHeaderIconBtn}
-                onPress={() => {}}
-                activeOpacity={0.8}
-              >
-                <Feather name="lock" size={17} color={stitch.onSurfaceVariant} />
-              </TouchableOpacity>
-              <Text style={styles.hubHeaderRoundTag}>
-                РАУНД #{todayRound?.round_number || 182}
-              </Text>
-            </View>
-
-            <View style={styles.universalHeaderCenter} pointerEvents="none">
-              <Text style={styles.universalBrandTitle}>KAPSA</Text>
-            </View>
-
-            <View style={styles.hubHeaderRight}>
-              <TouchableOpacity
-                accessibilityLabel="Профіль користувача"
-                style={styles.hubHeaderAvatarBtn}
-                onPress={() => setActiveTab('memories')}
-                activeOpacity={0.85}
-              >
-                <Image
-                  source={{ uri: userPortraitUri }}
-                  style={styles.hubHeaderAvatarImg}
-                />
-                <View style={styles.hubHeaderOnlineDot} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
 
         {/* ================================================================= */}
         {/* ВКЛАДКА 1: TODAY — ЕКРАН 1 (HOME HUB) / ЕКРАН 3 (ГОЛОСУВАННЯ) / ЕКРАН 2 (РОЗКРИТТЯ) */}
@@ -1812,38 +1848,6 @@ export default function HomeScreen() {
         {/* ================================================================= */}
         {activeTab === 'circles' && (
           <View style={styles.circlesScreenContainer}>
-            {/* TopAppBar Component */}
-            <View style={styles.circlesTopNavBar}>
-              <View style={styles.circlesNavLeft}>
-                <TouchableOpacity
-                  accessibilityLabel="Приватні простори"
-                  style={styles.circlesNavClockBtn}
-                  onPress={() => {}}
-                  activeOpacity={0.8}
-                >
-                  <Feather name="lock" size={18} color={stitch.onSurfaceVariant} />
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.universalHeaderCenter} pointerEvents="none">
-                <Text style={styles.universalBrandTitle}>KAPSA</Text>
-              </View>
-
-              <View style={styles.circlesNavRight}>
-                <TouchableOpacity
-                  accessibilityLabel="Профіль користувача"
-                  style={styles.circlesNavAvatarBtn}
-                  onPress={() => setActiveTab('memories')}
-                  activeOpacity={0.85}
-                >
-                  <Image
-                    source={{ uri: userPortraitUri }}
-                    style={styles.circlesNavAvatarImg}
-                  />
-                  <View style={styles.circlesOnlineDot} />
-                </TouchableOpacity>
-              </View>
-            </View>
 
             <View style={styles.circlesContentCanvas}>
               {/* Section 1: Editorial Header Section */}
@@ -2134,46 +2138,6 @@ export default function HomeScreen() {
         {/* ================================================================= */}
         {activeTab === 'fond' && (
           <View style={styles.loreScreenContainer}>
-            {/* Top Navigation Bar Component (Shared Stitch Header) */}
-            <View style={styles.loreTopNavBar}>
-              <View style={styles.loreNavLeft}>
-                <TouchableOpacity
-                  accessibilityLabel="Статус архіву"
-                  style={styles.loreNavClockBtn}
-                  onPress={() => {}}
-                  activeOpacity={0.8}
-                >
-                  <Feather name="clock" size={18} color={stitch.onSurfaceVariant} />
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.universalHeaderCenter} pointerEvents="none">
-                <Text style={styles.universalBrandTitle}>KAPSA</Text>
-              </View>
-
-              <View style={styles.loreNavRightActions}>
-                <TouchableOpacity
-                  accessibilityLabel="Пошук у хроніці"
-                  style={styles.loreSearchBtn}
-                  onPress={() => {}}
-                  activeOpacity={0.8}
-                >
-                  <Feather name="search" size={19} color={stitch.onSurfaceVariant} />
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  accessibilityLabel="Профіль користувача"
-                  style={styles.loreNavAvatarBtn}
-                  onPress={() => setActiveTab('memories')}
-                  activeOpacity={0.85}
-                >
-                  <Image
-                    source={{ uri: userPortraitUri }}
-                    style={styles.loreNavAvatarImg}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
 
             {/* Editorial Canvas Container */}
             <View style={styles.loreContentCanvas}>
@@ -2597,36 +2561,6 @@ export default function HomeScreen() {
         {/* ================================================================= */}
         {activeTab === 'memories' && (
           <View style={styles.stitchProfileContainer}>
-            {/* Top Navigation Bar with KAPSA Wordmark */}
-            <View style={styles.profileTopNavBar}>
-              <View style={styles.profileNavLeft}>
-                <TouchableOpacity
-                  accessibilityLabel="Головна"
-                  style={styles.profileNavBackBtn}
-                  onPress={() => setActiveTab('today')}
-                  activeOpacity={0.8}
-                >
-                  <Feather name="arrow-left" size={18} color={stitch.onSurfaceVariant} />
-                  <Text style={styles.profileNavBackText}>Сьогодні</Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={styles.universalHeaderCenter} pointerEvents="none">
-                <Text style={styles.universalBrandTitle}>KAPSA</Text>
-              </View>
-
-              <View style={styles.profileNavRight}>
-                <TouchableOpacity
-                  accessibilityLabel="Поділитися"
-                  style={styles.profileNavActionBtn}
-                  onPress={handleCopyProfileInviteCode}
-                  activeOpacity={0.8}
-                >
-                  <Feather name="share-2" size={17} color={stitch.onSurfaceVariant} />
-                </TouchableOpacity>
-              </View>
-            </View>
-
             {/* Screen Section Header */}
             <View style={styles.stitchSectionHeaderRow}>
               <Text style={styles.stitchScreenTitle}>Профіль</Text>
@@ -3056,9 +2990,83 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.paperBg,
   },
+  universalTopNavBar: {
+    position: 'relative',
+    height: 54,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: stitch.outlineVariant,
+    backgroundColor: stitch.surface,
+    zIndex: 20,
+  },
+  navSlotLeft: {
+    zIndex: 10,
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  navSlotRight: {
+    zIndex: 10,
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  navSlotIconBtn: {
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  universalHeaderCenter: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  universalBrandTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 24,
+    letterSpacing: 4.5,
+    fontWeight: '600',
+    color: stitch.primary,
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
+  navAvatarBtn: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    borderWidth: 1,
+    borderColor: stitch.outlineVariant,
+    position: 'relative',
+  },
+  navAvatarImg: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 17,
+  },
+  navOnlineDot: {
+    position: 'absolute',
+    bottom: -1,
+    right: -1,
+    width: 9,
+    height: 9,
+    borderRadius: 4.5,
+    backgroundColor: '#22C55E',
+    borderWidth: 1.5,
+    borderColor: stitch.surface,
+  },
   container: {
-    paddingHorizontal: 18,
-    paddingTop: 14,
+    paddingHorizontal: 0,
+    paddingTop: 0,
     paddingBottom: 100,
   },
   topHeader: {
@@ -3774,7 +3782,7 @@ const styles = StyleSheet.create({
   },
   stitchProfileContainer: {
     paddingHorizontal: 20,
-    paddingTop: 10,
+    paddingTop: 16,
     paddingBottom: 24,
     gap: 20,
   },
@@ -4551,24 +4559,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.8,
     textTransform: 'uppercase',
     color: stitch.onSurfaceVariant,
-  },
-  universalHeaderCenter: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  universalBrandTitle: {
-    fontFamily: fonts.serif,
-    fontSize: 27,
-    letterSpacing: 4.5,
-    color: stitch.primary,
-    fontWeight: '600',
-    textAlign: 'center',
-    includeFontPadding: false,
   },
   hubHeaderCenter: {
     position: 'absolute',

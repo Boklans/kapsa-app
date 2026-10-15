@@ -106,41 +106,35 @@ export default function LoreDetailScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       {/* Top Context Header Bar */}
-      <View style={styles.topContextBar}>
-        <View style={styles.navLeftWrap}>
+      <View style={styles.universalTopNavBar}>
+        <View style={styles.navSlotLeft}>
           <TouchableOpacity
-            style={styles.backBtn}
+            accessibilityLabel="Назад"
+            style={styles.navSlotIconBtn}
             onPress={() => router.back()}
-            activeOpacity={0.8}
+            activeOpacity={0.75}
           >
-            <Feather name="arrow-left" size={18} color={stitch.onSurfaceVariant} />
-            <Text style={styles.backBtnText}>До архіву</Text>
+            <Feather name="arrow-left" size={20} color={stitch.onSurfaceVariant} />
           </TouchableOpacity>
         </View>
 
-        <View style={styles.headerCenterBrand} pointerEvents="none">
-          <Text style={styles.brandTitle}>KAPSA</Text>
+        <View style={styles.universalHeaderCenter} pointerEvents="none">
+          <Text style={styles.universalBrandTitle}>KAPSA</Text>
         </View>
 
         {/* Actions / Overflow */}
-        <View style={styles.navActionsRow}>
+        <View style={styles.navSlotRight}>
           <TouchableOpacity
-            style={styles.navIconBtn}
+            accessibilityLabel="Закладка"
+            style={styles.navSlotIconBtn}
             onPress={() => setIsBookmarked((prev) => !prev)}
-            activeOpacity={0.8}
+            activeOpacity={0.75}
           >
             <Ionicons
               name={isBookmarked ? 'bookmark' : 'bookmark-outline'}
-              size={19}
+              size={20}
               color={isBookmarked ? stitch.secondary : stitch.onSurfaceVariant}
             />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.navIconBtn}
-            onPress={handleShare}
-            activeOpacity={0.8}
-          >
-            <Feather name="more-horizontal" size={20} color={stitch.onSurfaceVariant} />
           </TouchableOpacity>
         </View>
       </View>
@@ -415,35 +409,91 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: stitch.background,
   },
+  universalTopNavBar: {
+    position: 'relative',
+    height: 54,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: stitch.outlineVariant,
+    backgroundColor: stitch.surface,
+    zIndex: 20,
+  },
+  navSlotLeft: {
+    zIndex: 10,
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  navSlotRight: {
+    zIndex: 10,
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  navSlotIconBtn: {
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  universalHeaderCenter: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  universalBrandTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 24,
+    letterSpacing: 4.5,
+    fontWeight: '600',
+    color: stitch.primary,
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
+  brandTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 24,
+    letterSpacing: 4.5,
+    fontWeight: '600',
+    color: stitch.primary,
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
   topContextBar: {
     position: 'relative',
+    height: 54,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    minHeight: 56,
+    paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: stitch.outlineVariant,
     backgroundColor: stitch.surface,
   },
   navLeftWrap: {
     zIndex: 10,
-    flexDirection: 'row',
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   backBtn: {
-    flexDirection: 'row',
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 6,
-    paddingVertical: 2,
   },
   backBtnText: {
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 0.8,
-    textTransform: 'uppercase',
-    color: stitch.onSurfaceVariant,
+    display: 'none',
   },
   headerCenterBrand: {
     position: 'absolute',
@@ -453,15 +503,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  brandTitle: {
-    fontFamily: fonts.serif,
-    fontSize: 27,
-    letterSpacing: 4.5,
-    fontWeight: '600',
-    color: stitch.primary,
-    textAlign: 'center',
-    includeFontPadding: false,
   },
   roomTagRow: {
     flexDirection: 'row',

@@ -79,28 +79,30 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       {/* Top Header Bar */}
-      <View style={styles.topNavBar}>
-        <TouchableOpacity
-          style={styles.navBackBtn}
-          onPress={() => router.replace('/')}
-          activeOpacity={0.8}
-        >
-          <Feather name="arrow-left" size={18} color={stitch.onSurfaceVariant} />
-          <Text style={styles.navBackText}>На головну</Text>
-        </TouchableOpacity>
-
-        <View style={styles.headerCenterBrand} pointerEvents="none">
-          <Text style={styles.brandTitle}>KAPSA</Text>
+      <View style={styles.universalTopNavBar}>
+        <View style={styles.navSlotLeft}>
+          <TouchableOpacity
+            accessibilityLabel="На головну"
+            style={styles.navSlotIconBtn}
+            onPress={() => router.replace('/')}
+            activeOpacity={0.75}
+          >
+            <Feather name="arrow-left" size={20} color={stitch.onSurfaceVariant} />
+          </TouchableOpacity>
         </View>
 
-        <View style={styles.navRightWrap}>
+        <View style={styles.universalHeaderCenter} pointerEvents="none">
+          <Text style={styles.universalBrandTitle}>KAPSA</Text>
+        </View>
+
+        <View style={styles.navSlotRight}>
           <TouchableOpacity
             accessibilityLabel="Поділитися"
-            style={styles.navShareBtn}
+            style={styles.navSlotIconBtn}
             onPress={handleCopyProfileInviteCode}
-            activeOpacity={0.8}
+            activeOpacity={0.75}
           >
-            <Feather name="share-2" size={17} color={stitch.onSurfaceVariant} />
+            <Feather name="share-2" size={19} color={stitch.onSurfaceVariant} />
           </TouchableOpacity>
         </View>
       </View>
@@ -378,31 +380,85 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: stitch.background,
   },
-  topNavBar: {
+  universalTopNavBar: {
     position: 'relative',
+    height: 54,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    minHeight: 56,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: stitch.outlineVariant,
+    backgroundColor: stitch.surface,
+    zIndex: 20,
+  },
+  navSlotLeft: {
+    zIndex: 10,
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  navSlotRight: {
+    zIndex: 10,
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  navSlotIconBtn: {
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  universalHeaderCenter: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  universalBrandTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 24,
+    letterSpacing: 4.5,
+    fontWeight: '600',
+    color: stitch.primary,
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
+  brandTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 24,
+    letterSpacing: 4.5,
+    fontWeight: '600',
+    color: stitch.primary,
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
+  topNavBar: {
+    position: 'relative',
+    height: 54,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: stitch.outlineVariant,
     backgroundColor: stitch.surface,
   },
   navBackBtn: {
     zIndex: 10,
-    flexDirection: 'row',
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 6,
-    paddingVertical: 2,
   },
   navBackText: {
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 0.8,
-    textTransform: 'uppercase',
-    color: stitch.onSurfaceVariant,
+    display: 'none',
   },
   headerCenterBrand: {
     position: 'absolute',
@@ -413,26 +469,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  brandTitle: {
-    fontFamily: fonts.serif,
-    fontSize: 27,
-    letterSpacing: 4.5,
-    fontWeight: '600',
-    color: stitch.primary,
-    textAlign: 'center',
-    includeFontPadding: false,
-  },
   navRightWrap: {
     zIndex: 10,
-    flexDirection: 'row',
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   navShareBtn: {
-    padding: 4,
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   navTitleCenter: {
     fontFamily: fonts.serif,
-    fontSize: 27,
+    fontSize: 24,
     letterSpacing: 4.5,
     fontWeight: '600',
     color: stitch.primary,

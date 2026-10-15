@@ -87,25 +87,25 @@ export default function CreateRoomScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       {/* Top Editorial Header (Task-oriented navigation) */}
-      <View style={styles.topNavBar}>
-        <View style={styles.navLeftWrap}>
+      <View style={styles.universalTopNavBar}>
+        <View style={styles.navSlotLeft}>
           <TouchableOpacity
-            style={styles.navBackBtn}
+            accessibilityLabel="До кімнат"
+            style={styles.navSlotIconBtn}
             onPress={() => router.back()}
-            activeOpacity={0.8}
+            activeOpacity={0.75}
           >
-            <Feather name="arrow-left" size={18} color={stitch.onSurfaceVariant} />
-            <Text style={styles.navBackText}>До кімнат</Text>
+            <Feather name="arrow-left" size={20} color={stitch.onSurfaceVariant} />
           </TouchableOpacity>
         </View>
 
-        <View style={styles.headerCenterBrand} pointerEvents="none">
-          <Text style={styles.brandTitle}>KAPSA</Text>
+        <View style={styles.universalHeaderCenter} pointerEvents="none">
+          <Text style={styles.universalBrandTitle}>KAPSA</Text>
         </View>
 
-        <View style={styles.navRightWrap}>
-          <View style={styles.stepBadge}>
-            <Text style={styles.stepBadgeText}>Крок 1 з 2</Text>
+        <View style={styles.navSlotRight}>
+          <View style={styles.createStepBadge}>
+            <Text style={styles.createStepBadgeText}>1 з 2</Text>
           </View>
         </View>
       </View>
@@ -332,35 +332,91 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: stitch.background,
   },
-  topNavBar: {
+  universalTopNavBar: {
     position: 'relative',
+    height: 54,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    minHeight: 56,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: stitch.outlineVariant,
+    backgroundColor: stitch.surface,
+    zIndex: 20,
+  },
+  navSlotLeft: {
+    zIndex: 10,
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  navSlotRight: {
+    zIndex: 10,
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  navSlotIconBtn: {
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  universalHeaderCenter: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  universalBrandTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 24,
+    letterSpacing: 4.5,
+    fontWeight: '600',
+    color: stitch.primary,
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
+  brandTitle: {
+    fontFamily: fonts.serif,
+    fontSize: 24,
+    letterSpacing: 4.5,
+    fontWeight: '600',
+    color: stitch.primary,
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
+  topNavBar: {
+    position: 'relative',
+    height: 54,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
     borderBottomWidth: 1,
     borderBottomColor: stitch.outlineVariant,
     backgroundColor: stitch.surface,
   },
   navLeftWrap: {
     zIndex: 10,
-    flexDirection: 'row',
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   navBackBtn: {
-    flexDirection: 'row',
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 6,
-    paddingVertical: 2,
   },
   navBackText: {
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-    color: stitch.onSurfaceVariant,
+    display: 'none',
   },
   headerCenterBrand: {
     position: 'absolute',
@@ -371,18 +427,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  brandTitle: {
-    fontFamily: fonts.serif,
-    fontSize: 27,
-    letterSpacing: 4.5,
-    fontWeight: '600',
-    color: stitch.primary,
-    textAlign: 'center',
-    includeFontPadding: false,
-  },
   navTitleCenter: {
     fontFamily: fonts.serif,
-    fontSize: 27,
+    fontSize: 24,
     letterSpacing: 4.5,
     fontWeight: '600',
     color: stitch.primary,
@@ -391,8 +438,23 @@ const styles = StyleSheet.create({
   },
   navRightWrap: {
     zIndex: 10,
-    flexDirection: 'row',
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
     alignItems: 'center',
+  },
+  createStepBadge: {
+    backgroundColor: stitch.surfaceContainerLow,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+  },
+  createStepBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+    color: stitch.onSurfaceVariant,
   },
   stepBadge: {
     backgroundColor: stitch.surfaceContainerLow,
